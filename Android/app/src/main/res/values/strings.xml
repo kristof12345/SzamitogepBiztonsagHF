@@ -9,4 +9,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="not_yet_registered">Not yet registered? Click here</string>
+    <string name="log_in">Log in</string>
+    <string name="password">Password</string>
+    <string name="user_name">User name</string>
+    <string name="login">Login</string>
 </resources>
