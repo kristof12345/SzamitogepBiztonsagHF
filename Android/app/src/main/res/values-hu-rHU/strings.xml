@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_yet_registered">Még nem regisztráltál? Kattints ide</string>
+    <string name="log_in">Belépés</string>
+    <string name="password">Jelszó</string>
+    <string name="user_name">Felhasználónév</string>
+    <string name="login">Bejelentkezés</string>
+</resources>
