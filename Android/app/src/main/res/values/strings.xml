@@ -8,4 +8,8 @@
     <string name="login">Login</string>
     <string name="register_fragment_label" translatable="false">RegisterFragment</string>
     <string name="login_fragment_label" translatable="false">LoginFragment</string>
+    <string name="registration">Registration</string>
+    <string name="email_address">Email address</string>
+    <string name="register">Register</string>
+    <string name="already_registered">Already registered? Log in</string>
 </resources>
