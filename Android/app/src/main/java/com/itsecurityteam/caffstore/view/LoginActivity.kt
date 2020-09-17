@@ -3,6 +3,7 @@ package com.itsecurityteam.caffstore.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.itsecurityteam.caffstore.R
+import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
 
