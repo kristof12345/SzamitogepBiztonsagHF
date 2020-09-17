@@ -64,6 +64,9 @@ Logikai assetek:
 
 ### Támadó modell kidolgozása
 A lehetséges veszélyforrások rendszerezéséhez a STRIDE keretrendszert használtuk, melynek elemei a következők:
+
+Veszélyforrás | Példa 
+------------ | -------------
 Megszemélyesítés | Egy felhasználó valaki más által megvásárolt képet akar letölteni.
 Hamisítás | Valaki jogtalanul módosítja egy másik felhasználó CAFF képét.
 Tevékenység letagadása | Egy felhasználó megpróbálja letagadni az általa írt kommentet. 
