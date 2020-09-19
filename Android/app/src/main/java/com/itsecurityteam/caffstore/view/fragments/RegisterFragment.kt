@@ -16,6 +16,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.ValidationException
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : Fragment() {
@@ -56,6 +57,7 @@ class RegisterFragment : Fragment() {
                 it.visibility = View.GONE
             }
 
+            setAvailability(false)
             viewModel.register(
                 tietRegName.text.toString(), tietRegEmail.text.toString(),
                 tietRegPassword.text.toString()
@@ -64,6 +66,7 @@ class RegisterFragment : Fragment() {
 
         viewModel.NetworkResult.observe(viewLifecycleOwner) { result ->
             Log.i("RegisterFragment", "Network result observed")
+            setAvailability(true)
 
             when (result.success) {
                 true -> getView()?.let {
@@ -104,5 +107,14 @@ class RegisterFragment : Fragment() {
         }
 
         return true
+    }
+
+    private fun setAvailability(enabled: Boolean) {
+        btRegister.isEnabled = enabled
+        btToLogin.isEnabled = enabled
+        tietRegEmail.isEnabled = enabled
+        tietRegName.isEnabled = enabled
+        tietRegPassword.isEnabled = enabled
+        tietRegPasswordConfirm.isEnabled = enabled
     }
 }
