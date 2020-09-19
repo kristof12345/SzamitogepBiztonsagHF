@@ -9,4 +9,5 @@
     <string name="email_address">Email cím</string>
     <string name="register">Regisztrál</string>
     <string name="already_registered">Már regisztráltál? Lépj be</string>
+    <string name="confirm">Megerősítés</string>
 </resources>
