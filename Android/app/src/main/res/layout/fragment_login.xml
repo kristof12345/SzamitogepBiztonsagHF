@@ -73,13 +73,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/log_in"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilLoginPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginError" />
 
     <Button
         android:id="@+id/btToRegister"
@@ -95,4 +95,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvLoginError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/design_default_color_error"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/tilLoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/tilLoginPassword"
+        tools:text="Lorem ipsum"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
