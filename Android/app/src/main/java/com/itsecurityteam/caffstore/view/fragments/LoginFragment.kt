@@ -61,7 +61,7 @@ class LoginFragment : Fragment() {
 
             when (result.success) {
                 true -> {
-                    // Transact to activity
+                    NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
                 }
                 false -> {
                     tvLoginError?.let {
@@ -69,7 +69,7 @@ class LoginFragment : Fragment() {
                         it.visibility = View.VISIBLE
                     }
 
-                    // TODO: Check on return what happens (from next activity to this)
+                    // TODO: Check on return what happens
                     setAvailability(true)
                 }
             }

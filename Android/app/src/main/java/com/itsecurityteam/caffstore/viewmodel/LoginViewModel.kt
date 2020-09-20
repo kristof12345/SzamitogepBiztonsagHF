@@ -22,16 +22,17 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun login(name: String, pass: String) {
         // https://developer.android.com/kotlin/coroutines
-        // TODO: 2s-es timeout legyen, mert úgy néz ki jól a UI
+        // TODO: 2s-es timeout legyen, mert úgy néz ki jól a UI (és nem kell töltő karika)
         viewModelScope.launch {
-            delay(10000)
-            networkResult.postValue(Result(false, R.string.error_empty_input))
+            delay(500)
+            //networkResult.postValue(Result(false, R.string.error_empty_input))
+            networkResult.postValue(Result(true))
         }
     }
 
     fun register(name: String, pass: String, email: String) {
         viewModelScope.launch {
-            delay(10000)
+            delay(500)
             networkResult.postValue(Result(true))
         }
     }
