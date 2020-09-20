@@ -37,6 +37,9 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
 
+        // TODO: Delete
+        NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
+
         btToRegister.setOnClickListener {
             NavHostFragment.findNavController(this).navigate(R.id.action_login_to_register)
         }

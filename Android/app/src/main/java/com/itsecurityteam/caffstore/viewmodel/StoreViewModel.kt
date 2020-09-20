@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 import java.time.LocalDateTime
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val caffs = MutableLiveData<List<Caff>>()
@@ -51,7 +52,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 caffsList.add(
                     Caff(
                         i.toLong(), LocalDateTime.now(), "Adrian Wolve",
-                        Random.nextInt(100, 500), image
+                        Random.nextInt(500, 3000), image
                     )
                 )
             }
@@ -74,16 +75,33 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun select(caff: Caff) {
         viewModelScope.launch {
             selectedCaff.postValue(caff)
-            comments.postValue(listOf(Comment("Géza", LocalDateTime.now(), "Menő")))
+
+            val list = mutableListOf<Comment>()
+
+            for(i in 0..15) {
+                val generatedString = (1..100)
+                    .map { Random.nextInt(65..90) }
+                    .map { ch -> ch.toChar() }
+                    .joinToString("")
+
+                val generatedUN = (1..20)
+                    .map { Random.nextInt(65..90) }
+                    .map { ch -> ch.toChar() }
+                    .joinToString("")
+
+                list.add(Comment(generatedUN, LocalDateTime.now(), generatedString))
+            }
+
+            comments.postValue(list)
         }
     }
 
-    fun uploadCaff(caff: String) {
+    fun uploadCaff() {
 
     }
 
-    fun downloadCaff(): String {
-        return ""
+    fun downloadCaff() {
+
     }
 
     fun filter(text: String) {
