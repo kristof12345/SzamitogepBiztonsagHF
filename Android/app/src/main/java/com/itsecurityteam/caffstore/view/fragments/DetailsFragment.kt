@@ -72,15 +72,15 @@ class DetailsFragment : Fragment() {
 
     private fun inputComment() {
         val builder = AlertDialog.Builder(context)
-        builder.setTitle("Add comment")
+        builder.setTitle(R.string.add_comment)
         builder.setView(R.layout.dialog_comment)
 
-        builder.setPositiveButton("OK") { dialog, _ ->
+        builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietComment)
             viewModel.addComment(editText.toString())
             dialog.cancel()
         }
-        builder.setNegativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.cancel()
         }
 

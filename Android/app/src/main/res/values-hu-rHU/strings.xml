@@ -11,4 +11,11 @@
     <string name="already_registered">Már regisztráltál? Lépj be</string>
     <string name="confirm">Megerősítés</string>
     <string name="error_empty_input">A mező nem lehet üres</string>
+    <string name="creator">Készítő</string>
+    <string name="date_of_creation">Készítés ideje</string>
+    <string name="length">Hossz</string>
+    <string name="comments">Hozászólások</string>
+    <string name="add_comment">Új hozzászólás</string>
+    <string name="download">Letöltés</string>
+    <string name="thumbnail_image">Indexkép</string>
 </resources>

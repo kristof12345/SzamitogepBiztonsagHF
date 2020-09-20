@@ -15,4 +15,11 @@
     <string name="confirm">Confirm</string>
     <string name="error_empty_input">Field cannot be empty</string>
     <string name="length_value" translatable="false">%1$d:%2$02d.%3$03d</string>
+    <string name="creator">Creator</string>
+    <string name="date_of_creation">Date of Creation</string>
+    <string name="length">Length</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add comment</string>
+    <string name="download">Download</string>
+    <string name="thumbnail_image">Thumbnail</string>
 </resources>
