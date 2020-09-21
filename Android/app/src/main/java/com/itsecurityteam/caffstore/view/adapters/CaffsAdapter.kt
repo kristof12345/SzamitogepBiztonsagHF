@@ -19,11 +19,13 @@ class CaffsAdapter: RecyclerView.Adapter<CaffsAdapter.CaffViewHolder>() {
         private val image: ImageView = itemView.findViewById(R.id.ivThumbnail)
         private val creator: TextView = itemView.findViewById(R.id.tvCreator)
         private val creation: TextView = itemView.findViewById(R.id.tvCreationDate)
+        private val title: TextView = itemView.findViewById(R.id.tvTitle)
         private val base: MaterialCardView = itemView.findViewById(R.id.cvItemBase)
 
         fun bind(caff: Caff) {
             image.setImageBitmap(caff.thumbnail)
             creator.text = caff.creator
+            title.text = caff.name
 
             val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
                 .withZone(ZoneId.systemDefault())

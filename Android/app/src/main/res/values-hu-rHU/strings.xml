@@ -18,4 +18,12 @@
     <string name="add_comment">Új hozzászólás</string>
     <string name="download">Letöltés</string>
     <string name="thumbnail_image">Indexkép</string>
+    <string name="not_found">Nincs megfelelő találat</string>
+    <string name="results">Találatok száma: %1$d</string>
+    <string name="sign_out">Kijelentkezés</string>
+    <string name="search">Keresés</string>
+    <string name="upload">CAFF feltöltése</string>
+    <string name="title">Cím</string>
+    <string name="no_comment">Még nincs megjegyzés! Írj egyet</string>
+    <string name="comment_added">Megjegyzés sikeresen hozzáadva</string>
 </resources>

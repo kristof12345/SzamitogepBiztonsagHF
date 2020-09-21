@@ -15,6 +15,7 @@ import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.ValidationException
 import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
+import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -66,6 +67,9 @@ class LoginFragment : Fragment() {
 
             when (result.success) {
                 true -> {
+                    val vm = ViewModelProvider(requireActivity())[StoreViewModel::class.java]
+                    vm.signIn(viewModel.UserId)
+
                     NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
                 }
                 false -> {

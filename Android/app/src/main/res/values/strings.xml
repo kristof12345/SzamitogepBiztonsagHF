@@ -22,4 +22,12 @@
     <string name="add_comment">Add comment</string>
     <string name="download">Download</string>
     <string name="thumbnail_image">Thumbnail</string>
+    <string name="not_found">No result found</string>
+    <string name="sign_out">Sign out</string>
+    <string name="search">Search</string>
+    <string name="upload">Upload CAFF</string>
+    <string name="results">Number of result: %1$d</string>
+    <string name="title">Title</string>
+    <string name="no_comment">No comment yet! Add one</string>
+    <string name="comment_added">Comment successfully added</string>
 </resources>

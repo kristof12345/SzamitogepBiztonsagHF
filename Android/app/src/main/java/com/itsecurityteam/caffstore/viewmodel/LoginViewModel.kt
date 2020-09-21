@@ -17,6 +17,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         const val REGISTER_REQUEST = 1002
     }
 
+    public var UserId: Long = -1
+
     private val networkResult = MutableLiveData<ViewResult?>()
     val NetworkResult: LiveData<ViewResult?>
             get() = networkResult
@@ -31,6 +33,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             delay(500)
             //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
+
+            UserId = 15
             networkResult.postValue(ViewResult(LOGIN_REQUEST,true))
         }
     }

@@ -3,13 +3,17 @@ package com.itsecurityteam.caffstore.viewmodel
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.itsecurityteam.caffstore.model.Caff
 import com.itsecurityteam.caffstore.model.Comment
+import com.itsecurityteam.caffstore.model.ViewResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
@@ -18,19 +22,44 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
+    companion object{
+        const val UPLOAD_REQUEST = 1003
+        const val DOWNLOAD_REQUEST = 1004
+        const val ADD_COMMENT_REQUEST = 1005
+    }
+
     private val caffs = MutableLiveData<List<Caff>>()
     val Caffs: LiveData<List<Caff>>
         get() = caffs
 
-    private val selectedCaff = MutableLiveData<Caff>()
-    val SelectedCaff: LiveData<Caff>
+    private val selectedCaff = MutableLiveData<Caff?>()
+    val SelectedCaff: LiveData<Caff?>
         get() = selectedCaff
 
     private val comments = MutableLiveData<List<Comment>>()
     val Comments: LiveData<List<Comment>>
         get() = comments
 
-    init {
+    private val result = MutableLiveData<ViewResult?>()
+    val Result: LiveData<ViewResult?>
+        get() = result
+
+    private var userID: Long = -1
+
+
+    public fun signIn(userID: Long) {
+        this.userID = userID
+        loadDatabase()
+    }
+
+    public fun sigOut() {
+        caffs.postValue(emptyList())
+        comments.postValue(emptyList())
+        selectedCaff.postValue(null)
+        result.postValue(null)
+    }
+
+    private fun loadDatabase() {
         viewModelScope.launch {
             val urls = List(6) {
                 when (it) {
@@ -46,16 +75,17 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             val caffsList = mutableListOf<Caff>()
-
             for (i in 0..5) {
                 val image = loadImage(urls[i])
                 caffsList.add(
                     Caff(
-                        i.toLong(), LocalDateTime.now(), "Adrian Wolve",
+                        i.toLong(),"A cute girl", LocalDateTime.now(), "Adrian Wolve",
                         Random.nextInt(500, 3000), image
                     )
                 )
             }
+
+            // TODO: FILTER ezt lehet a szereveren kéne és akkor itt szimplán le kell tölteni a szűrt elemeket
 
             caffs.postValue(caffsList)
         }
@@ -68,14 +98,14 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addComment(text: String) {
-
+    fun deselect() {
+        selectedCaff.postValue(null)
+        comments.postValue(emptyList())
     }
 
     fun select(caff: Caff) {
+        selectedCaff.value = caff
         viewModelScope.launch {
-            selectedCaff.postValue(caff)
-
             val list = mutableListOf<Comment>()
 
             for(i in 0..15) {
@@ -92,19 +122,38 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 list.add(Comment(generatedUN, LocalDateTime.now(), generatedString))
             }
 
+            delay(500)
+            caff.image = caff.thumbnail
+
+            selectedCaff.postValue(caff)
             comments.postValue(list)
         }
     }
 
-    fun uploadCaff() {
 
+
+    fun resultProcessed() {
+        result.postValue(null)
+    }
+
+    fun addComment(text: String) {
+        viewModelScope.launch {
+            delay(500)
+            result.postValue(ViewResult(ADD_COMMENT_REQUEST, true))
+        }
+    }
+
+    fun uploadCaff() {
+        viewModelScope.launch {
+            delay(500)
+            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+        }
     }
 
     fun downloadCaff() {
-
-    }
-
-    fun filter(text: String) {
-        // TODO: ezt lehet a szereveren kéne és akkor itt szimplán le kell tölteni a szűrt elemeket
+        viewModelScope.launch {
+            delay(500)
+            result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+        }
     }
 }

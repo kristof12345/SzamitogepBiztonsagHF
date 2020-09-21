@@ -5,8 +5,10 @@ import java.time.LocalDateTime
 
 data class Caff(
     val id: Long,
+    val name: String,
     val creationDate: LocalDateTime,
     val creator: String,
     val length: Int,
-    val thumbnail: Bitmap // URL to image
+    val thumbnail: Bitmap,
+    var image: Bitmap? = null
 )
