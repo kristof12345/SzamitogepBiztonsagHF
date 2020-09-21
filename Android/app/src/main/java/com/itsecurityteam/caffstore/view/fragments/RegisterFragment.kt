@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.ValidationException
+import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -40,36 +41,22 @@ class RegisterFragment : Fragment() {
         }
 
         btRegister.setOnClickListener {
-            var ok = validateField(tilRegName) { viewModel.validateName(it) }
-            ok = ok && validateField(tilRegPassword) { viewModel.validatePassword(it) }
-            ok = ok && validateField(tilRegPasswordConfirm) {
-                val pass = tilRegPassword.editText!!.text!!.toString()
-                val confirm = it!!.toString()
-
-                if (pass != confirm) throw ValidationException(R.string.app_name)
-            }
-            ok = ok && validateField(tilRegEmail) { viewModel.validateEmail(it) }
-
-            if (!ok) return@setOnClickListener
-
-            tvRegError?.let {
-                it.text = null
-                it.visibility = View.GONE
-            }
-
-            setAvailability(false)
-            viewModel.register(
-                tietRegName.text.toString(), tietRegEmail.text.toString(),
-                tietRegPassword.text.toString()
-            )
+            register()
         }
 
         viewModel.NetworkResult.observe(viewLifecycleOwner) { result ->
-            Log.i("RegisterFragment", "Network result observed")
+            handleRegistration(result)
+        }
+    }
+
+    private fun handleRegistration(result: ViewResult?) {
+        Log.i("RegisterFragment", "Network result observed $result")
+        if (result?.resultCode == LoginViewModel.REGISTER_REQUEST) {
+            viewModel.resultProcessed()
             setAvailability(true)
 
             when (result.success) {
-                true -> getView()?.let {
+                true -> view?.let {
                     Snackbar
                         .make(it, "Registration successfull", Snackbar.LENGTH_LONG)
                         .setAction("Vissza") {
@@ -84,6 +71,31 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun register() {
+        var ok = validateField(tilRegName) { viewModel.validateName(it) }
+        ok = ok && validateField(tilRegPassword) { viewModel.validatePassword(it) }
+        ok = ok && validateField(tilRegPasswordConfirm) {
+            val pass = tilRegPassword.editText!!.text!!.toString()
+            val confirm = it!!.toString()
+
+            if (pass != confirm) throw ValidationException(R.string.app_name)
+        }
+        ok = ok && validateField(tilRegEmail) { viewModel.validateEmail(it) }
+
+        if (!ok) return
+
+        tvRegError?.let {
+            it.text = null
+            it.visibility = View.GONE
+        }
+
+        setAvailability(false)
+        viewModel.register(
+            tietRegName.text.toString(), tietRegEmail.text.toString(),
+            tietRegPassword.text.toString()
+        )
     }
 
     private fun validateField(

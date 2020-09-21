@@ -12,25 +12,33 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private val networkResult = MutableLiveData<ViewResult>()
-    val NetworkResult: LiveData<ViewResult>
+    companion object {
+        const val LOGIN_REQUEST = 1001
+        const val REGISTER_REQUEST = 1002
+    }
+
+    private val networkResult = MutableLiveData<ViewResult?>()
+    val NetworkResult: LiveData<ViewResult?>
             get() = networkResult
 
+    fun resultProcessed() {
+        networkResult.postValue(null)
+    }
 
     fun login(name: String, pass: String) {
         // https://developer.android.com/kotlin/coroutines
-        // TODO: 2s-es timeout legyen, mert úgy néz ki jól a UI (és nem kell töltő karika)
+        // TODO: 2s-es timeout legyen, mert úgy még jól néz ki a UI (és nem kell töltő karika)
         viewModelScope.launch {
             delay(500)
             //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
-            networkResult.postValue(ViewResult(true))
+            networkResult.postValue(ViewResult(LOGIN_REQUEST,true))
         }
     }
 
     fun register(name: String, pass: String, email: String) {
         viewModelScope.launch {
             delay(500)
-            networkResult.postValue(ViewResult(true))
+            networkResult.postValue(ViewResult(REGISTER_REQUEST,true))
         }
     }
 

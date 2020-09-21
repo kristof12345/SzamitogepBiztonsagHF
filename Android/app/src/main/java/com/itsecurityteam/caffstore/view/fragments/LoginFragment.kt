@@ -6,19 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.ValidationException
+import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_register.*
 
 
 class LoginFragment : Fragment() {
@@ -37,30 +34,35 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
 
-        // TODO: Delete
-        NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
-
         btToRegister.setOnClickListener {
             NavHostFragment.findNavController(this).navigate(R.id.action_login_to_register)
         }
 
-        btLogin.setOnClickListener { btn ->
-            var ok = validateField(tilLoginName) { viewModel.validateName(it) }
-            ok = ok && validateField(tilLoginPassword) { viewModel.validatePassword(it) }
-            if (!ok) return@setOnClickListener
-
-            tvLoginError?.let {
-                it.text = null
-                it.visibility = View.GONE
-            }
-
-            setAvailability(false)
-
-            viewModel.login(tietLoginName.text.toString(), tietLoginPassword.text.toString())
+        btLogin.setOnClickListener {
+            login()
         }
 
-        viewModel.NetworkResult.observe(viewLifecycleOwner) {result ->
-            Log.i("LoginFragment", "Network result observed")
+        viewModel.NetworkResult.observe(viewLifecycleOwner) { result -> handleLoginRequest(result) }
+    }
+
+    private fun login() {
+        var ok = validateField(tilLoginName) { viewModel.validateName(it) }
+        ok = ok && validateField(tilLoginPassword) { viewModel.validatePassword(it) }
+        if (!ok) return
+
+        tvLoginError?.let {
+            it.text = null
+            it.visibility = View.GONE
+        }
+
+        setAvailability(false)
+        viewModel.login(tietLoginName.text.toString(), tietLoginPassword.text.toString())
+    }
+
+    private fun handleLoginRequest(result: ViewResult?) {
+        Log.i("LoginFragment", "Network result observed $result")
+        if (result?.resultCode == LoginViewModel.LOGIN_REQUEST) {
+            viewModel.resultProcessed()
 
             when (result.success) {
                 true -> {
@@ -72,7 +74,6 @@ class LoginFragment : Fragment() {
                         it.visibility = View.VISIBLE
                     }
 
-                    // TODO: Check on return what happens
                     setAvailability(true)
                 }
             }
