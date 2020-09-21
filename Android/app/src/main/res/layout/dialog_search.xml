@@ -1,174 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/filter"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilSearchTitle"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/barrier">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tietSearchTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title" />
-    </com.google.android.material.textfield.TextInputLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clDetails"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tilSearchTitle"
-        tools:layout_editor_absoluteX="0dp"
-        tools:visibility="visible">
-
-        <RadioGroup
-            android:id="@+id/rgType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/tvOrdering"
-            app:layout_constraintTop_toBottomOf="@+id/tvOrdering">
-
-            <RadioButton
-                android:id="@+id/rbDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/date_of_creation" />
-
-            <RadioButton
-                android:id="@+id/rbName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/title" />
-
-            <RadioButton
-                android:id="@+id/rbLength"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/length" />
-
-            <RadioButton
-                android:id="@+id/rbCreator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/creator" />
-        </RadioGroup>
-
-        <RadioGroup
-            android:id="@+id/rgDir"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toEndOf="@+id/rgType"
-            app:layout_constraintTop_toTopOf="@+id/rgType">
-
-            <RadioButton
-                android:id="@+id/rbDescend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/descending" />
-
-            <RadioButton
-                android:id="@+id/rbAscend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ascending" />
-
-        </RadioGroup>
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tvOrdering"
+            android:id="@+id/tvFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="@string/ordering"
+            android:text="@string/filter"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilSearchCreator" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilSearchCreator"
+            android:id="@+id/tilSearchTitle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@id/barrier">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tietSearchCreator"
+                android:id="@+id/tietSearchTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/creator" />
+                android:hint="@string/title" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/tilSearchTitle"
+            tools:layout_editor_absoluteX="0dp"
+            tools:visibility="visible">
+
+            <RadioGroup
+                android:id="@+id/rgType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/tvOrdering"
+                app:layout_constraintTop_toBottomOf="@+id/tvOrdering">
+
+                <RadioButton
+                    android:id="@+id/rbDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/date_of_creation" />
+
+                <RadioButton
+                    android:id="@+id/rbName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title" />
+
+                <RadioButton
+                    android:id="@+id/rbLength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/length" />
+
+                <RadioButton
+                    android:id="@+id/rbCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/creator" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/rgDir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toEndOf="@+id/rgType"
+                app:layout_constraintTop_toTopOf="@+id/rgType">
+
+                <RadioButton
+                    android:id="@+id/rbDescend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/descending" />
+
+                <RadioButton
+                    android:id="@+id/rbAscend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ascending" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/tvOrdering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/ordering"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilSearchCreator" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilSearchCreator"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tietSearchCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/creator" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btMore"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/more"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tvFilter"
+            app:layout_constraintTop_toTopOf="@+id/tvFilter" />
+
+        <Button
+            android:id="@+id/btLess"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/less"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tvFilter"
+            app:layout_constraintTop_toTopOf="@+id/tvFilter" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="btLess, btMore, tvFilter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/btMore"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/more"
-        app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tvFilter"
-        app:layout_constraintTop_toTopOf="@+id/tvFilter" />
-
-    <Button
-        android:id="@+id/btLess"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/less"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tvFilter"
-        app:layout_constraintTop_toTopOf="@+id/tvFilter" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btLess, btMore, tvFilter"
-        app:barrierDirection="bottom"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
