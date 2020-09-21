@@ -1,7 +1,11 @@
 package com.itsecurityteam.caffstore.view.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +21,18 @@ import com.itsecurityteam.caffstore.model.Caff
 import com.itsecurityteam.caffstore.view.adapters.CommentAdapter
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_details.*
+import org.w3c.dom.DocumentType
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import javax.xml.parsers.DocumentBuilder
 
 
 class DetailsFragment : Fragment() {
+    companion object{
+        const val SAVE_FILE_INTENT = 1007
+    }
+
     lateinit var viewModel: StoreViewModel
 
     override fun onCreateView(
@@ -45,7 +55,17 @@ class DetailsFragment : Fragment() {
         }
 
         btDownload.setOnClickListener {
-            viewModel.downloadCaff()
+            val saveFileIntent = Intent()
+            saveFileIntent.type = "application/caff"
+            saveFileIntent.action = Intent.ACTION_CREATE_DOCUMENT
+            saveFileIntent.putExtra(Intent.EXTRA_TITLE, "untitled.caff")
+
+            startActivityForResult(
+                Intent.createChooser(
+                    saveFileIntent,
+                    getString(R.string.save_file)
+                ), SAVE_FILE_INTENT
+            )
         }
 
         btAddComment.setOnClickListener {
@@ -139,5 +159,14 @@ class DetailsFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.deselect()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SAVE_FILE_INTENT && resultCode == Activity.RESULT_OK) {
+            data?.data?.let {
+                viewModel.downloadCaff(it)
+            }
+        }
     }
 }

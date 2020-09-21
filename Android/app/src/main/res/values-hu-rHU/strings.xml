@@ -14,7 +14,7 @@
     <string name="creator">Készítő</string>
     <string name="date_of_creation">Készítés ideje</string>
     <string name="length">Hossz</string>
-    <string name="comments">Hozászólások</string>
+    <string name="comments">Hozzászólások</string>
     <string name="add_comment">Új hozzászólás</string>
     <string name="download">Letöltés</string>
     <string name="thumbnail_image">Indexkép</string>
@@ -33,8 +33,10 @@
     <string name="less">Kevesebb</string>
     <string name="more">Több</string>
     <string name="filter">Szűrés</string>
-    <string name="max_caff">A CAFF neve (maxa 60 karakter)</string>
+    <string name="max_caff">A CAFF neve (max 60 karakter)</string>
     <string name="add_name">Név megadása</string>
     <string name="upload_success">Caff feltöltése sikeres</string>
     <string name="download_successfull">Caff letöltése sikeres</string>
+    <string name="save_file">Mentés helye</string>
+    <string name="open_caff">CAFF fájl megnyitása</string>
 </resources>

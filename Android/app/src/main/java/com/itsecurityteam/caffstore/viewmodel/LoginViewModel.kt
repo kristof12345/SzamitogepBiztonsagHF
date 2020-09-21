@@ -28,12 +28,18 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun login(name: String, pass: String) {
-        // https://developer.android.com/kotlin/coroutines
-        // TODO: 2s-es timeout legyen, mert úgy még jól néz ki a UI (és nem kell töltő karika)
         viewModelScope.launch {
+            // TODO: A bejelentkezés megvalósítása
+            // Maga a hálózati hivást nem itt, hanem a service-ben egy suspend fun-ban
+            // https://developer.android.com/kotlin/coroutines
+            // Az eredményt a networkResult.postValue-val lehet jelenteni
+            // Paramétere ViewResult(REQ azonosító (company object),sikeres-e, hiba kód, amely egy R.string-re mutat)
+            // Fontos, hogy eredményben kell kapni egy UserID-t, az itt be kell állítani
+
+            // TODO: 2 sec-es timeout nem árt bele, mert a UI úgy nem zavaró (meg amúgy is)
+            // PL.:
             delay(500)
             //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
-
             UserId = 15
             networkResult.postValue(ViewResult(LOGIN_REQUEST,true))
         }
@@ -41,6 +47,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun register(name: String, pass: String, email: String) {
         viewModelScope.launch {
+            // TODO: A regisztráció megvalósítása
+            // Ugyan azon elven, mint a login
+
             delay(500)
             networkResult.postValue(ViewResult(REGISTER_REQUEST,true))
         }
@@ -48,14 +57,18 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun validateName(name: Editable?) {
-
+        // TODO: név beviteli mező validálása
+        // Amennyiben a bemenet érvénytelen, akkor throw ValidationException(int)
+        // A fenti konstruktorban az int egy R.string beli elem
     }
 
     fun validateEmail(email: Editable?) {
-
+        // TODO: email beviteli mező validálása
+        // Hasonlóan a fentihez
     }
 
     fun validatePassword(pass: Editable?) {
-
+        // TODO: jelszó beviteli mező validálása
+        // Hasonlóan a fentihez
     }
 }

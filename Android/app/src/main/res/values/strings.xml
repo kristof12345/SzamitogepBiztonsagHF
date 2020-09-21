@@ -28,7 +28,7 @@
     <string name="upload">Upload CAFF</string>
     <string name="results">Number of result: %1$d</string>
     <string name="title">Title</string>
-    <string name="no_comment">No comment yet! Add one</string>
+    <string name="no_comment">No comments yet! Add one</string>
     <string name="comment_added">Comment successfully added</string>
     <string name="comment_max">Comment (max 255 character)</string>
     <string name="ascending">Ascending</string>
@@ -41,4 +41,6 @@
     <string name="add_name">Add name</string>
     <string name="upload_success">Caff upload successful</string>
     <string name="download_successfull">Caff download successful</string>
+    <string name="open_caff">Open CAFF file</string>
+    <string name="save_file">Save location</string>
 </resources>

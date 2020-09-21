@@ -34,7 +34,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
-
         val vm = ViewModelProvider(requireActivity())[StoreViewModel::class.java]
         vm.sigOut()
 
@@ -73,6 +72,7 @@ class LoginFragment : Fragment() {
                 true -> {
                     val vm = ViewModelProvider(requireActivity())[StoreViewModel::class.java]
                     vm.signIn(viewModel.UserId)
+                    viewModel.UserId = -1
 
                     NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
                 }

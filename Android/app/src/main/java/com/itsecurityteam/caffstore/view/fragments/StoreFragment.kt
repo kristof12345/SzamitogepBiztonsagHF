@@ -1,7 +1,10 @@
 package com.itsecurityteam.caffstore.view.fragments
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +24,12 @@ import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_store.*
 
 class StoreFragment : Fragment() {
+    companion object {
+        const val FILE_OPEN_INTENT = 1006
+    }
+
     private lateinit var viewModel: StoreViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +51,16 @@ class StoreFragment : Fragment() {
         }
 
         ibUpload.setOnClickListener {
-            inputName()
+            val openFileIntent = Intent()
+            openFileIntent.type = "application/caff"
+            openFileIntent.action = Intent.ACTION_OPEN_DOCUMENT
+
+            startActivityForResult(
+                Intent.createChooser(
+                    openFileIntent,
+                    getString(R.string.open_caff)
+                ), FILE_OPEN_INTENT
+            )
         }
 
         ibSearch.setOnClickListener {
@@ -92,14 +109,14 @@ class StoreFragment : Fragment() {
         rvCaffs.adapter = adapter
     }
 
-    private fun inputName() {
+    private fun inputName(uri: Uri) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.add_name)
         builder.setView(R.layout.dialog_upload)
 
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietName)
-            viewModel.uploadCaff(editText.toString())
+            viewModel.uploadCaff(editText.text.toString(), uri)
             dialog.dismiss()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -107,5 +124,15 @@ class StoreFragment : Fragment() {
         }
 
         builder.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == FILE_OPEN_INTENT && resultCode == RESULT_OK) {
+            data?.data?.let {
+                inputName(it)
+            }
+        }
     }
 }
