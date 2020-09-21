@@ -17,7 +17,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         const val REGISTER_REQUEST = 1002
     }
 
-    public var UserId: Long = -1
+    var UserId: Long = -1
 
     private val networkResult = MutableLiveData<ViewResult?>()
     val NetworkResult: LiveData<ViewResult?>

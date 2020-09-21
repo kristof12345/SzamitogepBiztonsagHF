@@ -26,4 +26,15 @@
     <string name="title">Cím</string>
     <string name="no_comment">Még nincs megjegyzés! Írj egyet</string>
     <string name="comment_added">Megjegyzés sikeresen hozzáadva</string>
+    <string name="comment_max">Megjegyzés (max 255 karakter)</string>
+    <string name="ordering">Rendezés</string>
+    <string name="ascending">Növekvő</string>
+    <string name="descending">Csökkenő</string>
+    <string name="less">Kevesebb</string>
+    <string name="more">Több</string>
+    <string name="filter">Szűrés</string>
+    <string name="max_caff">A CAFF neve (maxa 60 karakter)</string>
+    <string name="add_name">Név megadása</string>
+    <string name="upload_success">Caff feltöltése sikeres</string>
+    <string name="download_successfull">Caff letöltése sikeres</string>
 </resources>

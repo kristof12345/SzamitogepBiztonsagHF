@@ -30,4 +30,15 @@
     <string name="title">Title</string>
     <string name="no_comment">No comment yet! Add one</string>
     <string name="comment_added">Comment successfully added</string>
+    <string name="comment_max">Comment (max 255 character)</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="ordering">Ordering</string>
+    <string name="less">Less</string>
+    <string name="more">More</string>
+    <string name="filter">Filter</string>
+    <string name="max_caff">Name of CAFF (max 60 character)</string>
+    <string name="add_name">Add name</string>
+    <string name="upload_success">Caff upload successful</string>
+    <string name="download_successfull">Caff download successful</string>
 </resources>

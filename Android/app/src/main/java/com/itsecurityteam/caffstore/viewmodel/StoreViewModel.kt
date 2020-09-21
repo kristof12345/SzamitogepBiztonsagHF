@@ -12,6 +12,9 @@ import androidx.lifecycle.viewModelScope
 import com.itsecurityteam.caffstore.model.Caff
 import com.itsecurityteam.caffstore.model.Comment
 import com.itsecurityteam.caffstore.model.ViewResult
+import com.itsecurityteam.caffstore.model.filter.Filter
+import com.itsecurityteam.caffstore.model.filter.OrderBy
+import com.itsecurityteam.caffstore.model.filter.OrderDirection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,17 +49,24 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     private var userID: Long = -1
 
+    val filter: Filter = Filter()
+    var orderBy: OrderBy = OrderBy.Date
+        private set
 
-    public fun signIn(userID: Long) {
+    var orderDir: OrderDirection = OrderDirection.Descending
+        private set
+
+    fun signIn(userID: Long) {
         this.userID = userID
         loadDatabase()
     }
 
-    public fun sigOut() {
+    fun sigOut() {
         caffs.postValue(emptyList())
         comments.postValue(emptyList())
         selectedCaff.postValue(null)
         result.postValue(null)
+        userID = -1
     }
 
     private fun loadDatabase() {
@@ -74,12 +84,16 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     else -> "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1f9363c7-d5c4-4cee-864c-cc290f55a413/d97urxm-a8bbedfb-baad-4bd3-a209-e307f06dad4f.jpg/v1/fill/w_600,h_849,q_75,strp/i_know_i_buried_it_somewhere____by_adrian_wolve_by_adrianwolve_d97urxm-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3siaGVpZ2h0IjoiPD04NDkiLCJwYXRoIjoiXC9mXC8xZjkzNjNjNy1kNWM0LTRjZWUtODY0Yy1jYzI5MGY1NWE0MTNcL2Q5N3VyeG0tYThiYmVkZmItYmFhZC00YmQzLWEyMDktZTMwN2YwNmRhZDRmLmpwZyIsIndpZHRoIjoiPD02MDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.PuhtcZSLtDgjuybfZXj65YbJ3Wd4ev_deNc_OP_PhaE"
                 }
             }
+
+            val titles = listOf("Nidalee Portrait", "Ahri","Ahri K/DA", "Order of the Lotus Irelia","You are in my dreams","Call me Dagger")
+            val creators = listOf("Adrian Wolve","Adrian Wolve","Hell-and-Heavens", "MichelleHoefener","Adrian Wolve","Adrian Wolve")
+
             val caffsList = mutableListOf<Caff>()
             for (i in 0..5) {
                 val image = loadImage(urls[i])
                 caffsList.add(
                     Caff(
-                        i.toLong(),"A cute girl", LocalDateTime.now(), "Adrian Wolve",
+                        i.toLong(),titles[i], LocalDateTime.now(), creators[i],
                         Random.nextInt(500, 3000), image
                     )
                 )
@@ -143,7 +157,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun uploadCaff() {
+    fun uploadCaff(name: String) {
         viewModelScope.launch {
             delay(500)
             result.postValue(ViewResult(UPLOAD_REQUEST, true))
@@ -155,5 +169,16 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             delay(500)
             result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
         }
+    }
+
+
+    fun setOrdering(orderBy: OrderBy, orderDir: OrderDirection) {
+        this.orderDir = orderDir
+        this.orderBy = orderBy
+    }
+
+    fun setFilter(name: String, creator: String) {
+        this.filter.title = name
+        this.filter.creator = creator
     }
 }

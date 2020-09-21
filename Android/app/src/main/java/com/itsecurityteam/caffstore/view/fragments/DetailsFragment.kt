@@ -74,6 +74,16 @@ class DetailsFragment : Fragment() {
                         Snackbar.make(it, result.errorCode, Snackbar.LENGTH_SHORT).show()
                     }
                 }
+            } else if (result?.resultCode == StoreViewModel.DOWNLOAD_REQUEST) {
+                viewModel.resultProcessed()
+                when (result.success) {
+                    true -> view?.let {
+                        Snackbar.make(it, R.string.download_successfull, Snackbar.LENGTH_SHORT).show()
+                    }
+                    false -> view?.let {
+                        Snackbar.make(it, result.errorCode, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -117,7 +127,7 @@ class DetailsFragment : Fragment() {
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietComment)
             viewModel.addComment(editText.toString())
-            dialog.cancel()
+            dialog.dismiss()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.cancel()
