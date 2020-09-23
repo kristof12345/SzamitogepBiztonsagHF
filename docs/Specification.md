@@ -1,4 +1,4 @@
-# SzamitogepBiztonsagHF
+# Szamitogep Biztonság HF Specifikáció
 ## Követelmények
 ### Funkcionális követelmények
 A projekt célja egy olyan online áruházat elkészítése, amiben egyedi formátumú animált képeket lehet vásárolni. A legfontosabb követelmények és felhasználási szenáriók a kevetkezők:
@@ -66,6 +66,8 @@ Logikai assetek:
 
 A felhasználók több use-case-ben is kapcsolatba lépnek a rendszerrel: képeket böngészhetnek, kommentelhetnek mások képeihez, vásárolhatnak és saját képeket tölthetnek fel az áruházba. Ezen műveletekhez azonban csak regisztráció és bejelentkezés után férhetnek hozzá. Az adminisztrátorok a normál felhasználói jogosultságokon kívül törölhetnek képeket és kommenteket is. Az alkalmazásban nincs lehetőség adminisztrátorként regisztrálni, az adminisztrátorok az adatbázisban előre rögzítettek.
 
+A rendszer komponenseit és azok kapcsolatait az alábbi adatfolyam-diagramm mutatja be:
+
 ![DataFlowDiagram](images/DataFlowDiagram.png)
 
 ### Támadó modell kidolgozása
@@ -79,3 +81,22 @@ Tevékenység letagadása | Egy felhasználó megpróbálja letagadni az általa
 Információ szivárgás | Egy felhasználó megszerzi egy másik felhasználó jelszavát. Egy felhasználó vásárlás nélkül jut hozzá egy képhez. 
 Szolgáltatás megtagadás | Egy felhasználó olyan sok képet akar letölteni, hogy összeomlik a rendszer.
 Jogosultsági szint emelése | Egy normál felhasználó illetéktelenül adminisztrátori jogokhoz jut.
+
+## Architektúra tervek
+### A rendszer architektúrája
+![ArchitectureDiagram](images/ArchitectureDiagram.png)
+
+### A rendszer viselkedése
+A rendszerrel történő legfontosabb interakciókat az alábbi sekvencia-diagrammok ábrázolják:
+
+### Regisztráció
+![RegisterSequenceDiagram](images/RegisterSequenceDiagram.png)
+
+### Kép vásárlása
+![BuyImageSequenceDiagram](images/BuyImageSequenceDiagram.png)
+
+### Komment hozzáadása
+![CommentSequenceDiagram](images/CommentSequenceDiagram.png)
+
+### Kép törlése
+![DeleteImageSequenceDiagram](images/DeleteImageSequenceDiagram.png)
