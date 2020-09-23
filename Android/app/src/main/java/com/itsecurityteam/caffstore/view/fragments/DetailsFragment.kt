@@ -97,6 +97,7 @@ class DetailsFragment : Fragment() {
                     viewModel.buy()
                     dialog.dismiss()
                 }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    btBuy.isEnabled = true
                     dialog.cancel()
                 }
 

@@ -45,4 +45,6 @@
     <string name="confirm_buy">Biztosan megvásárolod ezt a CAFF-ot?</string>
     <string name="invalid_file_type">Érvénytelen fájlformátum</string>
     <string name="bought_success">Caff vásárlása sikeres</string>
+    <string name="permission_title">Tárhely jogok</string>
+    <string name="permission_reason">Az alkalmazásnak szükséges van a tárhelyhez való hozzáférésre, a CAFF fájlok fel és letöltéséhez</string>
 </resources>
