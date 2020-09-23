@@ -35,6 +35,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             // Az eredményt a networkResult.postValue-val lehet jelenteni
             // Paramétere ViewResult(REQ azonosító (company object),sikeres-e, hiba kód, amely egy R.string-re mutat)
             // Fontos, hogy eredményben kell kapni egy UserID-t, az itt be kell állítani
+            // FONTOS A viewModelScope-ban eldobott hibák a UI-ban nem jelennek meg, szóval nem kezelem le őket.
+            // ha hiba van (és nincs lekezelve), akkor azt a networkResult-ban kell jelezni
 
             // TODO: 2 sec-es timeout nem árt bele, mert a UI úgy nem zavaró (meg amúgy is)
             // PL.:
@@ -58,7 +60,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun validateName(name: Editable?) {
         // TODO: név beviteli mező validálása
-        // Amennyiben a bemenet érvénytelen, akkor throw ValidationException(int)
+        // Amennyiben a bemenet érvénytelen, akkor throw AndroidException(int)
         // A fenti konstruktorban az int egy R.string beli elem
     }
 
