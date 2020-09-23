@@ -7,9 +7,12 @@ A projekt célja egy olyan online áruházat elkészítése, amiben egyedi form�
 * A felhasználóknak kell tudni CAFF fájlt feltölteni, letölteni, keresni.
 * A felhasználóknak kell tudni CAFF fájlhoz megjegyzést hozzáfűzni.
 * A felhasználóknak keresés közben meg kell tudni tekinteni a CAFF fájl előnézetét.
+* Az adminisztrátoroknak tudniuk kell kommenteket törölni.
+* Az adminisztrátoroknak tudniuk kell CAFF képeket törölni.
+
 A funkcionális követelményeket az alábbi use-case diagramm foglalja össze:
 
-(ide jön a diagramm)
+[[/docs/images/UseCaseDiagram.png]]
 
 ### Technológiai követelmények
 A szoftverrel szembeni technológiai követelmények a következők:
