@@ -39,4 +39,6 @@
     <string name="download_successfull">Caff letöltése sikeres</string>
     <string name="save_file">Mentés helye</string>
     <string name="open_caff">CAFF fájl megnyitása</string>
+    <string name="free_only">Ingyenes</string>
+    <string name="already_bought">Megvásárolt</string>
 </resources>

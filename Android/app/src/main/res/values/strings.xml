@@ -43,4 +43,6 @@
     <string name="download_successfull">Caff download successful</string>
     <string name="open_caff">Open CAFF file</string>
     <string name="save_file">Save location</string>
+    <string name="free_only">Free</string>
+    <string name="already_bought">Bought</string>
 </resources>

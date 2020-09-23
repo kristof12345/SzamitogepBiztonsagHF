@@ -79,6 +79,7 @@ class SearchDialog : DialogFragment() {
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 setFilter()
                 setOrder()
+                setCheckboxes()
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -101,6 +102,9 @@ class SearchDialog : DialogFragment() {
             OrderDirection.Ascending -> R.id.rbAscend
             OrderDirection.Descending -> R.id.rbDescend
         })
+
+        cbBought.isChecked = viewModel.bought
+        cbFree.isChecked = viewModel.free
     }
 
     private fun setFilter() {
@@ -125,5 +129,9 @@ class SearchDialog : DialogFragment() {
         }
 
         viewModel.setOrdering(orderBy, orderDir)
+    }
+
+    private fun setCheckboxes() {
+        viewModel.setCheckbox(cbFree.isChecked, cbBought.isChecked)
     }
 }

@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/tilSearchTitle"
+            app:layout_constraintTop_toBottomOf="@+id/cbFree"
             tools:layout_editor_absoluteX="0dp"
             tools:visibility="visible">
 
@@ -172,7 +172,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="btLess, btMore, tvFilter" />
+            app:constraint_referenced_ids="btLess, btMore, tvFilter"
+            tools:layout_editor_absoluteY="55dp" />
+
+        <CheckBox
+            android:id="@+id/cbFree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/free_only"
+            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/tilSearchTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tilSearchTitle" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <CheckBox
+            android:id="@+id/cbBought"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/already_bought"
+            app:layout_constraintBottom_toBottomOf="@+id/cbFree"
+            app:layout_constraintEnd_toEndOf="@+id/tilSearchTitle"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toTopOf="@+id/cbFree" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

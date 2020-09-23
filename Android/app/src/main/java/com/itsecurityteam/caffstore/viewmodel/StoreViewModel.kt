@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.time.LocalDateTime
+import kotlin.math.max
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -53,6 +54,12 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         private set
 
     var orderDir: OrderDirection = OrderDirection.Descending
+        private set
+
+    var bought: Boolean = false
+        private set
+
+    var free: Boolean = false
         private set
 
     fun signIn(userID: Long) {
@@ -121,10 +128,12 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         val caffsList = mutableListOf<Caff>()
         for (i in 0..5) {
             val image = loadImage(urls[i])
+            val cost = max(0.0, Random.nextDouble() * 5.0)
+
             caffsList.add(
                 Caff(
                     i.toLong(), titles[i], LocalDateTime.now(), creators[i],
-                    Random.nextInt(500, 3000), image
+                    Random.nextInt(500, 3000), image, cost, Random.nextBoolean()
                 )
             )
         }
@@ -230,5 +239,10 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun setFilter(name: String, creator: String) {
         this.filter.title = name
         this.filter.creator = creator
+    }
+
+    fun setCheckbox(free: Boolean, bought: Boolean) {
+        this.free = free
+        this.bought = bought
     }
 }
