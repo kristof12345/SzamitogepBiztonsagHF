@@ -75,10 +75,10 @@ A lehetséges veszélyforrások rendszerezéséhez a STRIDE keretrendszert haszn
 
 Veszélyforrás | Példa 
 ------------ | -------------
-Megszemélyesítés | Egy felhasználó valaki más által megvásárolt képet akar letölteni.
+Megszemélyesítés | Egy felhasználó valaki más nevében akar kommentet közzétenni.
 Hamisítás | Valaki jogtalanul módosítja egy másik felhasználó CAFF képét.
 Tevékenység letagadása | Egy felhasználó megpróbálja letagadni az általa írt kommentet. 
-Információ szivárgás | Egy felhasználó megszerzi egy másik felhasználó jelszavát. Egy felhasználó vásárlás nélkül jut hozzá egy képhez. 
+Információ szivárgás | Egy felhasználó megszerzi egy másik felhasználó jelszavát. Egy felhasználó bejelentkezés nélkül jut hozzá egy képhez. 
 Szolgáltatás megtagadás | Egy felhasználó olyan sok képet akar letölteni, hogy összeomlik a rendszer.
 Jogosultsági szint emelése | Egy normál felhasználó illetéktelenül adminisztrátori jogokhoz jut.
 

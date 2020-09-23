@@ -431,7 +431,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 432.72998046875,
+											"left": 431.99365234375,
 											"top": 157,
 											"width": 1,
 											"height": 13
@@ -445,7 +445,7 @@
 											"font": "Arial;13;1",
 											"left": 413,
 											"top": 157,
-											"width": 14.72998046875,
+											"width": 13.99365234375,
 											"height": 13,
 											"text": "alt"
 										},
@@ -478,7 +478,7 @@
 															"font": "Arial;13;0",
 															"left": 428,
 															"top": 190,
-															"width": 119.9580078125,
+															"width": 108.6337890625,
 															"height": 13,
 															"text": "[username available]"
 														}
@@ -511,7 +511,7 @@
 															"font": "Arial;13;0",
 															"left": 428,
 															"top": 344,
-															"width": 146.6943359375,
+															"width": 131.37109375,
 															"height": 13,
 															"text": "[username already taken]"
 														}
@@ -1235,9 +1235,9 @@
 												"$ref": "AAAAAAF0mtlGsXBdS5c="
 											},
 											"font": "Arial;13;0",
-											"left": 238.97900390625,
+											"left": 234.58642578125,
 											"top": 13,
-											"width": 96.3671875,
+											"width": 88.0009765625,
 											"height": 13,
 											"text": "User registration"
 										},
@@ -1250,7 +1250,7 @@
 											"font": "Arial;13;1",
 											"left": 173,
 											"top": 13,
-											"width": 60.97900390625,
+											"width": 56.58642578125,
 											"height": 13,
 											"text": "interaction"
 										}
@@ -1528,9 +1528,9 @@
 												"$ref": "AAAAAAF0mupAsXG687Q="
 											},
 											"font": "Arial;13;0",
-											"left": 190.97900390625,
+											"left": 186.58642578125,
 											"top": 10,
-											"width": 80.49169921875,
+											"width": 73.20458984375,
 											"height": 13,
 											"text": "Buy an image"
 										},
@@ -1543,7 +1543,7 @@
 											"font": "Arial;13;1",
 											"left": 125,
 											"top": 10,
-											"width": 60.97900390625,
+											"width": 56.58642578125,
 											"height": 13,
 											"text": "interaction"
 										}
@@ -3953,9 +3953,9 @@
 												"$ref": "AAAAAAF0mvS1o3Oh3zY="
 											},
 											"font": "Arial;13;0",
-											"left": 278.97900390625,
+											"left": 274.58642578125,
 											"top": 5,
-											"width": 57.34814453125,
+											"width": 52.2763671875,
 											"height": 13,
 											"text": "Comment"
 										},
@@ -3968,7 +3968,7 @@
 											"font": "Arial;13;1",
 											"left": 213,
 											"top": 5,
-											"width": 60.97900390625,
+											"width": 56.58642578125,
 											"height": 13,
 											"text": "interaction"
 										}
@@ -7978,7 +7978,8 @@
 					"_parent": {
 						"$ref": "AAAAAAF0uiZndwDMdfw="
 					},
-					"name": "Role1"
+					"name": "Role1",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
@@ -7986,7 +7987,8 @@
 					"_parent": {
 						"$ref": "AAAAAAF0uiZndwDMdfw="
 					},
-					"name": "Role2"
+					"name": "Role2",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
@@ -7994,7 +7996,8 @@
 					"_parent": {
 						"$ref": "AAAAAAF0uiZndwDMdfw="
 					},
-					"name": "Role3"
+					"name": "Role3",
+					"type": ""
 				}
 			]
 		}
