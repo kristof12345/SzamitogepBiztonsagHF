@@ -12,7 +12,7 @@ A projekt célja egy olyan online áruházat elkészítése, amiben egyedi form�
 
 A funkcionális követelményeket az alábbi use-case diagramm foglalja össze:
 
-![UseCaseDiagram](docs/images/UseCaseDiagram.png)
+![UseCaseDiagram](images/UseCaseDiagram.png)
 
 ### Technológiai követelmények
 A szoftverrel szembeni technológiai követelmények a következők:
