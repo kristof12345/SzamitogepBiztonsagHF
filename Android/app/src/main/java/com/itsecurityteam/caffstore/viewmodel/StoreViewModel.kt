@@ -29,6 +29,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val UPLOAD_REQUEST = 1003
         const val DOWNLOAD_REQUEST = 1004
         const val ADD_COMMENT_REQUEST = 1005
+        const val BUY_REQUEST = 1008
     }
 
     private val caffs = MutableLiveData<List<Caff>>()
@@ -150,13 +151,10 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deselect() {
-        selectedCaff.postValue(null)
-        comments.postValue(emptyList())
-    }
-
     fun select(caff: Caff) {
         selectedCaff.value = caff
+        comments.postValue(emptyList())
+
         viewModelScope.launch {
             val list = mutableListOf<Comment>()
 
@@ -196,6 +194,23 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         result.postValue(null)
     }
 
+    fun buy() {
+        viewModelScope.launch {
+            // TODO: Termék megvásárlásának beállítása
+            //  Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
+            // Ua, mint a LoginViewModel-ben a login/register
+
+            delay(2000)
+
+            val selected = selectedCaff.value
+            selected?.let {
+                it.bought = true
+                selectedCaff.postValue(it)
+                result.postValue(ViewResult(BUY_REQUEST, true))
+            }
+        }
+    }
+
     fun addComment(text: String) {
         viewModelScope.launch {
             // TODO: Komment hozzáadásanak megvalósítása
@@ -205,7 +220,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun uploadCaff(name: String, uri: Uri) {
+    fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch {
             // TODO: Upload megvalósítása
             // Ua, mint a LoginViewModel-ben a login/register
@@ -234,15 +249,21 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun setOrdering(orderBy: OrderBy, orderDir: OrderDirection) {
         this.orderDir = orderDir
         this.orderBy = orderBy
+
+        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
     }
 
     fun setFilter(name: String, creator: String) {
         this.filter.title = name
         this.filter.creator = creator
+
+        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
     }
 
     fun setCheckbox(free: Boolean, bought: Boolean) {
         this.free = free
         this.bought = bought
+
+        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
     }
 }

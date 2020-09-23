@@ -1,15 +1,13 @@
 package com.itsecurityteam.caffstore.view.fragments
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.DocumentsContract
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -17,19 +15,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.itsecurityteam.caffstore.R
+import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.Caff
 import com.itsecurityteam.caffstore.view.adapters.CommentAdapter
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_details.*
-import org.w3c.dom.DocumentType
+import java.io.File
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import javax.xml.parsers.DocumentBuilder
 
 
 class DetailsFragment : Fragment() {
-    companion object{
+    companion object {
         const val SAVE_FILE_INTENT = 1007
     }
 
@@ -55,21 +53,55 @@ class DetailsFragment : Fragment() {
         }
 
         btDownload.setOnClickListener {
-            val saveFileIntent = Intent()
-            saveFileIntent.type = "application/caff"
-            saveFileIntent.action = Intent.ACTION_CREATE_DOCUMENT
-            saveFileIntent.putExtra(Intent.EXTRA_TITLE, "untitled.caff")
+            try {
+                var selected = (viewModel.SelectedCaff.value?.name ?: "untitled")
+                selected = selected.replace(" ", "_").replace("/", "")
+                    .replace("\\", "")
 
-            startActivityForResult(
-                Intent.createChooser(
-                    saveFileIntent,
-                    getString(R.string.save_file)
-                ), SAVE_FILE_INTENT
-            )
+                val uri =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+
+                var i = 1
+                var append = ""
+                while (true) {
+                    val file = File(uri, "$selected$append.caff")
+                    if (file.exists()) {
+                        append = "_$i"
+                        i++
+                        continue
+                    }
+
+                    file.createNewFile()
+                    viewModel.downloadCaff(file.toUri())
+                    break
+                }
+            } catch (exception: AndroidException) {
+                view.let { w ->
+                    Snackbar.make(w, exception.stringCode, Snackbar.LENGTH_SHORT).show()
+                }
+            } catch (exception: Exception) {
+                view.let { w ->
+                    Snackbar.make(w, exception.toString(), Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
 
         btAddComment.setOnClickListener {
             inputComment()
+        }
+
+        btBuy.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.confirm).setMessage(R.string.confirm_buy)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    viewModel.buy()
+                    dialog.dismiss()
+                }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    dialog.cancel()
+                }
+
+            btBuy.isEnabled = false
+            builder.show()
         }
     }
 
@@ -83,25 +115,23 @@ class DetailsFragment : Fragment() {
             tvNoComment.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        viewModel.Result.observe(viewLifecycleOwner) { result ->
-            if (result?.resultCode == StoreViewModel.ADD_COMMENT_REQUEST) {
+        viewModel.Result.observe(viewLifecycleOwner) { res ->
+            res?.let { result ->
                 viewModel.resultProcessed()
-                when (result.success) {
-                    true -> view?.let {
-                        Snackbar.make(it, R.string.comment_added, Snackbar.LENGTH_SHORT).show()
-                    }
-                    false -> view?.let {
-                        Snackbar.make(it, result.errorCode, Snackbar.LENGTH_SHORT).show()
-                    }
+
+                val text = when (result.resultCode) {
+                    StoreViewModel.DOWNLOAD_REQUEST -> R.string.download_successfull
+                    StoreViewModel.ADD_COMMENT_REQUEST -> R.string.comment_added
+                    StoreViewModel.BUY_REQUEST -> R.string.bought_success
+                    else -> throw Exception("Option not available")
                 }
-            } else if (result?.resultCode == StoreViewModel.DOWNLOAD_REQUEST) {
-                viewModel.resultProcessed()
+
                 when (result.success) {
                     true -> view?.let {
-                        Snackbar.make(it, R.string.download_successfull, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(it, text, Snackbar.LENGTH_SHORT).show()
                     }
                     false -> view?.let {
-                        Snackbar.make(it, result.errorCode, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(it, result.errorStringCode, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -136,6 +166,16 @@ class DetailsFragment : Fragment() {
 
             tvLength.text = getString(R.string.length_value, mins, secs, ms)
             tvtDetailsTitle.text = it.name
+
+            btBuy.text = getString(R.string.buy, it.cost)
+
+            if (it.bought) {
+                btBuy.visibility = View.GONE
+                btDownload.visibility = View.VISIBLE
+            } else {
+                btBuy.visibility = View.VISIBLE
+                btDownload.visibility = View.GONE
+            }
         }
     }
 
@@ -154,19 +194,5 @@ class DetailsFragment : Fragment() {
         }
 
         builder.show()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.deselect()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SAVE_FILE_INTENT && resultCode == Activity.RESULT_OK) {
-            data?.data?.let {
-                viewModel.downloadCaff(it)
-            }
-        }
     }
 }

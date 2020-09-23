@@ -43,7 +43,7 @@
             android:id="@+id/clDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/cbFree"
             tools:layout_editor_absoluteX="0dp"

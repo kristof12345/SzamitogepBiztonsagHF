@@ -11,6 +11,6 @@ data class Caff(
     val length: Int,
     val thumbnail: Bitmap,
     val cost: Double,
-    val bought: Boolean,
+    var bought: Boolean,
     var image: Bitmap? = null
 )

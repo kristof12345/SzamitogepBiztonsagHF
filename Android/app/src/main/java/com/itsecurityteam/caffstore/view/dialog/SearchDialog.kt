@@ -1,13 +1,10 @@
 package com.itsecurityteam.caffstore.view.dialog
 
 import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.model.filter.OrderBy
 import com.itsecurityteam.caffstore.model.filter.OrderDirection
-import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
-import kotlinx.android.synthetic.main.dialog_search.*
 
 
 class SearchDialog : DialogFragment() {
@@ -35,6 +30,9 @@ class SearchDialog : DialogFragment() {
     lateinit var tilCreator: TextInputLayout
 
     lateinit var clMore: ConstraintLayout
+
+    lateinit var cbBought: CheckBox
+    lateinit var cbFree: CheckBox
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
@@ -61,7 +59,8 @@ class SearchDialog : DialogFragment() {
         tilTitle = view.findViewById(R.id.tilSearchTitle)
         tilCreator = view.findViewById(R.id.tilSearchCreator)
         clMore = view.findViewById(R.id.clDetails)
-
+        cbBought = view.findViewById(R.id.cbBought)
+        cbFree = view.findViewById(R.id.cbFree)
 
         btMore.setOnClickListener {
             btMore.visibility = View.GONE

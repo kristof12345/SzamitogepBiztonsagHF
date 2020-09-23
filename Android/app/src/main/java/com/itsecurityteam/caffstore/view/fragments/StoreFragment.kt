@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.itsecurityteam.caffstore.R
+import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.view.adapters.CaffsAdapter
 import com.itsecurityteam.caffstore.view.dialog.SearchDialog
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_store.*
+import java.lang.Exception
+import java.util.*
 
 class StoreFragment : Fragment() {
     companion object {
@@ -52,7 +55,7 @@ class StoreFragment : Fragment() {
 
         ibUpload.setOnClickListener {
             val openFileIntent = Intent()
-            openFileIntent.type = "application/caff"
+            openFileIntent.type = "*/*"
             openFileIntent.action = Intent.ACTION_OPEN_DOCUMENT
 
             startActivityForResult(
@@ -77,7 +80,7 @@ class StoreFragment : Fragment() {
                         Snackbar.make(it, R.string.upload_success, Snackbar.LENGTH_SHORT).show()
                     }
                     false -> view.let {
-                        Snackbar.make(it, result.errorCode, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(it, result.errorStringCode, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -116,7 +119,9 @@ class StoreFragment : Fragment() {
 
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietName)
-            viewModel.uploadCaff(editText.text.toString(), uri)
+            val price = dialog.findViewById<TextInputEditText>(R.id.tietPrice)
+
+            viewModel.uploadCaff(editText.text.toString(), price.text.toString().toDouble(), uri)
             dialog.dismiss()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -131,7 +136,21 @@ class StoreFragment : Fragment() {
 
         if (requestCode == FILE_OPEN_INTENT && resultCode == RESULT_OK) {
             data?.data?.let {
-                inputName(it)
+                try {
+                    if (it.encodedPath?.split(".")?.last()?.toLowerCase(Locale.ROOT) == "caff") {
+                        inputName(it)
+                    } else {
+                        throw AndroidException(R.string.invalid_file_type)
+                    }
+                } catch (exception: AndroidException) {
+                    view?.let { w ->
+                        Snackbar.make(w, exception.stringCode, Snackbar.LENGTH_SHORT).show()
+                    }
+                } catch (exception: Exception) {
+                    view?.let { w ->
+                        Snackbar.make(w, exception.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }

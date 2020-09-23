@@ -12,7 +12,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
-import com.itsecurityteam.caffstore.exceptions.ValidationException
+import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
@@ -78,7 +78,7 @@ class LoginFragment : Fragment() {
                 }
                 false -> {
                     tvLoginError?.let {
-                        it.text = getString(result.errorCode)
+                        it.text = getString(result.errorStringCode)
                         it.visibility = View.VISIBLE
                     }
 
@@ -96,11 +96,11 @@ class LoginFragment : Fragment() {
         val text = editText.text ?: return false
 
         try {
-            if (text.isEmpty()) throw ValidationException(R.string.error_empty_input)
+            if (text.isEmpty()) throw AndroidException(R.string.error_empty_input)
 
             validator(text)
             layout.error = null
-        } catch (exception: ValidationException) {
+        } catch (exception: AndroidException) {
             layout.error = getString(exception.stringCode)
             return false
         } catch (exception: Exception) {

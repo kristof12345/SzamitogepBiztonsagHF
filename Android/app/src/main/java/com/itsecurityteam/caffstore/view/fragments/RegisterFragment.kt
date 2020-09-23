@@ -1,6 +1,5 @@
 package com.itsecurityteam.caffstore.view.fragments
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -14,10 +13,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.itsecurityteam.caffstore.R
-import com.itsecurityteam.caffstore.exceptions.ValidationException
+import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.viewmodel.LoginViewModel
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : Fragment() {
@@ -65,7 +63,7 @@ class RegisterFragment : Fragment() {
                 }
                 false -> {
                     tvRegError?.let {
-                        it.text = getString(result.errorCode)
+                        it.text = getString(result.errorStringCode)
                         it.visibility = View.VISIBLE
                     }
                 }
@@ -80,7 +78,7 @@ class RegisterFragment : Fragment() {
             val pass = tilRegPassword.editText!!.text!!.toString()
             val confirm = it!!.toString()
 
-            if (pass != confirm) throw ValidationException(R.string.app_name)
+            if (pass != confirm) throw AndroidException(R.string.app_name)
         }
         ok = ok && validateField(tilRegEmail) { viewModel.validateEmail(it) }
 
@@ -106,11 +104,11 @@ class RegisterFragment : Fragment() {
         val text = editText.text ?: return false
 
         try {
-            if (text.isEmpty()) throw ValidationException(R.string.error_empty_input)
+            if (text.isEmpty()) throw AndroidException(R.string.error_empty_input)
 
             validator(text)
             layout.error = null
-        } catch (exception: ValidationException) {
+        } catch (exception: AndroidException) {
             layout.error = getString(exception.stringCode)
             return false
         } catch (exception: Exception) {

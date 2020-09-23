@@ -45,4 +45,8 @@
     <string name="save_file">Save location</string>
     <string name="free_only">Free</string>
     <string name="already_bought">Bought</string>
+    <string name="buy">Buy (%1$.2f €)</string>
+    <string name="confirm_buy">\"Are you sure to buy this CAFF?</string>
+    <string name="bought_success">CAFF brought successful</string>
+    <string name="invalid_file_type">Invalid type of file</string>
 </resources>

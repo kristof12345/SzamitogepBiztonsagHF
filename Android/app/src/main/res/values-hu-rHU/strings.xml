@@ -41,4 +41,8 @@
     <string name="open_caff">CAFF fájl megnyitása</string>
     <string name="free_only">Ingyenes</string>
     <string name="already_bought">Megvásárolt</string>
+    <string name="buy">Vásárlás (%1$.2f €)</string>
+    <string name="confirm_buy">Biztosan megvásárolod ezt a CAFF-ot?</string>
+    <string name="invalid_file_type">Érvénytelen fájlformátum</string>
+    <string name="bought_success">Caff vásárlása sikeres</string>
 </resources>
