@@ -43,7 +43,6 @@
         android:clickable="true"
         android:contentDescription="@string/upload"
         android:src="@drawable/ic_baseline_cloud_upload_24"
-        android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/ibSearch"
         app:layout_constraintTop_toTopOf="@+id/ibSearch" />
 
@@ -56,7 +55,6 @@
         android:clickable="true"
         android:contentDescription="@string/search"
         android:src="@drawable/ic_baseline_search_24"
-        android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/ibSignOut"
         app:layout_constraintTop_toTopOf="@+id/ibSignOut" />
 
