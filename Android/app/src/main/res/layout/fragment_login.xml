@@ -7,7 +7,6 @@
     tools:context=".view.fragments.LoginFragment">
 
     <TextView
-        android:id="@+id/tvLoginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login"
@@ -35,7 +34,9 @@
             android:id="@+id/tietLoginName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user_name" />
+            android:hint="@string/user_name"
+            android:inputType="text"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -64,7 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType="textPassword|textWebPassword" />
+            android:inputType="textPassword|textWebPassword"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

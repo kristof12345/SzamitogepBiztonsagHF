@@ -1,7 +1,6 @@
 package com.itsecurityteam.caffstore.view
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog

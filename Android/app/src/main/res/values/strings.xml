@@ -42,7 +42,6 @@
     <string name="upload_success">Caff upload successful</string>
     <string name="download_successfull">Caff download successful</string>
     <string name="open_caff">Open CAFF file</string>
-    <string name="save_file">Save location</string>
     <string name="free_only">Free</string>
     <string name="already_bought">Bought</string>
     <string name="buy">Buy (%1$.2f €)</string>
@@ -51,4 +50,8 @@
     <string name="invalid_file_type">Invalid type of file</string>
     <string name="permission_title">Storage permission</string>
     <string name="permission_reason" >This application requires storage permission for the download/upload of the CAFF files</string>
+    <string name="price">Price</string>
+    <string name="reg_success">Registration successful</string>
+    <string name="back">Back</string>
+    <string name="image">Image</string>
 </resources>

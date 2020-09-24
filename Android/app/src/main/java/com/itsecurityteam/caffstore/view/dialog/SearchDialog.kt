@@ -1,5 +1,6 @@
 package com.itsecurityteam.caffstore.view.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
@@ -18,22 +19,23 @@ import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 
 
 class SearchDialog : DialogFragment() {
-    lateinit var viewModel: StoreViewModel
+    private lateinit var viewModel: StoreViewModel
 
-    lateinit var btMore: Button
-    lateinit var btLess: Button
+    private lateinit var btMore: Button
+    private lateinit var btLess: Button
 
-    lateinit var rgType: RadioGroup
-    lateinit var rgOrder: RadioGroup
+    private lateinit var rgType: RadioGroup
+    private lateinit var rgOrder: RadioGroup
 
-    lateinit var tilTitle: TextInputLayout
-    lateinit var tilCreator: TextInputLayout
+    private lateinit var tilTitle: TextInputLayout
+    private lateinit var tilCreator: TextInputLayout
 
-    lateinit var clMore: ConstraintLayout
+    private lateinit var clMore: ConstraintLayout
 
-    lateinit var cbBought: CheckBox
-    lateinit var cbFree: CheckBox
+    private lateinit var cbBought: CheckBox
+    private lateinit var cbFree: CheckBox
 
+    @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflate = requireActivity().layoutInflater

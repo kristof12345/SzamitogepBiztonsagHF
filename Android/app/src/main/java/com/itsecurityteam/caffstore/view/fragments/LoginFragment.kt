@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 
 
 class LoginFragment : Fragment() {
-    lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +46,7 @@ class LoginFragment : Fragment() {
             login()
         }
 
-        viewModel.NetworkResult.observe(viewLifecycleOwner) { result -> handleLoginRequest(result) }
+        viewModel.networkResultProp.observe(viewLifecycleOwner) { result -> handleLoginRequest(result) }
     }
 
     private fun login() {
@@ -71,8 +71,8 @@ class LoginFragment : Fragment() {
             when (result.success) {
                 true -> {
                     val vm = ViewModelProvider(requireActivity())[StoreViewModel::class.java]
-                    vm.signIn(viewModel.UserId)
-                    viewModel.UserId = -1
+                    vm.signIn(viewModel.userId)
+                    viewModel.userId = -1
 
                     NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
                 }

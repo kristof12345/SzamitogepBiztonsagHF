@@ -71,7 +71,7 @@ class StoreFragment : Fragment() {
             dialog.show(activity?.supportFragmentManager!!, "")
         }
 
-        viewModel.Result.observe(viewLifecycleOwner) { result ->
+        viewModel.resultProp.observe(viewLifecycleOwner) { result ->
             if (result?.resultCode == StoreViewModel.UPLOAD_REQUEST) {
                 viewModel.resultProcessed()
 
@@ -96,8 +96,8 @@ class StoreFragment : Fragment() {
 
         val adapter = CaffsAdapter()
 
-        viewModel.Caffs.observe(viewLifecycleOwner) {
-            adapter.Caffs = it
+        viewModel.caffsProp.observe(viewLifecycleOwner) {
+            adapter.caffProp = it
             tvResults.text = if (it.isNotEmpty()) getString(
                 R.string.results,
                 it.size

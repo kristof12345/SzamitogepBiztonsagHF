@@ -32,14 +32,10 @@ import java.time.format.FormatStyle
 
 
 class DetailsFragment : Fragment() {
-    companion object {
-        const val SAVE_FILE_INTENT = 1007
-    }
+    private lateinit var viewModel: StoreViewModel
+    private var dialog: Dialog? = null
 
-    lateinit var viewModel: StoreViewModel
-    var dialog: Dialog? = null
-
-    var bitmapAvailable: Boolean = false
+    private var bitmapAvailable: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,13 +56,13 @@ class DetailsFragment : Fragment() {
             if (showDialog()) return@setOnClickListener
         }
 
-        viewModel.SelectedCaff.observe(viewLifecycleOwner) {
+        viewModel.selectedCaffProp.observe(viewLifecycleOwner) {
             setView(it)
         }
 
         btDownload.setOnClickListener {
             try {
-                var selected = (viewModel.SelectedCaff.value?.name ?: "untitled")
+                var selected = (viewModel.selectedCaffProp.value?.name ?: "untitled")
                 selected = selected.replace(" ", "_").replace("/", "")
                     .replace("\\", "")
 
@@ -128,7 +124,7 @@ class DetailsFragment : Fragment() {
             val image = dialogTmp.findViewById<ImageView>(R.id.ivDialogImage)
             val close = dialogTmp.findViewById<ImageButton>(R.id.ibDialogClose)
 
-            image.setImageBitmap(viewModel.SelectedCaff.value?.image)
+            image.setImageBitmap(viewModel.selectedCaffProp.value?.image)
             close.setOnClickListener {
                 dialogTmp.cancel()
             }
@@ -159,12 +155,12 @@ class DetailsFragment : Fragment() {
         val adapter = CommentAdapter()
         rvComments.adapter = adapter
 
-        viewModel.Comments.observe(viewLifecycleOwner) {
-            adapter.Comments = it
+        viewModel.commentsProp.observe(viewLifecycleOwner) {
+            adapter.commentsProp = it
             tvNoComment.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        viewModel.Result.observe(viewLifecycleOwner) { res ->
+        viewModel.resultProp.observe(viewLifecycleOwner) { res ->
             res?.let { result ->
                 viewModel.resultProcessed()
 

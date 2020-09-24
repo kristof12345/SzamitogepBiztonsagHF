@@ -40,7 +40,7 @@ class CaffsAdapter: RecyclerView.Adapter<CaffsAdapter.CaffViewHolder>() {
     private var listener: ((Caff) -> Unit)? = null
 
     private var caffs = emptyList<Caff>()
-    var Caffs: List<Caff>
+    var caffProp: List<Caff>
         get() = caffs
         set(value) {
             caffs = value

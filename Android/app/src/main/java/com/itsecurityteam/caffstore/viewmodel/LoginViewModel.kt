@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.model.ViewResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,10 +16,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         const val REGISTER_REQUEST = 1002
     }
 
-    var UserId: Long = -1
+    var userId: Long = -1
 
     private val networkResult = MutableLiveData<ViewResult?>()
-    val NetworkResult: LiveData<ViewResult?>
+    val networkResultProp: LiveData<ViewResult?>
             get() = networkResult
 
     fun resultProcessed() {
@@ -42,7 +41,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             // PL.:
             delay(500)
             //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
-            UserId = 15
+            userId = 15
             networkResult.postValue(ViewResult(LOGIN_REQUEST,true))
         }
     }

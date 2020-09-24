@@ -42,7 +42,7 @@ class RegisterFragment : Fragment() {
             register()
         }
 
-        viewModel.NetworkResult.observe(viewLifecycleOwner) { result ->
+        viewModel.networkResultProp.observe(viewLifecycleOwner) { result ->
             handleRegistration(result)
         }
     }
@@ -56,8 +56,8 @@ class RegisterFragment : Fragment() {
             when (result.success) {
                 true -> view?.let {
                     Snackbar
-                        .make(it, "Registration successfull", Snackbar.LENGTH_LONG)
-                        .setAction("Vissza") {
+                        .make(it, getString(R.string.reg_success), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.back)) {
                             btToLogin.performClick()
                         }.show()
                 }

@@ -30,7 +30,7 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
     }
 
     private var comments = emptyList<Comment>()
-    var Comments: List<Comment>
+    var commentsProp: List<Comment>
         get() = comments
         set(value) {
             comments = value
@@ -42,10 +42,10 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.bind(Comments[position])
+        holder.bind(commentsProp[position])
     }
 
     override fun getItemCount(): Int {
-        return Comments.size
+        return commentsProp.size
     }
 }

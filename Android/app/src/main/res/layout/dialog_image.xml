@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4D000000"
-    android:backgroundTint="#4D000000">
+    android:background="#4D000000">
 
     <ImageView
         android:id="@+id/ivDialogImage"
         android:layout_width="0dp"
+        android:contentDescription="@string/image"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
@@ -24,6 +24,7 @@
         style="@android:style/Widget.Material.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/back"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="#0F000000"

@@ -33,19 +33,19 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val caffs = MutableLiveData<List<Caff>>()
-    val Caffs: LiveData<List<Caff>>
+    val caffsProp: LiveData<List<Caff>>
         get() = caffs
 
     private val selectedCaff = MutableLiveData<Caff?>()
-    val SelectedCaff: LiveData<Caff?>
+    val selectedCaffProp: LiveData<Caff?>
         get() = selectedCaff
 
     private val comments = MutableLiveData<List<Comment>>()
-    val Comments: LiveData<List<Comment>>
+    val commentsProp: LiveData<List<Comment>>
         get() = comments
 
     private val result = MutableLiveData<ViewResult?>()
-    val Result: LiveData<ViewResult?>
+    val resultProp: LiveData<ViewResult?>
         get() = result
 
     private var userID: Long = -1
@@ -129,7 +129,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         )
 
         val caffsList = mutableListOf<Caff>()
-        for (i in urls.indices) {
+        for (i in 2..2) {
             val image = loadImage(urls[i])
             val cost = max(0.0, Random.nextDouble() * 5.0)
 
