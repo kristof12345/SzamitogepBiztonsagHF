@@ -1,12 +1,17 @@
 package com.itsecurityteam.caffstore.view.fragments
 
 import android.app.AlertDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +37,9 @@ class DetailsFragment : Fragment() {
     }
 
     lateinit var viewModel: StoreViewModel
+    var dialog: Dialog? = null
+
+    var bitmapAvailable: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +55,10 @@ class DetailsFragment : Fragment() {
 
 
         addCommentsView()
+
+        ivDetailsImage.setOnClickListener {
+            if (showDialog()) return@setOnClickListener
+        }
 
         viewModel.SelectedCaff.observe(viewLifecycleOwner) {
             setView(it)
@@ -106,6 +118,42 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    private fun showDialog(): Boolean {
+        if (!bitmapAvailable) return true
+        context?.let { it1 ->
+            val dialogTmp = Dialog(it1, R.style.AppTheme)
+            dialogTmp.window?.setBackgroundDrawable(ColorDrawable(Color.argb(0.8f, 0f, 0f, 0f)))
+            dialogTmp.setContentView(R.layout.dialog_image)
+
+            val image = dialogTmp.findViewById<ImageView>(R.id.ivDialogImage)
+            val close = dialogTmp.findViewById<ImageButton>(R.id.ibDialogClose)
+
+            image.setImageBitmap(viewModel.SelectedCaff.value?.image)
+            close.setOnClickListener {
+                dialogTmp.cancel()
+            }
+
+            dialogTmp.setOnDismissListener {
+                Log.d("Dialog", "Dismissed")
+            }
+
+            dialogTmp.setOnCancelListener {
+                viewModel.modalPressed = false
+                Log.d("Dialog", "Cancelled")
+            }
+
+            dialog = dialogTmp
+            viewModel.modalPressed = true
+            dialogTmp.show()
+        }
+        return false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dialog?.dismiss()
+    }
+
     private fun addCommentsView() {
         rvComments.layoutManager = GridLayoutManager(context, 1)
         val adapter = CommentAdapter()
@@ -151,6 +199,7 @@ class DetailsFragment : Fragment() {
                 ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
                 ivDetailsImage.visibility = View.VISIBLE
                 Log.d("Image visibility", "Visible")
+                bitmapAvailable = true
             }
 
             tvDetailsCreator.text = it.creator
@@ -177,6 +226,8 @@ class DetailsFragment : Fragment() {
                 btBuy.visibility = View.VISIBLE
                 btDownload.visibility = View.GONE
             }
+
+            if (viewModel.modalPressed) ivDetailsImage.performClick()
         }
     }
 

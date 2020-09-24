@@ -25,7 +25,7 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
-    companion object{
+    companion object {
         const val UPLOAD_REQUEST = 1003
         const val DOWNLOAD_REQUEST = 1004
         const val ADD_COMMENT_REQUEST = 1005
@@ -67,6 +67,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         this.userID = userID
         loadDatabase()
     }
+
+    var modalPressed = false
 
     fun sigOut() {
         caffs.postValue(emptyList())
@@ -127,7 +129,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         )
 
         val caffsList = mutableListOf<Caff>()
-        for (i in 0..5) {
+        for (i in urls.indices) {
             val image = loadImage(urls[i])
             val cost = max(0.0, Random.nextDouble() * 5.0)
 
