@@ -46,7 +46,7 @@
     <string name="bought_success">Caff vásárlása sikeres</string>
     <string name="permission_title">Tárhely jogok</string>
     <string name="permission_reason">Az alkalmazásnak szükséges van a tárhelyhez való hozzáférésre, a CAFF fájlok fel és letöltéséhez</string>
-    <string name="price">Ár</string>
+    <string name="price">Ár (€)</string>
     <string name="back">Vissza</string>
     <string name="reg_success">Regisztráció sikeres</string>
     <string name="image">Kép</string>
