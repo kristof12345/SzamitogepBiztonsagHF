@@ -10,6 +10,5 @@ namespace CaffStoreServer.WebApi.Controllers
         {
             
         }
-
     }
 }
