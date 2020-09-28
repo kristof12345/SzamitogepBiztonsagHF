@@ -23,7 +23,7 @@ A szoftverrel szembeni technológiai követelmények a következők:
 ### Biztonsági követelmények és célok
 Mivel a kliensektől és a hálózaton érkező esettleges egyéb kéréseket nem tudjuk kontrollálni, ezért a velük történő interakció bizalmi kérdéseket vet fel. A regisztrációhoz és bejelentkezéshez felhasználói adatok tárolására van szükség, amelyek bizalmas információnak számítanak. Az alkalmazásba feltöltött CAFF képek értéket képviselnek, így megfelelő védelmükről gondoskodni kell. A képekhez fűzött kommentek személyes adatokat tartalmazhatnak, melyeket csak a bejelentkezett felhasználók láthatnak, így ezek hozzáférésvédelméről is gondoskodni kell. A Caff Store és környezetének kapcsolatát az alábbi ábra mutatja be:
 
-![CaffStoreConnections](images/CaffStoreConnections.png)
+![CaffStoreConnections](images/StoreConnections.png)
 
 A biztonsági követelményeket 6 kategóriába soroljuk:
 * Confidentiality

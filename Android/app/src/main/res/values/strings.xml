@@ -54,4 +54,6 @@
     <string name="reg_success">Registration successful</string>
     <string name="back">Back</string>
     <string name="image">Image</string>
+    <string name="invalid_user_name">This username does not exist</string>
+    <string name="invalid_password">Incorrect password</string>
 </resources>
