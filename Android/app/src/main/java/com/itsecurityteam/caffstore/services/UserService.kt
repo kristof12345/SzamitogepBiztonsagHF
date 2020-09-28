@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class UserService() {
-    private val baseUrl = "https://10.0.2.2:44309/" //TODO: set base url
+    private val baseUrl = "https://10.0.2.2:5001/" //TODO: set base url
     private val http: HttpService
     private var token: String? = null
 
