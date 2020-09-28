@@ -37,7 +37,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun login(name: String, pass: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                val response = userService!!.login(name, pass)
+                val response = userService!!.login(name, pass).execute()
                 delay(2000)
                 if (response.isSuccessful && response.body() != null) {
                     val data = response.body()!!
