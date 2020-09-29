@@ -2,6 +2,8 @@ package com.itsecurityteam.caffstore.viewmodel
 
 import android.app.Application
 import android.text.Editable
+import android.util.AndroidException
+import android.util.Patterns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -115,8 +117,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun validateEmail(email: Editable?) {
-        // TODO: email beviteli mező validálása
-        // Hasonlóan a fentihez
+        val text = email.toString()
+        if(text.isNullOrEmpty() || !Patterns.EMAIL_ADDRESS.matcher(text).matches()){
+            throw AndroidException(CaffStoreApplication.appContext.getString(R.string.invalid_email_address))
+        }
     }
 
     fun validatePassword(pass: Editable?) {
