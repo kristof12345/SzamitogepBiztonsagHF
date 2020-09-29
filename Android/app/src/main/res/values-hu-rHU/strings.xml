@@ -55,4 +55,8 @@
     <string name="network_error">Hálózati hiba</string>
     <string name="duplicate_user_name">Ez a felhasználónév már foglalt</string>
     <string name="invalid_email_address">Helytelen email cím</string>
+    <string name="comment_delete_conf">Komment törlése sikeres</string>
+    <string name="delete">Törlés</string>
+    <string name="delete_confirm">Biztosan törlöd ezt az elemet?</string>
+    <string name="caff_delete_conf">CAFF törlése sikeres</string>
 </resources>

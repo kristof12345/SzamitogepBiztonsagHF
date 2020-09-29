@@ -3,4 +3,5 @@
     <color name="colorPrimary">#9ccc65</color>
     <color name="colorPrimaryDark">#6b9b37</color>
     <color name="colorAccent">#29b6f6</color>
+    <color name="deleteIcon">#b61827</color>
 </resources>

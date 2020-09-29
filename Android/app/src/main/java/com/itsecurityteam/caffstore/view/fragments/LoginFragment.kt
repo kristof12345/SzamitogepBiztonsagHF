@@ -64,15 +64,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleLoginRequest(result: ViewResult?) {
-        Log.i("LoginFragment", "Network result observed $result")
         if (result?.resultCode == LoginViewModel.LOGIN_REQUEST) {
             viewModel.resultProcessed()
 
             when (result.success) {
                 true -> {
                     val vm = ViewModelProvider(requireActivity())[StoreViewModel::class.java]
-                    vm.signIn(viewModel.userId)
-                    viewModel.userId = -1
+                    vm.signIn(viewModel.userType)
 
                     NavHostFragment.findNavController(this).navigate(R.id.action_login_to_store)
                 }

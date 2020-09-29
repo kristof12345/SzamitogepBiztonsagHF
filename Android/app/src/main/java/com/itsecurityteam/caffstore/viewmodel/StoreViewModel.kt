@@ -14,6 +14,7 @@ import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.model.filter.Filter
 import com.itsecurityteam.caffstore.model.filter.OrderBy
 import com.itsecurityteam.caffstore.model.filter.OrderDirection
+import com.itsecurityteam.caffstore.model.responses.UserType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,6 +31,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val DOWNLOAD_REQUEST = 1004
         const val ADD_COMMENT_REQUEST = 1005
         const val BUY_REQUEST = 1008
+        const val REMOVE_COMMENT_REQUEST = 1101
+        const val REMOVE_CAFF_REQUEST = 1102
     }
 
     private val caffs = MutableLiveData<List<Caff>>()
@@ -48,7 +51,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     val resultProp: LiveData<ViewResult?>
         get() = result
 
-    private var userID: Long = -1
+    var user: UserType = UserType.Admin // TODO: User by default
+        private set
 
     val filter: Filter = Filter()
     var orderBy: OrderBy = OrderBy.Date
@@ -63,8 +67,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     var free: Boolean = false
         private set
 
-    fun signIn(userID: Long) {
-        this.userID = userID
+    fun signIn(type: UserType) {
+        this.user = type
         loadDatabase()
     }
 
@@ -75,7 +79,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         comments.postValue(emptyList())
         selectedCaff.postValue(null)
         result.postValue(null)
-        userID = -1
+        user = UserType.User
     }
 
     private fun loadDatabase() {
@@ -184,7 +188,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 .map { ch -> ch.toChar() }
                 .joinToString("")
 
-            list.add(Comment(generatedUN, LocalDateTime.now(), generatedString))
+            list.add(Comment(Random.nextLong(), generatedUN, LocalDateTime.now(), generatedString))
         }
 
         delay(500)
@@ -247,6 +251,19 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun removeCurrentCaff() {
+        viewModelScope.launch {
+            delay(500)
+            result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
+        }
+    }
+
+    fun removeComment(comment: Comment) {
+        viewModelScope.launch {
+            delay(500)
+            result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
+        }
+    }
 
     fun setOrdering(orderBy: OrderBy, orderDir: OrderDirection) {
         this.orderDir = orderDir

@@ -12,11 +12,11 @@
         android:id="@+id/btBuy"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/buy"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintEnd_toStartOf="@+id/btDelete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLengthLabel" />
 
@@ -144,11 +144,11 @@
         android:id="@+id/btDownload"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/download"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintEnd_toStartOf="@+id/btDelete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLengthLabel" />
 
@@ -195,5 +195,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.45" />
+
+    <Button
+        android:id="@+id/btDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/delete"
+        app:layout_constraintBottom_toBottomOf="@+id/btBuy"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintTop_toBottomOf="@+id/tvLength" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

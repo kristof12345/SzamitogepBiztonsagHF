@@ -16,12 +16,14 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.Caff
+import com.itsecurityteam.caffstore.model.responses.UserType
 import com.itsecurityteam.caffstore.view.adapters.CommentAdapter
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -105,13 +107,30 @@ class DetailsFragment : Fragment() {
                     viewModel.buy()
                     dialog.dismiss()
                 }.setNegativeButton(android.R.string.no) { dialog, _ ->
-                    btBuy.isEnabled = true
+                    enable(true)
                     dialog.cancel()
                 }
 
-            btBuy.isEnabled = false
+            enable(false)
             builder.show()
         }
+
+        btDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.confirm).setMessage(R.string.delete_confirm)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.removeCurrentCaff()
+                }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    dialog.cancel()
+                    enable(true)
+                }
+
+            builder.show()
+            enable(false)
+        }
+
+        btDelete.visibility = if (viewModel.user == UserType.Admin) View.VISIBLE else View.GONE
     }
 
     private fun showDialog(): Boolean {
@@ -129,13 +148,8 @@ class DetailsFragment : Fragment() {
                 dialogTmp.cancel()
             }
 
-            dialogTmp.setOnDismissListener {
-                Log.d("Dialog", "Dismissed")
-            }
-
             dialogTmp.setOnCancelListener {
                 viewModel.modalPressed = false
-                Log.d("Dialog", "Cancelled")
             }
 
             dialog = dialogTmp
@@ -152,7 +166,20 @@ class DetailsFragment : Fragment() {
 
     private fun addCommentsView() {
         rvComments.layoutManager = GridLayoutManager(context, 1)
-        val adapter = CommentAdapter()
+        val adapter = CommentAdapter(viewModel.user == UserType.Admin)
+        adapter.setOnDeleteListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.confirm).setMessage(R.string.delete_confirm)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.removeComment(it)
+                }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    dialog.cancel()
+                }
+
+            builder.show()
+        }
+
         rvComments.adapter = adapter
 
         viewModel.commentsProp.observe(viewLifecycleOwner) {
@@ -168,12 +195,17 @@ class DetailsFragment : Fragment() {
                     StoreViewModel.DOWNLOAD_REQUEST -> R.string.download_successfull
                     StoreViewModel.ADD_COMMENT_REQUEST -> R.string.comment_added
                     StoreViewModel.BUY_REQUEST -> R.string.bought_success
+                    StoreViewModel.REMOVE_COMMENT_REQUEST -> R.string.comment_delete_conf
+                    StoreViewModel.REMOVE_CAFF_REQUEST -> R.string.caff_delete_conf
                     else -> throw Exception("Option not available")
                 }
 
                 when (result.success) {
                     true -> view?.let {
                         Snackbar.make(it, text, Snackbar.LENGTH_SHORT).show()
+                        if (result.resultCode == StoreViewModel.REMOVE_CAFF_REQUEST) {
+                            NavHostFragment.findNavController(this).navigate(R.id.action_details_to_store)
+                        }
                     }
                     false -> view?.let {
                         Snackbar.make(it, result.errorStringCode, Snackbar.LENGTH_SHORT).show()
@@ -185,16 +217,13 @@ class DetailsFragment : Fragment() {
 
     private fun setView(it: Caff?) {
         it?.let {
-            Log.d("Image visibility", "$it - ${ivDetailsImage.visibility}")
             if (it.image == null) {
                 ivDetailsImage.visibility = View.GONE
                 ivDetailsImage.maxHeight = 0
-                Log.d("Image visibility", "Invisible")
             } else {
                 ivDetailsImage.setImageBitmap(it.image)
                 ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
                 ivDetailsImage.visibility = View.VISIBLE
-                Log.d("Image visibility", "Visible")
                 bitmapAvailable = true
             }
 
@@ -242,5 +271,11 @@ class DetailsFragment : Fragment() {
         }
 
         builder.show()
+    }
+
+    private fun enable(value: Boolean) {
+        btBuy.isEnabled = value
+        btDownload.isEnabled = value
+        btDelete.isEnabled = value
     }
 }
