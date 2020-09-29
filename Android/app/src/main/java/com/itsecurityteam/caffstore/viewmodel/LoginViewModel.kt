@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.model.responses.UserType
-import com.itsecurityteam.caffstore.services.CaffStoreApplication
+import com.itsecurityteam.caffstore.CaffStoreApplication
 import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers

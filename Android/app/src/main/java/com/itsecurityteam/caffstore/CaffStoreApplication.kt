@@ -1,4 +1,4 @@
-package com.itsecurityteam.caffstore.services
+package com.itsecurityteam.caffstore
 
 import android.app.Application
 import android.content.Context
