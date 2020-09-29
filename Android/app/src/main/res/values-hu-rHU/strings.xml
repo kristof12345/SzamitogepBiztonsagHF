@@ -52,4 +52,8 @@
     <string name="image">Kép</string>
     <string name="invalid_user_name">Ez a felhasználó nem létezik</string>
     <string name="invalid_password">Helytelen jelszó</string>
+    <string name="comment_delete_conf">Komment törlése sikeres</string>
+    <string name="delete">Törlés</string>
+    <string name="delete_confirm">Biztosan törlöd ezt az elemet?</string>
+    <string name="caff_delete_conf">CAFF törlése sikeres</string>
 </resources>

@@ -56,4 +56,8 @@
     <string name="image">Image</string>
     <string name="invalid_user_name">This username does not exist</string>
     <string name="invalid_password">Incorrect password</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm">Are you sure to delete this item?</string>
+    <string name="comment_delete_conf">Comment has been successfully remove</string>
+    <string name="caff_delete_conf">CAFF has been successfully deleted.</string>
 </resources>

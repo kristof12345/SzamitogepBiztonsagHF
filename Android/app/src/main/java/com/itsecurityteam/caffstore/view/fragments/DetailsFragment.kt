@@ -16,6 +16,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -105,12 +106,27 @@ class DetailsFragment : Fragment() {
                     viewModel.buy()
                     dialog.dismiss()
                 }.setNegativeButton(android.R.string.no) { dialog, _ ->
-                    btBuy.isEnabled = true
+                    enable(true)
                     dialog.cancel()
                 }
 
-            btBuy.isEnabled = false
+            enable(false)
             builder.show()
+        }
+
+        btDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.confirm).setMessage(R.string.delete_confirm)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.removeCurrentCaff()
+                }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    dialog.cancel()
+                    enable(true)
+                }
+
+            builder.show()
+            enable(false)
         }
     }
 
@@ -129,13 +145,8 @@ class DetailsFragment : Fragment() {
                 dialogTmp.cancel()
             }
 
-            dialogTmp.setOnDismissListener {
-                Log.d("Dialog", "Dismissed")
-            }
-
             dialogTmp.setOnCancelListener {
                 viewModel.modalPressed = false
-                Log.d("Dialog", "Cancelled")
             }
 
             dialog = dialogTmp
@@ -153,6 +164,10 @@ class DetailsFragment : Fragment() {
     private fun addCommentsView() {
         rvComments.layoutManager = GridLayoutManager(context, 1)
         val adapter = CommentAdapter()
+        adapter.setOnDeleteListener {
+            viewModel.removeComment(it)
+        }
+
         rvComments.adapter = adapter
 
         viewModel.commentsProp.observe(viewLifecycleOwner) {
@@ -168,12 +183,17 @@ class DetailsFragment : Fragment() {
                     StoreViewModel.DOWNLOAD_REQUEST -> R.string.download_successfull
                     StoreViewModel.ADD_COMMENT_REQUEST -> R.string.comment_added
                     StoreViewModel.BUY_REQUEST -> R.string.bought_success
+                    StoreViewModel.REMOVE_COMMENT_REQUEST -> R.string.comment_delete_conf
+                    StoreViewModel.REMOVE_CAFF_REQUEST -> R.string.caff_delete_conf
                     else -> throw Exception("Option not available")
                 }
 
                 when (result.success) {
                     true -> view?.let {
                         Snackbar.make(it, text, Snackbar.LENGTH_SHORT).show()
+                        if (result.resultCode == StoreViewModel.REMOVE_CAFF_REQUEST) {
+                            NavHostFragment.findNavController(this).navigate(R.id.action_details_to_store)
+                        }
                     }
                     false -> view?.let {
                         Snackbar.make(it, result.errorStringCode, Snackbar.LENGTH_SHORT).show()
@@ -242,5 +262,11 @@ class DetailsFragment : Fragment() {
         }
 
         builder.show()
+    }
+
+    fun enable(value: Boolean) {
+        btBuy.isEnabled = value
+        btDownload.isEnabled = value
+        btDelete.isEnabled = value
     }
 }

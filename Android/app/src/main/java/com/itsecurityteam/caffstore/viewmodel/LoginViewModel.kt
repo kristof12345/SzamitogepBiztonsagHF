@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.model.ViewResult
+import com.itsecurityteam.caffstore.model.responses.UserType
 import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,7 +22,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         const val REGISTER_REQUEST = 1002
     }
 
-    var userId: Long = -1
+    var userType: UserType = UserType.User
+        private set
 
     private val networkResult = MutableLiveData<ViewResult?>()
     val networkResultProp: LiveData<ViewResult?>
@@ -36,28 +38,38 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun login(name: String, pass: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val response = userService!!.login(name, pass).execute()
-                delay(2000)
-                if (response.isSuccessful && response.body() != null) {
-                    val data = response.body()!!
-                    if (data.isSuccess) { // Ez lehet, hogy nem is kell
-                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
-                        userId = data.userId
-                        userService?.saveToken(data.token)
-                    }
-                } else if(response.code() == 404){
-                    // Username not found
-                    networkResult.postValue(ViewResult(LOGIN_REQUEST, false, R.string.invalid_user_name))
-                } else if(response.code() == 401){
-                    // Incorrect password
-                    networkResult.postValue(ViewResult(LOGIN_REQUEST, false, R.string.invalid_password))
+        viewModelScope.launch(Dispatchers.IO) {
+            networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
+            userType = UserType.Admin
+            return@launch
+
+            val response = userService!!.login(name, pass).execute()
+            delay(2000)
+            if (response.isSuccessful && response.body() != null) {
+                val data = response.body()!!
+                if (data.isSuccess) { // Ez lehet, hogy nem is kell
+                    networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
+                    userType = data.type
+                    userService?.saveToken(data.token)
                 }
+            } else if (response.code() == 404) {
+                // Username not found
+                networkResult.postValue(
+                    ViewResult(
+                        LOGIN_REQUEST,
+                        false,
+                        R.string.invalid_user_name
+                    )
+                )
+            } else if (response.code() == 401) {
+                // Incorrect password
+                networkResult.postValue(ViewResult(LOGIN_REQUEST, false, R.string.invalid_password))
             }
-            //TODO: Exception handling
-            //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
-            //userId = 15
         }
+        //TODO: Exception handling
+        //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
+        //userId = 15
+    }
 
     fun register(name: String, pass: String, email: String) {
         viewModelScope.launch {
