@@ -97,26 +97,31 @@
         tools:text="1:15" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/comments"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="@+id/btAddComment"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btAddComment" />
 
     <Button
         android:id="@+id/btAddComment"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/add_comment"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@id/barrier2" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -194,21 +199,30 @@
         app:layout_constraintTop_toBottomOf="@+id/btAddComment" />
 
     <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/barrier2"
+        app:barrierDirection="bottom"
         app:constraint_referenced_ids="btBuy, btDownload"
-        app:barrierDirection="bottom"/>
+        tools:layout_editor_absoluteY="498dp" />
 
     <Button
         android:id="@+id/btDelete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/deleteIcon"
         android:text="@string/delete"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLength" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLengthLabel" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
