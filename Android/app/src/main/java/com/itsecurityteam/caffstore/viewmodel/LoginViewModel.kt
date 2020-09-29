@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.model.ViewResult
+import com.itsecurityteam.caffstore.model.responses.UserType
+import com.itsecurityteam.caffstore.services.CaffStoreApplication
+import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val userService: UserService = UserService()
+    private val sessionManager: SessionManager = SessionManager(CaffStoreApplication.appContext)
 
     companion object {
         const val LOGIN_REQUEST = 1001
@@ -22,6 +26,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var userId: Long = -1
+    var userType: UserType = UserType.User
 
     private val networkResult = MutableLiveData<ViewResult?>()
     val networkResultProp: LiveData<ViewResult?>
@@ -40,7 +45,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     val data = response.body()
                     networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
                     userId = data.userId
-                    userService.saveToken(data.token)
+                    userType = data.type
+                    sessionManager.saveAuthToken(data.token!!)
                 } else if (response.code() == 404) {
                     // Username not found
                     networkResult.postValue(
