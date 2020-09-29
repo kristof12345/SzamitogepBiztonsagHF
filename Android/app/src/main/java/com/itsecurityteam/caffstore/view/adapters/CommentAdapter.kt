@@ -1,6 +1,7 @@
 package com.itsecurityteam.caffstore.view.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
@@ -12,8 +13,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
-    class CommentViewHolder(private val listener: ((Comment) -> Unit)?, inflater: LayoutInflater, parent: ViewGroup) :
+class CommentAdapter(private val deletable: Boolean) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+    class CommentViewHolder(private val listener: ((Comment) -> Unit)?, private val deletable: Boolean, inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.comment_item, parent, false)) {
 
         private val creator: TextView = itemView.findViewById(R.id.tvCommentName)
@@ -30,8 +31,12 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
                     .withZone(ZoneId.systemDefault())
             creation.text = comment.addTime.format(formatter)
 
-            delete.setOnClickListener {
-                listener?.invoke(comment)
+            if (deletable) {
+                delete.setOnClickListener {
+                    listener?.invoke(comment)
+                }
+
+                delete.visibility = View.VISIBLE
             }
         }
     }
@@ -51,7 +56,7 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        return CommentViewHolder(listener, LayoutInflater.from(parent.context), parent)
+        return CommentViewHolder(listener, deletable, LayoutInflater.from(parent.context), parent)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {

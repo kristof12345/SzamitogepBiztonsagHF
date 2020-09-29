@@ -23,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.itsecurityteam.caffstore.R
 import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.Caff
+import com.itsecurityteam.caffstore.model.responses.UserType
 import com.itsecurityteam.caffstore.view.adapters.CommentAdapter
 import com.itsecurityteam.caffstore.viewmodel.StoreViewModel
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -128,6 +129,8 @@ class DetailsFragment : Fragment() {
             builder.show()
             enable(false)
         }
+
+        btDelete.visibility = if (viewModel.user == UserType.Admin) View.VISIBLE else View.GONE
     }
 
     private fun showDialog(): Boolean {
@@ -163,9 +166,18 @@ class DetailsFragment : Fragment() {
 
     private fun addCommentsView() {
         rvComments.layoutManager = GridLayoutManager(context, 1)
-        val adapter = CommentAdapter()
+        val adapter = CommentAdapter(viewModel.user == UserType.Admin)
         adapter.setOnDeleteListener {
-            viewModel.removeComment(it)
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.confirm).setMessage(R.string.delete_confirm)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.removeComment(it)
+                }.setNegativeButton(android.R.string.no) { dialog, _ ->
+                    dialog.cancel()
+                }
+
+            builder.show()
         }
 
         rvComments.adapter = adapter
@@ -205,16 +217,13 @@ class DetailsFragment : Fragment() {
 
     private fun setView(it: Caff?) {
         it?.let {
-            Log.d("Image visibility", "$it - ${ivDetailsImage.visibility}")
             if (it.image == null) {
                 ivDetailsImage.visibility = View.GONE
                 ivDetailsImage.maxHeight = 0
-                Log.d("Image visibility", "Invisible")
             } else {
                 ivDetailsImage.setImageBitmap(it.image)
                 ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
                 ivDetailsImage.visibility = View.VISIBLE
-                Log.d("Image visibility", "Visible")
                 bitmapAvailable = true
             }
 
@@ -264,7 +273,7 @@ class DetailsFragment : Fragment() {
         builder.show()
     }
 
-    fun enable(value: Boolean) {
+    private fun enable(value: Boolean) {
         btBuy.isEnabled = value
         btDownload.isEnabled = value
         btDelete.isEnabled = value

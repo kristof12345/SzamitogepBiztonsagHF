@@ -48,7 +48,6 @@ class RegisterFragment : Fragment() {
     }
 
     private fun handleRegistration(result: ViewResult?) {
-        Log.i("RegisterFragment", "Network result observed $result")
         if (result?.resultCode == LoginViewModel.REGISTER_REQUEST) {
             viewModel.resultProcessed()
             setAvailability(true)

@@ -40,7 +40,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun login(name: String, pass: String) {
         viewModelScope.launch(Dispatchers.IO) {
             networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
-            userType = UserType.Admin
+            userType = UserType.User
             return@launch
 
             val response = userService!!.login(name, pass).execute()

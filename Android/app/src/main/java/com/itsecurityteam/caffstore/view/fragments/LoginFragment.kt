@@ -64,7 +64,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleLoginRequest(result: ViewResult?) {
-        Log.i("LoginFragment", "Network result observed $result")
         if (result?.resultCode == LoginViewModel.LOGIN_REQUEST) {
             viewModel.resultProcessed()
 

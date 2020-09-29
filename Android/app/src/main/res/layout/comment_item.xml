@@ -71,6 +71,7 @@
         android:layout_marginEnd="8dp"
         android:background="@null"
         android:contentDescription="@string/delete"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/tvCommentName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvCommentName"

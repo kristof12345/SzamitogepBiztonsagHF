@@ -51,7 +51,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     val resultProp: LiveData<ViewResult?>
         get() = result
 
-    private var user: UserType = UserType.Admin // TODO: User by default
+    var user: UserType = UserType.Admin // TODO: User by default
+        private set
 
     val filter: Filter = Filter()
     var orderBy: OrderBy = OrderBy.Date
