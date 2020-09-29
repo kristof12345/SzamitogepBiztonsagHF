@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private var userService: UserService? = null
+    private val userService: UserService = UserService()
 
     companion object {
         const val LOGIN_REQUEST = 1001
@@ -27,45 +27,77 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     val networkResultProp: LiveData<ViewResult?>
         get() = networkResult
 
-    init {
-        userService = UserService()
-    }
-
     fun resultProcessed() {
         networkResult.postValue(null)
     }
 
     fun login(name: String, pass: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val response = userService!!.login(name, pass).execute()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = userService.login(name, pass).execute()
                 delay(2000)
                 if (response.isSuccessful && response.body() != null) {
-                    val data = response.body()!!
-                    if (data.isSuccess) { // Ez lehet, hogy nem is kell
-                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
-                        userId = data.userId
-                        userService?.saveToken(data.token)
-                    }
-                } else if(response.code() == 404){
+                    val data = response.body()
+                    networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
+                    userId = data.userId
+                    userService.saveToken(data.token)
+                } else if (response.code() == 404) {
                     // Username not found
-                    networkResult.postValue(ViewResult(LOGIN_REQUEST, false, R.string.invalid_user_name))
-                } else if(response.code() == 401){
+                    networkResult.postValue(
+                        ViewResult(
+                            LOGIN_REQUEST,
+                            false,
+                            R.string.invalid_user_name
+                        )
+                    )
+                } else if (response.code() == 401) {
                     // Incorrect password
-                    networkResult.postValue(ViewResult(LOGIN_REQUEST, false, R.string.invalid_password))
+                    networkResult.postValue(
+                        ViewResult(
+                            LOGIN_REQUEST,
+                            false,
+                            R.string.invalid_password
+                        )
+                    )
                 }
+            } catch (e: Exception) {
+                networkResult.postValue(
+                    ViewResult(
+                        LOGIN_REQUEST,
+                        false,
+                        R.string.network_error
+                    )
+                )
             }
-            //TODO: Exception handling
-            //networkResult.postValue(ViewResult(false, R.string.error_empty_input))
-            //userId = 15
         }
+    }
 
     fun register(name: String, pass: String, email: String) {
-        viewModelScope.launch {
-            // TODO: A regisztráció megvalósítása
-            // Ugyan azon elven, mint a login
-
-            delay(500)
-            networkResult.postValue(ViewResult(REGISTER_REQUEST, true))
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = userService.register(name, pass, email).execute()
+                delay(2000)
+                if (response.isSuccessful) {
+                    networkResult.postValue(ViewResult(REGISTER_REQUEST, true))
+                } else if (response.code() == 409) {
+                    // Duplicate username
+                    networkResult.postValue(
+                        ViewResult(
+                            REGISTER_REQUEST,
+                            false,
+                            R.string.duplicate_user_name
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                networkResult.postValue(
+                    ViewResult(
+                        REGISTER_REQUEST,
+                        false,
+                        R.string.network_error
+                    )
+                )
+            }
         }
     }
 

@@ -52,4 +52,6 @@
     <string name="image">Kép</string>
     <string name="invalid_user_name">Ez a felhasználó nem létezik</string>
     <string name="invalid_password">Helytelen jelszó</string>
+    <string name="network_error">Hálózati hiba</string>
+    <string name="duplicate_user_name">Ez a felhasználónév már foglalt</string>
 </resources>

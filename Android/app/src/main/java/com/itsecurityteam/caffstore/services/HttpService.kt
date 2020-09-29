@@ -13,5 +13,5 @@ interface HttpService {
     fun loginUser(@Body request: LoginRequest): Call<LoginResponse>
 
     @POST("users")
-    fun createUser(@Body request: RegisterRequest): Call<Void>
+    fun registerUser(@Body request: RegisterRequest): Call<Void>
 }
