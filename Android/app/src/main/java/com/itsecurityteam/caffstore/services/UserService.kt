@@ -11,7 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class UserService() {
     private val baseUrl = "https://10.0.2.2:5001/"
     private val http: HttpService
-    private var token: String? = null
 
     init {
         val okHttpClient = CertificateProvider.getUnsafeOkHttpClient();
@@ -31,9 +30,5 @@ class UserService() {
     fun register(username: String, password: String, email: String): Call<Void> {
         val request = RegisterRequest(username, password, email)
         return http.registerUser(request)
-    }
-
-    fun saveToken(token: String?) {
-        this.token = token //TODO: ezt be lehetne állítani a retrofitben is, csak akkor ugyanaz a példány kell minden service-be
     }
 }
