@@ -206,6 +206,7 @@ class DetailsFragment : Fragment() {
                         if (result.resultCode == StoreViewModel.REMOVE_CAFF_REQUEST) {
                             NavHostFragment.findNavController(this).navigate(R.id.action_details_to_store)
                         }
+                        enable(true)
                     }
                     false -> view?.let {
                         Snackbar.make(it, result.errorStringCode, Snackbar.LENGTH_SHORT).show()
