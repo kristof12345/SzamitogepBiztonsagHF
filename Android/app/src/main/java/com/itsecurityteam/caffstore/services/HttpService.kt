@@ -22,7 +22,9 @@ interface HttpService {
     fun search(
         @Header("Authorization") token: String,
         @Query("creator") creator: String?,
-        @Query("title") title: String?
+        @Query("title") title: String?,
+        @Query("free") free: Boolean?,
+        @Query("bought") bought: Boolean?
     ): Call<List<CaffResponse>>
 
     @GET("caffs/{id}/comments")

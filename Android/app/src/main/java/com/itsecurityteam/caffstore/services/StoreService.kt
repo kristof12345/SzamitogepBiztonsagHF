@@ -1,7 +1,5 @@
 package com.itsecurityteam.caffstore.services
 
-import android.net.Uri
-import android.os.Environment
 import com.itsecurityteam.caffstore.model.Comment
 import com.itsecurityteam.caffstore.model.filter.Filter
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
@@ -29,7 +27,7 @@ class StoreService {
     }
 
     fun loadCaffs(token: String, filter: Filter): Call<List<CaffResponse>> {
-        return http.search(token, filter.creator, filter.title)
+        return http.search(token, filter.creator, filter.title, filter.free, filter.bought)
     }
 
     fun loadComments(token: String, caffId: Long): Call<List<Comment>> {
@@ -63,12 +61,11 @@ class StoreService {
         return http.uploadImage(token, nameData, priceData, imageData)
     }
 
-    fun downloadCaff(token: String, id: Long, uri: Uri) {
+    fun downloadCaff(token: String, id: Long, uri: String) {
         var response = http.downloadImage(token, id).execute()
         try {
-            var file = File(uri.path);
-            var fileOutputStream = FileOutputStream(file);
-            fileOutputStream.write(response.body().bytes());
+            var fileOutputStream = FileOutputStream(File(uri))
+            fileOutputStream.write(response.body().bytes())
         } catch (ex: Exception) {
         }
     }

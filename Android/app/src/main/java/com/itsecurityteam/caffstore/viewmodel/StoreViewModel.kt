@@ -201,7 +201,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             var fileUri = uri.getPath()
             if (fileUri == null)
-                result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                result.postValue(ViewResult(UPLOAD_REQUEST, false))
             // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
             else {
                 var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, File(fileUri)).execute()
@@ -216,9 +216,14 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun downloadCaff(uri: Uri) {
         viewModelScope.launch {
+            var fileUri = uri.getPath()
+            if (fileUri == null)
+                result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
             // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
-            storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, uri)
-            result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+            else {
+                storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
+                result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+            }
         }
     }
 
