@@ -80,7 +80,6 @@ class SearchDialog : DialogFragment() {
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 setFilter()
                 setOrder()
-                setCheckboxes()
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -104,35 +103,37 @@ class SearchDialog : DialogFragment() {
             OrderDirection.Descending -> R.id.rbDescend
         })
 
-        cbBought.isChecked = viewModel.bought
-        cbFree.isChecked = viewModel.free
+        cbBought.isChecked = viewModel.filter.bought
+        cbFree.isChecked = viewModel.filter.free
     }
 
     private fun setFilter() {
         val title = tilTitle.editText!!.text.toString()
         val creator = tilCreator.editText!!.text.toString()
-        viewModel.setFilter(title, creator)
+        val isFree = cbFree.isChecked
+        val isBought = cbBought.isChecked
+        viewModel.setFilter(title, creator, isFree, isBought)
     }
 
     private fun setOrder() {
-        val orderBy = when(rgType.checkedRadioButtonId){
+        viewModel.setOrdering(getOrderBy(), getOrderDirection())
+    }
+
+    private fun getOrderDirection(): OrderDirection {
+        return when (rgOrder.checkedRadioButtonId) {
+            R.id.rbAscend -> OrderDirection.Ascending
+            R.id.rbDescend -> OrderDirection.Descending
+            else -> OrderDirection.Descending
+        }
+    }
+
+    private fun getOrderBy(): OrderBy {
+        return when (rgType.checkedRadioButtonId) {
             R.id.rbDate -> OrderBy.Date
             R.id.rbCreator -> OrderBy.Creator
             R.id.rbLength -> OrderBy.Length
             R.id.rbName -> OrderBy.Name
             else -> OrderBy.Date
         }
-
-        val orderDir = when(rgOrder.checkedRadioButtonId){
-            R.id.rbAscend -> OrderDirection.Ascending
-            R.id.rbDescend -> OrderDirection.Descending
-            else -> OrderDirection.Descending
-        }
-
-        viewModel.setOrdering(orderBy, orderDir)
-    }
-
-    private fun setCheckboxes() {
-        viewModel.setCheckbox(cbFree.isChecked, cbBought.isChecked)
     }
 }

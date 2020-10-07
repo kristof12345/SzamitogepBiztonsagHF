@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.net.URL
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
@@ -59,16 +60,11 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         private set
 
     val filter: Filter = Filter()
+
     var orderBy: OrderBy = OrderBy.Date
         private set
 
     var orderDir: OrderDirection = OrderDirection.Descending
-        private set
-
-    var bought: Boolean = false
-        private set
-
-    var free: Boolean = false
         private set
 
     fun signIn(type: UserType) {
@@ -162,10 +158,11 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun buy() {
         viewModelScope.launch {
-            // TODO: Termék megvásárlásának beállítása
-            //  Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
-            // Ua, mint a LoginViewModel-ben a login/register
-            val response = storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id).execute()
+            // Termék megvásárlásának beállítása
+            // Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
+            val response =
+                storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id)
+                    .execute()
             when {
                 response.isSuccessful -> {
                     val selected = selectedCaff.value
@@ -184,34 +181,43 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addComment(text: String) {
         viewModelScope.launch {
-            // TODO: Komment hozzáadásanak megvalósítása
-            // Ua, mint a LoginViewModel-ben a login/register
-            delay(500)
-            result.postValue(ViewResult(ADD_COMMENT_REQUEST, true))
+            val response = storeService.addComment(
+                sessionManager.fetchAuthToken()!!,
+                selectedCaff.value?.id,
+                text
+            ).execute()
+            when {
+                response.isSuccessful -> {
+                    result.postValue(ViewResult(ADD_COMMENT_REQUEST, true))
+                }
+                else -> {
+                    result.postValue(ViewResult(ADD_COMMENT_REQUEST, false, R.string.comment_error))
+                }
+            }
         }
     }
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch {
-            // TODO: Upload megvalósítása
-            // Ua, mint a LoginViewModel-ben a login/register
-
-            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi,
-            //  valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
-            //  Ha unatkozol, akkor a name-t is
-            delay(500)
-            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+            var fileUri = uri.getPath()
+            if (fileUri == null)
+                result.postValue(ViewResult(UPLOAD_REQUEST, true))
+            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
+            else {
+                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, File(fileUri)).execute()
+                when {
+                    response.isSuccessful -> {
+                        result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                    }
+                }
+            }
         }
     }
 
     fun downloadCaff(uri: Uri) {
         viewModelScope.launch {
-            // TODO: Upload megvalósítása
-            // Ua, mint a LoginViewModel-ben a login/register
-
-            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi,
-            //  valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
-            delay(500)
+            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
+            storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, uri)
             result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
         }
     }
@@ -234,20 +240,15 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         this.orderDir = orderDir
         this.orderBy = orderBy
 
-        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
+        search()
     }
 
-    fun setFilter(name: String, creator: String) {
+    fun setFilter(name: String, creator: String, isFree: Boolean, isBought: Boolean) {
         this.filter.title = name
         this.filter.creator = creator
+        this.filter.free = isFree
+        this.filter.bought = isBought
 
-        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
-    }
-
-    fun setCheckbox(free: Boolean, bought: Boolean) {
-        this.free = free
-        this.bought = bought
-
-        // TODO: Vagy loadDatabase, vagy csak szűrés a jelenlegin
+        search()
     }
 }
