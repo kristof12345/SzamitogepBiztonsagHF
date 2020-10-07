@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class CaffsAdapter: RecyclerView.Adapter<CaffsAdapter.CaffViewHolder>() {
+class CaffsAdapter(): RecyclerView.Adapter<CaffsAdapter.CaffViewHolder>() {
     class CaffViewHolder(private val listener: ((Caff) -> Unit)?, inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.store_item, parent, false)) {
 
@@ -34,6 +34,8 @@ class CaffsAdapter: RecyclerView.Adapter<CaffsAdapter.CaffViewHolder>() {
             base.setOnClickListener {
                 listener?.invoke(caff)
             }
+
+
         }
     }
 

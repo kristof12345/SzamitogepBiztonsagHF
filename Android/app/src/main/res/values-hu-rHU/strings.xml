@@ -4,7 +4,7 @@
     <string name="log_in">Belépés</string>
     <string name="password">Jelszó</string>
     <string name="user_name">Felhasználónév</string>
-    <string name="login">Bejelentkezés</string>
+    <string name="login">Belépés</string>
     <string name="registration">Regisztáció</string>
     <string name="email_address">Email cím</string>
     <string name="register">Regisztrál</string>
@@ -15,7 +15,7 @@
     <string name="date_of_creation">Készítés ideje</string>
     <string name="length">Hossz</string>
     <string name="comments">Hozzászólások</string>
-    <string name="add_comment">Új hozzászólás</string>
+    <string name="add_comment">Új komment</string>
     <string name="download">Letöltés</string>
     <string name="thumbnail_image">Indexkép</string>
     <string name="not_found">Nincs megfelelő találat</string>
@@ -55,4 +55,8 @@
     <string name="network_error">Hálózati hiba</string>
     <string name="duplicate_user_name">Ez a felhasználónév már foglalt</string>
     <string name="invalid_email_address">Helytelen email cím</string>
+    <string name="comment_delete_conf">Komment törlése sikeres</string>
+    <string name="delete">Törlés</string>
+    <string name="delete_confirm">Biztosan törlöd ezt az elemet?</string>
+    <string name="caff_delete_conf">CAFF törlése sikeres</string>
 </resources>
