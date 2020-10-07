@@ -1,17 +1,16 @@
-package com.itsecurityteam.caffstore.model
+package com.itsecurityteam.caffstore.model.responses
 
 import android.graphics.Bitmap
 import java.time.LocalDateTime
 
-data class Caff(
+data class CaffResponse(
     val id: Long,
     val name: String,
     val creationDate: LocalDateTime,
     val creator: String,
     val duration: Int,
-    val thumbnail: Bitmap,
+    val thumbnailUrl: String,
     val cost: Double,
     var bought: Boolean,
-    var url: String,
-    var image: Bitmap? = null
+    var imageUrl: String
 )

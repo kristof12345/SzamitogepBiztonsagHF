@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -236,9 +235,9 @@ class DetailsFragment : Fragment() {
             tvDetailsDate.text = it.creationDate.format(formatter)
 
 
-            val mins = it.length / 1000 / 60
-            val secs = it.length / 1000 - mins * 60
-            val ms = it.length - (mins * 60 + secs) * 1000
+            val mins = it.duration / 1000 / 60
+            val secs = it.duration / 1000 - mins * 60
+            val ms = it.duration - (mins * 60 + secs) * 1000
 
             tvLength.text = getString(R.string.length_value, mins, secs, ms)
             tvtDetailsTitle.text = it.name

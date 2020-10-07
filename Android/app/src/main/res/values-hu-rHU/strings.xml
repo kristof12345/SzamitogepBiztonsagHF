@@ -59,4 +59,5 @@
     <string name="delete">Törlés</string>
     <string name="delete_confirm">Biztosan törlöd ezt az elemet?</string>
     <string name="caff_delete_conf">CAFF törlése sikeres</string>
+    <string name="purchase_error">A kép megvásárlása sikertelen</string>
 </resources>
