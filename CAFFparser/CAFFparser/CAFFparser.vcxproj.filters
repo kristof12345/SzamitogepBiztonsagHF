@@ -26,5 +26,11 @@
     <ClInclude Include="caff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="error_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="binary_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

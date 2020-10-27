@@ -1,21 +1,30 @@
-#include "caff.h"
 #include <iostream>
 #include <fstream>
+#include <iterator>
+#include <vector>
+
+#include "caff.h"
+#include "error_handler.h"
+
+using namespace std;
+using namespace CAFFparser;
 
 int main()
 {
-    std::ifstream myfile("3.caff", std::ios::in | std::ios::binary);
-    
-    if (myfile.is_open())
-    {
-        Block block;
-        while (myfile >> block) {
-            std::cout << block << std::endl;
-        }
-        myfile.close();
-    }
+	cout << "CAFFparser" << endl;
 
-    else std::cout << "Unable to open file";
+	ifstream input("c:\\BME\\SzamitogepBiztonsag\\test\\1.caff", ios::binary);
+	vector<unsigned char> buffer(istreambuf_iterator<char>(input), {});
+	input.close();
 
-    return 0;
+	CAFF caff;
+	try {
+		caff.Read(buffer.data(), buffer.size());
+	}
+	catch (const char* c)
+	{
+		ErrorHandler::Handle(c);
+	}
+
+	return 0;
 }
