@@ -363,3 +363,5 @@ FodyWeavers.xsd
 /CAFFparser/*.exe
 /CAFFparser/make_obj/*.o
 /CAFFparser/*.d
+
+**/.DS_Store
