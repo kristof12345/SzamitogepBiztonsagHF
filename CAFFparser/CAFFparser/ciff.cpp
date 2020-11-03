@@ -60,11 +60,14 @@ namespace CAFFparser
 		{
 			for (int j = 0; j < h; j++)
 			{
-				int x = i;
+				img[(i * h + j) * 3 + 2] = (unsigned char)(pixels[i][j].r);
+				img[(i * h + j) * 3 + 1] = (unsigned char)(pixels[i][j].g);
+				img[(i * h + j) * 3 + 0] = (unsigned char)(pixels[i][j].b);
+				/*int x = i;
 				int y = (h - 1) - j;
 				img[(x + y * w) * 3 + 2] = (unsigned char)(pixels[i][j].r);
 				img[(x + y * w) * 3 + 1] = (unsigned char)(pixels[i][j].g);
-				img[(x + y * w) * 3 + 0] = (unsigned char)(pixels[i][j].b);
+				img[(x + y * w) * 3 + 0] = (unsigned char)(pixels[i][j].b);*/
 			}
 		}
 
@@ -156,6 +159,16 @@ namespace CAFFparser
 			ErrorHandler::Handle("CIFF content size is not equal to width * height * 3");
 			return false;
 		}
+
+		//pixels.resize((size_t)header.content_size); //for performance increase
+		//for (size_t i = 0; i < (size_t)header.content_size; ++i)
+		//{
+		//	Pixel& pixel = pixels[i];
+
+		//	pixel.r = ReadBinary<byte>(data, length, cursor);
+		//	pixel.g = ReadBinary<byte>(data, length, cursor);
+		//	pixel.b = ReadBinary<byte>(data, length, cursor);
+		//}
 
 		pixels.resize((size_t)header.width); //for performance increase
 		for (size_t x = 0; x < header.width; ++x)
