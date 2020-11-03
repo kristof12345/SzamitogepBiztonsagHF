@@ -3,7 +3,6 @@
 
 namespace CAFFparser
 {
-
 	CAFF::CAFF()
 		: valid(false)
 		, header()
@@ -21,6 +20,16 @@ namespace CAFFparser
 		return header;
 	}
 
+	const CAFFcredits& CAFF::GetCredits() const
+	{
+		return credits;
+	}
+
+	const vector<Animation>& CAFF::GetAnimations() const
+	{
+		return animations;
+	}
+
 	bool CAFF::Read(byte* data, size_t length)
 	{
 		valid = false;
@@ -29,72 +38,68 @@ namespace CAFFparser
 
 		size_t cursor = 0;
 
-		if (!ReadHeader(data, length, cursor))
-			return false;
-
 		if (!ReadBlocks(data, length, cursor))
 			return false;
+
+		if (cursor != length)
+		{
+			ErrorHandler::Handle("CAFF is not as long as specified");
+			return false;
+		}
 
 		valid = true;
 		return true;
 	}
 
-	bool CAFF::ReadHeader(byte* data, size_t length, size_t& cursor)
-	{
-		byte ID = ReadBinary<byte>(data, length, cursor);
-		if (ID != 0x1)
-		{
-			ErrorHandler::Handle("Header block mandatory 0x1 validated");
-			return false;
-		}
-
-		long long int blocklength = ReadBinary<long long int>(data, length, cursor);
-		if (blocklength != sizeof(byte[4]) + sizeof(long long int) + sizeof(long long int))
-		{
-			ErrorHandler::Handle("Header block length violated");
-			return false;
-		}
-
-		//header.magic[0] = ReadBinary<byte>(data, length, cursor);
-		//header.magic[1] = ReadBinary<byte>(data, length, cursor);
-		//header.magic[2] = ReadBinary<byte>(data, length, cursor);
-		//header.magic[3] = ReadBinary<byte>(data, length, cursor);
-		ReadBinaryToBuffer<byte>(data, length, cursor, header.magic, sizeof(header.magic));
-
-		header.header_size = ReadBinary<long long int>(data, length, cursor);
-		header.num_anim = ReadBinary<long long int>(data, length, cursor);
-
-		return true;
-	}
-
 	bool CAFF::ReadBlocks(byte* data, size_t length, size_t& cursor)
 	{
+		bool firstblock = true;
 		while (cursor < length)
 		{
-			if (!ReadBlock(data, length, cursor))
+			byte ID = ReadBinary<byte>(data, length, cursor);
+			if (firstblock && ID != 0x1)
+			{
+				ErrorHandler::Handle("Header block mandatory 0x1 validated");
 				return false;
+			}
+			else if (!firstblock && ID == 0x1)
+			{
+				ErrorHandler::Handle("Multiple header blocks found");
+				return false;
+			}
+
+			long long int signed_blocklength = ReadBinary<long long int>(data, length, cursor);
+			if (signed_blocklength <= 0)
+			{
+				ErrorHandler::Handle("Block length invalid");
+				return false;
+			}
+
+			size_t blocklength = (size_t)signed_blocklength;
+			size_t blockcursor = 0;
+			if (!ReadBlock(data + cursor, blocklength, blockcursor, ID))
+				return false;
+
+			if (blocklength != blockcursor)
+			{
+				ErrorHandler::Handle("Block length specified is not equal to actual block length");
+				return false;
+			}
+
+			cursor += blocklength;
+			firstblock = false;
 		}
 
 		return true;
 	}
 
-	bool CAFF::ReadBlock(byte* data, size_t length, size_t& cursor)
+	bool CAFF::ReadBlock(byte* data, size_t length, size_t& cursor, byte ID)
 	{
-		byte ID = ReadBinary<byte>(data, length, cursor);
 		if (ID == 0x1)
 		{
-			ErrorHandler::Handle("Multiple header blocks found");
-			return false;
+			return ReadHeader(data, length, cursor);
 		}
-
-		long long int blocklength = ReadBinary<long long int>(data, length, cursor);
-		if (blocklength <= 0)
-		{
-			ErrorHandler::Handle("Block length invalid");
-			return false;
-		}
-
-		if (ID == 0x2)
+		else if (ID == 0x2)
 		{
 			return ReadCredits(data, length, cursor);
 		}
@@ -107,6 +112,16 @@ namespace CAFFparser
 			ErrorHandler::Handle("Unknown block type");
 			return false;
 		}
+	}
+
+	bool CAFF::ReadHeader(byte* data, size_t length, size_t& cursor)
+	{
+		ReadBinaryToBuffer<byte>(data, length, cursor, header.magic, sizeof(header.magic));
+
+		header.header_size = ReadBinary<long long int>(data, length, cursor);
+		header.num_anim = ReadBinary<long long int>(data, length, cursor);
+
+		return true;
 	}
 
 	bool CAFF::ReadCredits(byte* data, size_t length, size_t& cursor)
@@ -125,9 +140,9 @@ namespace CAFFparser
 		}
 		else if (credits.creator_len > 0)
 		{
-			char* buffercreator = new char[credits.creator_len + 1];
+			char* buffercreator = new char[(size_t)credits.creator_len + 1];
 			try {
-				ReadBinaryToBuffer<char>(data, length, cursor, buffercreator, credits.creator_len);
+				ReadBinaryToBuffer<char>(data, length, cursor, buffercreator, (size_t)credits.creator_len);
 			}
 			catch (...)
 			{
@@ -135,7 +150,7 @@ namespace CAFFparser
 				throw;
 			}
 
-			buffercreator[credits.creator_len] = '\0';
+			buffercreator[(size_t)credits.creator_len] = '\0';
 			credits.creator = string(buffercreator);
 
 			delete[] buffercreator;
@@ -145,7 +160,21 @@ namespace CAFFparser
 
 	bool CAFF::ReadAnimation(byte* data, size_t length, size_t& cursor)
 	{
-		// TODO
-		return true;
+		Animation animation;
+		animation.duration = ReadBinary<long long int>(data, length, cursor);
+
+		size_t remaining_length = length - sizeof(animation.duration);
+		bool success = animation.ciff.Read(data + cursor, remaining_length);
+		cursor += remaining_length;
+
+		if (success)
+		{
+			animations.push_back(animation);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

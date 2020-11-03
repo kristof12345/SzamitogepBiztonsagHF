@@ -140,11 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="caff.cpp" />
+    <ClCompile Include="ciff.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="binary_helper.h" />
     <ClInclude Include="caff.h" />
+    <ClInclude Include="ciff.h" />
     <ClInclude Include="error_handler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

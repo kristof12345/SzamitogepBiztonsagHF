@@ -24,6 +24,13 @@ int main()
 	catch (const char* c)
 	{
 		ErrorHandler::Handle(c);
+		return -1;
+	}
+
+	string outputpath = "c:\\BME\\SzamitogepBiztonsag\\test\\output\\";
+	for(int i = 0; i < caff.GetAnimations().size(); ++i)
+	{
+		caff.GetAnimations()[i].ciff.ExportToBMP(outputpath + to_string(i+1) + "_img.bmp" );
 	}
 
 	return 0;

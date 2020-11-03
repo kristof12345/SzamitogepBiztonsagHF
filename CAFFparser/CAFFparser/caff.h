@@ -3,7 +3,7 @@
 #include<iostream>
 
 #include "binary_helper.h"
-#include <vector>
+#include "ciff.h"
 
 using namespace std;
 
@@ -27,25 +27,34 @@ namespace CAFFparser
 		string creator;
 	};
 
+	struct Animation
+	{
+		long long int duration;
+		CIFF ciff;
+	};
+
 	class CAFF
 	{
 	protected:
 		bool valid;
 		CAFFheader header;
 		CAFFcredits credits;
+		vector<Animation> animations;
 
 	public:
 		CAFF();
 
 		const bool GetValid() const;
 		const CAFFheader& GetHeader() const;
+		const CAFFcredits& GetCredits() const;
+		const vector<Animation>& GetAnimations() const;
 
 		bool Read(byte* data, size_t length);
 
 	protected:
-		bool ReadHeader(byte* data, size_t length, size_t& cursor);
 		bool ReadBlocks(byte* data, size_t length, size_t& cursor);
-		bool ReadBlock(byte* data, size_t length, size_t& cursor);
+		bool ReadBlock(byte* data, size_t length, size_t& cursor, byte ID);
+		bool ReadHeader(byte* data, size_t length, size_t& cursor);
 		bool ReadCredits(byte* data, size_t length, size_t& cursor);
 		bool ReadAnimation(byte* data, size_t length, size_t& cursor);
 	};
