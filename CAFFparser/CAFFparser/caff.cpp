@@ -1,4 +1,6 @@
+#include <fstream>
 #include "error_handler.h"
+#include "json_helper.h"
 #include "caff.h"
 
 namespace CAFFparser
@@ -60,11 +62,6 @@ namespace CAFFparser
 			if (firstblock && ID != 0x1)
 			{
 				ErrorHandler::Handle("Header block mandatory 0x1 validated");
-				return false;
-			}
-			else if (!firstblock && ID == 0x1)
-			{
-				ErrorHandler::Handle("Multiple header blocks found");
 				return false;
 			}
 
@@ -133,7 +130,7 @@ namespace CAFFparser
 		credits.m = ReadBinary<byte>(data, length, cursor);
 		credits.creator_len = ReadBinary<long long int>(data, length, cursor);
 
-		if(credits.creator_len < 0)
+		if (credits.creator_len < 0)
 		{
 			ErrorHandler::Handle("Credits block has invalid creator_len");
 			return false;
@@ -177,4 +174,47 @@ namespace CAFFparser
 			return false;
 		}
 	}
+
+	void CAFF::ExportToJson(string file)
+	{
+		int tab = 0;
+		string json;
+		json += WriteWithTabs(tab++, "{");
+
+			json += WriteWithTabs(tab++, "\"Header\": {");
+				json += WriteWithTabs(tab, "\"header_size\": " + to_string(header.header_size) + ",");
+				json += WriteWithTabs(tab, "\"num_anim\": " + to_string(header.header_size));
+			json += WriteWithTabs(--tab, "},");
+
+			json += WriteWithTabs(tab++, "\"Credits\": {");
+				json += WriteWithTabs(tab, "\"year\": " + to_string(credits.Y) + ",");
+				json += WriteWithTabs(tab, "\"month\": " + to_string(credits.M) + ",");
+				json += WriteWithTabs(tab, "\"day\": " + to_string(credits.D) + ",");
+				json += WriteWithTabs(tab, "\"hour\": " + to_string(credits.h) + ",");
+				json += WriteWithTabs(tab, "\"minute\": " + to_string(credits.m) + ",");
+				json += WriteWithTabs(tab, "\"creator_len\": " + to_string(credits.creator_len) + ",");
+				json += WriteWithTabs(tab, "\"creator\": \"" + credits.creator + "\"");
+			json += WriteWithTabs(--tab, "},");
+
+			json += WriteWithTabs(tab++, "\"Animations\": [");
+			for (size_t i = 0; i < animations.size(); ++i)
+			{
+				Animation& animation = animations[i];
+				json += WriteWithTabs(tab++, "{");
+					json += WriteWithTabs(tab, "\"duration\": " + to_string(animation.duration) + ",");
+					json += animation.ciff.GetJson(tab);
+				json += WriteWithTabs(--tab, i == animations.size() - 1 ? "}" : "}," );
+
+			}
+
+			json += WriteWithTabs(--tab, "]");
+
+		json += WriteWithTabs(--tab, "}");
+
+		ofstream myfile;
+		myfile.open(file);
+		myfile << json;
+		myfile.close();
+	}
+
 }

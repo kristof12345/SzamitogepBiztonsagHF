@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef CIFF_H
+#define CIFF_H
+
 #include<vector>
 #include<iostream>
 
@@ -42,9 +46,12 @@ namespace CAFFparser
 
 		bool Read(byte* data, size_t length);
 		void ExportToBMP(string file) const;
+		string GetJson(int initial_tabs);
 
 	protected:
 		bool ReadHeader(byte* data, size_t length, size_t& cursor);
 		bool ReadPixels(byte* data, size_t length, size_t& cursor);
 	};
 }
+
+#endif

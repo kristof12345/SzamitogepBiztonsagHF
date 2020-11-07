@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef ERROR_HANDLER_H
+#define ERROR_HANDLER_H
+
 #include <string>
 #include <iostream>
 
@@ -13,3 +16,5 @@ namespace CAFFparser
 		static void Handle(string error) { cout << "ERROR: " << error << endl; }
 	};
 }
+
+#endif

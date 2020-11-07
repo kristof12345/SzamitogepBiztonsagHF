@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef BINARY_HELPER_H
+#define BINARY_HELPER_H
+
 namespace CAFFparser
 {
 	using byte = unsigned char;
@@ -28,3 +31,5 @@ namespace CAFFparser
 		}
 	}
 }
+
+#endif

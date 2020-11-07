@@ -1,3 +1,4 @@
+#include "json_helper.h"
 #include "error_handler.h"
 #include "ciff.h"
 
@@ -46,48 +47,49 @@ namespace CAFFparser
 
 	void CIFF::ExportToBMP(string file) const
 	{
-		int w = header.width;
-		int h = header.height;
+		int w = (size_t)header.width;
+		int h = (size_t)header.height;
 
 		FILE* f;
-		unsigned char* img = NULL;
+		byte* img = NULL;
 		int filesize = 54 + 3 * w * h;  //w is your image width, h is image height, both int
 
-		img = (unsigned char*)malloc(3 * w * h);
-		memset(img, 0, 3 * w * h);
+		img = new byte[3 * w * h];
+		for (int i = 0; i < 3 * w * h; ++i)
+			img[i] = 0;
 
 		for (int i = 0; i < w; i++)
 		{
 			for (int j = 0; j < h; j++)
 			{
-				img[(i * h + j) * 3 + 2] = (unsigned char)(pixels[i][j].r);
-				img[(i * h + j) * 3 + 1] = (unsigned char)(pixels[i][j].g);
-				img[(i * h + j) * 3 + 0] = (unsigned char)(pixels[i][j].b);
+				img[(i * h + j) * 3 + 2] = (byte)(pixels[i][j].r);
+				img[(i * h + j) * 3 + 1] = (byte)(pixels[i][j].g);
+				img[(i * h + j) * 3 + 0] = (byte)(pixels[i][j].b);
 				/*int x = i;
 				int y = (h - 1) - j;
-				img[(x + y * w) * 3 + 2] = (unsigned char)(pixels[i][j].r);
-				img[(x + y * w) * 3 + 1] = (unsigned char)(pixels[i][j].g);
-				img[(x + y * w) * 3 + 0] = (unsigned char)(pixels[i][j].b);*/
+				img[(x + y * w) * 3 + 2] = (byte)(pixels[i][j].r);
+				img[(x + y * w) * 3 + 1] = (byte)(pixels[i][j].g);
+				img[(x + y * w) * 3 + 0] = (byte)(pixels[i][j].b);*/
 			}
 		}
 
-		unsigned char bmpfileheader[14] = { 'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0 };
-		unsigned char bmpinfoheader[40] = { 40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0 };
-		unsigned char bmppad[3] = { 0,0,0 };
+		byte bmpfileheader[14] = { 'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0 };
+		byte bmpinfoheader[40] = { 40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0 };
+		byte bmppad[3] = { 0,0,0 };
 
-		bmpfileheader[2] = (unsigned char)(filesize);
-		bmpfileheader[3] = (unsigned char)(filesize >> 8);
-		bmpfileheader[4] = (unsigned char)(filesize >> 16);
-		bmpfileheader[5] = (unsigned char)(filesize >> 24);
+		bmpfileheader[2] = (byte)(filesize);
+		bmpfileheader[3] = (byte)(filesize >> 8);
+		bmpfileheader[4] = (byte)(filesize >> 16);
+		bmpfileheader[5] = (byte)(filesize >> 24);
 
-		bmpinfoheader[4] = (unsigned char)(w);
-		bmpinfoheader[5] = (unsigned char)(w >> 8);
-		bmpinfoheader[6] = (unsigned char)(w >> 16);
-		bmpinfoheader[7] = (unsigned char)(w >> 24);
-		bmpinfoheader[8] = (unsigned char)(h);
-		bmpinfoheader[9] = (unsigned char)(h >> 8);
-		bmpinfoheader[10] = (unsigned char)(h >> 16);
-		bmpinfoheader[11] = (unsigned char)(h >> 24);
+		bmpinfoheader[4] = (byte)(w);
+		bmpinfoheader[5] = (byte)(w >> 8);
+		bmpinfoheader[6] = (byte)(w >> 16);
+		bmpinfoheader[7] = (byte)(w >> 24);
+		bmpinfoheader[8] = (byte)(h);
+		bmpinfoheader[9] = (byte)(h >> 8);
+		bmpinfoheader[10] = (byte)(h >> 16);
+		bmpinfoheader[11] = (byte)(h >> 24);
 
 		fopen_s(&f, file.c_str(), "wb");
 		if (f != 0)
@@ -102,8 +104,12 @@ namespace CAFFparser
 
 			fclose(f);
 		}
+		else
+		{
+			ErrorHandler::Handle(string("Could not open file with 'wb': ") + file);
+		}
 
-		free(img);
+		delete[] img;
 	}
 
 	bool CIFF::ReadHeader(byte* data, size_t length, size_t& cursor)
@@ -127,7 +133,7 @@ namespace CAFFparser
 		header.width = ReadBinary<long long int>(data, length, cursor);
 		header.height = ReadBinary<long long int>(data, length, cursor);
 
-		if (cursor < header.header_size)
+		if (cursor < (size_t)header.header_size)
 		{
 			char c = ReadBinary<char>(data, (size_t)header.header_size, cursor);
 			while (c != '\n')
@@ -137,7 +143,7 @@ namespace CAFFparser
 			}
 		}
 
-		while (cursor < header.header_size)
+		while (cursor < (size_t)header.header_size)
 		{
 			string tag;
 			char c = ReadBinary<char>(data, (size_t)header.header_size, cursor);
@@ -171,7 +177,7 @@ namespace CAFFparser
 		//}
 
 		pixels.resize((size_t)header.width); //for performance increase
-		for (size_t x = 0; x < header.width; ++x)
+		for (size_t x = 0; x < (size_t)header.width; ++x)
 		{
 			pixels[x].resize((size_t)header.height);
 			for (size_t y = 0; y < (size_t)header.height; ++y)
@@ -185,5 +191,28 @@ namespace CAFFparser
 		}
 
 		return true;
+	}
+
+	string CIFF::GetJson(int initial_tabs)
+	{
+		int tab = initial_tabs;
+		string json;
+		json += WriteWithTabs(tab++, "\"ciff\": {");
+			json += WriteWithTabs(tab++, "\"Header\": {");
+				json += WriteWithTabs(tab, "\"header_size\": " + to_string(header.header_size) + ",");
+				json += WriteWithTabs(tab, "\"content_size\": " + to_string(header.content_size) + ",");
+				json += WriteWithTabs(tab, "\"width\": " + to_string(header.width) + ",");
+				json += WriteWithTabs(tab, "\"height\": " + to_string(header.height) + ",");
+				json += WriteWithTabs(tab, "\"caption\": \"" + header.caption + "\",");
+				json += WriteWithTabs(tab++, "\"tags\": [");
+				for (size_t i = 0; i < header.tags.size(); ++i)
+				{
+					string& tag = header.tags[i];
+					json += WriteWithTabs(tab, "\"" + tag + (i == header.tags.size() - 1 ? "\"" : "\","));
+				}
+				json += WriteWithTabs(--tab, "]");
+			json += WriteWithTabs(--tab, "}");
+		json += WriteWithTabs(--tab, "}");
+		return json;
 	}
 }

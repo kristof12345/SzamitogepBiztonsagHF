@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef CAFF_H
+#define CAFF_H
+
 #include<vector>
 #include<iostream>
 
@@ -50,6 +54,7 @@ namespace CAFFparser
 		const vector<Animation>& GetAnimations() const;
 
 		bool Read(byte* data, size_t length);
+		void ExportToJson(string file);
 
 	protected:
 		bool ReadBlocks(byte* data, size_t length, size_t& cursor);
@@ -59,3 +64,5 @@ namespace CAFFparser
 		bool ReadAnimation(byte* data, size_t length, size_t& cursor);
 	};
 }
+
+#endif
