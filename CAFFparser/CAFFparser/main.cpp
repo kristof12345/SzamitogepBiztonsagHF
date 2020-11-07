@@ -38,6 +38,12 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	if (!caff.GetValid())
+	{
+		ErrorHandler::Handle("CAFF is not valid, not exporting any output");
+		return -1;
+	}
+
 	caff.ExportToJson(outputpath + "output.json");
 	for(size_t i = 0; i < caff.GetAnimations().size(); ++i)
 	{
