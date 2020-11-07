@@ -16,5 +16,5 @@ To use the Makefile on Windows, follow these steps:
     - First parameter is the caff file's full path
     - Second parameter is the output directory (make sure, that this directorx already exists)
     - Example: `CAFFparserBin.exe c:\BME\SzamitogepBiztonsag\test\1.caff c:\BME\SzamitogepBiztonsag\test\output\`
-1. The metadata of the CAFF file is found in the "output.json" file in the output directory.
-1. The images contained in the CAFF file are found in the output directory with names: ##_img.bmp where ## is the number of the ciff (example: "1_img.bmp").
+1. The metadata of the CAFF file is found in the `output.json` file in the output directory.
+1. The images contained in the CAFF file are found in the output directory with names: `##_img.bmp` where `##` is the number of the ciff (example: `1_img.bmp`).
