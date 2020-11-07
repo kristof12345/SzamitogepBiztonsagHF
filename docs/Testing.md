@@ -16,3 +16,8 @@ Kitérünk az alábbi scenáriók tesztelésére (annak ellenőrzésére, hogy n
 * Két felhasználó regisztrálása azonos felhasználónévvel
 * Bejelentkezés nélküli hozzáférés a rendszerhez
 * Adminisztrátori funkciók elérése normál felhasználók számára
+### Elemző eszközök
+A teszteseteken kívül elemző programokkal is ellenőrizzük a nemfunkcionális követelményeket
+* C++ modul: Valgrind és AFL
+* Backend: SonarQube
+* Kliens: SonarQube

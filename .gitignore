@@ -360,3 +360,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/CAFFparser/*.exe
+/CAFFparser/make_obj/*.o
+/CAFFparser/*.d
+
+**/.DS_Store
