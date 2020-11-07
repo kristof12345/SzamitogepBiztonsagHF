@@ -49,6 +49,12 @@ namespace CAFFparser
 			return false;
 		}
 
+		if (header.num_anim != animations.size())
+		{
+			ErrorHandler::Handle("CAFF header num_anim is not equal to the number of animation blocks");
+			return false;
+		}
+
 		valid = true;
 		return true;
 	}
