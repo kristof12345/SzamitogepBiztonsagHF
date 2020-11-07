@@ -161,8 +161,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             // Termék megvásárlásának beállítása
             // Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
             val response =
-                storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id)
-                    .execute()
+                storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id).execute()
             when {
                 response.isSuccessful -> {
                     val selected = selectedCaff.value
