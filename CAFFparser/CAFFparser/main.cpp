@@ -25,6 +25,10 @@ int main(int argc, char* argv[])
 	cout << "output directory: " << outputpath << endl;
 
 	ifstream input(caff_file, ios::binary);
+	if (!input) {
+		ErrorHandler::Handle(string("Could not open CAFF file: " + caff_file));
+		return -1;
+	}
 	vector<unsigned char> buffer(istreambuf_iterator<char>(input), {});
 	input.close();
 
