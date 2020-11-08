@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	cout << "currently running in: " << argv[0] << endl;
 	string caff_file = argv[1];
 	cout << ".caff file: " << caff_file << endl;
-	string outputpath = string(argv[2]) + "\\";
+	string outputpath = string(argv[2]) + "/";
 	cout << "output directory: " << outputpath << endl;
 
 	ifstream input(caff_file, ios::binary);
