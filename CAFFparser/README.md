@@ -26,12 +26,15 @@ The solution was tested on Linux with Valgrind and AFL. See the results in the [
 1. Run program with Valgrind with terminal command: `valgrind ./CAFFparserBin 1.caff out`
 ## AFL
 1. Install AFL
+
 `git clone https://github.com/mirrorer/afl`
+
 Change the value of `MAX_FILE` in `config.h` to `(8 * 1024 * 1024)`
 ```
 cd afl
 make && sudo make install
 ```
-2. Run AFL 
+2. Run AFL
+
 Create inputs directory  in the solution directory and copy some sample caff files into the inputs directory.
 Run command `./run_afl.sh` from the solution directory
