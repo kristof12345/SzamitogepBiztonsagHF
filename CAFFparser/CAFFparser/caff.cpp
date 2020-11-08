@@ -72,7 +72,7 @@ namespace CAFFparser
 			}
 
 			long long int signed_blocklength = ReadBinary<long long int>(data, length, cursor);
-			if (signed_blocklength <= 0)
+			if (signed_blocklength <= 0 || signed_blocklength > length)
 			{
 				ErrorHandler::Handle("Block length invalid");
 				return false;

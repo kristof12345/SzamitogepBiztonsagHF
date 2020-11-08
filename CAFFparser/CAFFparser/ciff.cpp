@@ -118,7 +118,7 @@ namespace CAFFparser
 		}
 
 		header.content_size = ReadBinary<long long int>(data, length, cursor);
-		if (header.header_size < 0)
+		if (header.header_size < 0 || header.header_size > length)
 		{
 			ErrorHandler::Handle("CIFF content size invalid");
 			return false;
