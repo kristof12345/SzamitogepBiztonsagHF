@@ -50,7 +50,6 @@ namespace CAFFparser
 		int w = (size_t)header.width;
 		int h = (size_t)header.height;
 
-		FILE* f;
 		byte* img = NULL;
 		int filesize = 54 + 3 * w * h;  //w is your image width, h is image height, both int
 
@@ -86,22 +85,22 @@ namespace CAFFparser
 		bmpinfoheader[10] = (byte)(h >> 16);
 		bmpinfoheader[11] = (byte)(h >> 24);
 
-		fopen_s(&f, file.c_str(), "wb");
-		if (f != 0)
+		ofstream myfile;
+		myfile.open(file, ios::binary);
+		if (myfile)
 		{
-			fwrite(bmpfileheader, 1, 14, f);
-			fwrite(bmpinfoheader, 1, 40, f);
+			myfile.write(reinterpret_cast<char*>(bmpfileheader), 14);
+			myfile.write(reinterpret_cast<char*>(bmpinfoheader), 40);
 			for (int i = 0; i < h; i++)
 			{
-				fwrite(img + (w * (h - i - 1) * 3), 3, w, f);
-				fwrite(bmppad, 1, (4 - (w * 3) % 4) % 4, f);
+				myfile.write(reinterpret_cast<char*>(img + (w * (h - i - 1) * 3)), 3*w);
+				myfile.write(reinterpret_cast<char*>(bmppad), (4 - (w * 3) % 4) % 4);
 			}
-
-			fclose(f);
+			myfile.close();
 		}
 		else
 		{
-			ErrorHandler::Handle(string("Could not open file with 'wb': ") + file);
+			ErrorHandler::Handle(string("Could not create file: ") + file);
 		}
 
 		delete[] img;

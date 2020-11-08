@@ -219,11 +219,13 @@ namespace CAFFparser
 
 		ofstream myfile;
 		myfile.open(file);
-		if (myfile)
+		if (myfile) {
 			myfile << json;
-		else
+			myfile.close();
+		}
+		else {
 			ErrorHandler::Handle(string("Could not create json file: ") + file);
-		myfile.close();
+		}
 	}
 
 }
