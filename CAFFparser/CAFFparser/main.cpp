@@ -41,6 +41,11 @@ int main(int argc, char* argv[])
 		ErrorHandler::Handle(c);
 		return -1;
 	}
+	catch (...)
+	{
+		ErrorHandler::Handle("Can not parse caff file");
+		return -1;
+	}
 
 	if (!caff.GetValid())
 	{
