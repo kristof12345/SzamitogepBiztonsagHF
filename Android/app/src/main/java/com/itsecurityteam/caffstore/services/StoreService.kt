@@ -63,7 +63,7 @@ class StoreService {
     @Throws(IOException::class)
     fun copyStream(input: InputStream, out: OutputStream) {
         val buffer = ByteArray(1024)
-        var read: Int = 0;
+        var read = 0;
         while (input.read(buffer).also { read = it } != -1) {
             out.write(buffer, 0, read)
         }

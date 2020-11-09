@@ -28,7 +28,6 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val storeService: StoreService = StoreService()
     private val sessionManager: SessionManager = SessionManager(CaffStoreApplication.appContext)
@@ -164,10 +163,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun buy() {
         viewModelScope.launch(Dispatchers.IO) {
-            // Termék megvásárlásának beállítása
-            // Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
-            val response =
-                storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id).execute()
+            val response = storeService.buy(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id).execute()
             when {
                 response.isSuccessful -> {
                     val selected = selectedCaff.value
@@ -175,6 +171,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                         it.bought = true
                         selectedCaff.postValue(it)
                         result.postValue(ViewResult(BUY_REQUEST, true))
+                    }
+                    caffs.value?.let {
+                        it.stream().filter{ a -> a.id == selected?.id}.forEach { a -> a.bought = true }
                     }
                 }
                 else -> {
@@ -225,10 +224,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun downloadCaff(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.getPath()
+            var fileUri = uri.path
             if (fileUri == null)
                 result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
-            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
             else {
                 storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
                 result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
@@ -262,7 +260,6 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         this.filter.creator = creator
         this.filter.free = isFree
         this.filter.bought = isBought
-
         search()
     }
 }

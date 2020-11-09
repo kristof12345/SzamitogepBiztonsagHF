@@ -7,16 +7,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.itsecurityteam.caffstore.CaffStoreApplication
 import com.itsecurityteam.caffstore.R
+import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.model.ViewResult
 import com.itsecurityteam.caffstore.model.responses.UserType
-import com.itsecurityteam.caffstore.CaffStoreApplication
-import com.itsecurityteam.caffstore.exceptions.AndroidException
 import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val userService: UserService = UserService()
@@ -117,9 +119,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun validateName(name: Editable?) {
-        // TODO: név beviteli mező validálása
-        // Amennyiben a bemenet érvénytelen, akkor throw AndroidException(int)
-        // A fenti konstruktorban az int egy R.string beli elem
+        if(name == null || name.length < 5)
+            throw AndroidException(R.string.tooShortUsername)
     }
 
     fun validateEmail(email: Editable?) {
@@ -130,7 +131,22 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun validatePassword(pass: Editable?) {
-        // TODO: jelszó beviteli mező validálása
-        // Hasonlóan a fentihez
+        if(pass == null || pass.length < 7)
+            throw AndroidException(R.string.tooShortPassword)
+
+        if(!isValidPasswordFormat(pass.toString()))
+            throw AndroidException(R.string.tooWeakPassword)
+    }
+
+    fun isValidPasswordFormat(password: String): Boolean {
+        val passwordREGEX = Pattern.compile("^" +
+                "(?=.*[0-9])" +         //at least 1 digit
+                "(?=.*[a-z])" +         //at least 1 lower case letter
+                "(?=.*[A-Z])" +         //at least 1 upper case letter
+                "(?=.*[a-zA-Z])" +      //any letter
+                "(?=.*[@#$%^&+=])" +    //at least 1 special character
+                ".{8,}" +               //at least 8 characters
+                "$");
+        return passwordREGEX.matcher(password).matches()
     }
 }

@@ -107,7 +107,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}/download")]
-        public ActionResult<IFormFile> DownloadImage([FromRoute] string id, [FromBody] UploadCAFFRequest caff)
+        public ActionResult<IFormFile> DownloadImage([FromRoute] string id)
         {
             //TODO: Authorization token from header
 
