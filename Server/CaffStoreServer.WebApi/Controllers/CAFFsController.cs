@@ -89,18 +89,17 @@ namespace CaffStoreServer.WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> UploadImage(IFormFile file)
+        [Route("{name}/{price}")]
+        public ActionResult<CommentResponse> UploadImage(IFormFile file, [FromRoute] string name, [FromRoute] string price)
         {
             //TODO: Authorization token from header
-            /*
+            
             var request = new UploadCAFFRequest
             {
-                Image = caff,
+                Image = file,
                 Name = name,
-                Price = price
+                Price = double.Parse(price)
             };
-            */
-            var a = file;
 
             var response = new CAFFResponse();
             return Ok(response);

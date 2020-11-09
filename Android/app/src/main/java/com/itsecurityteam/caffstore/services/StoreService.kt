@@ -57,7 +57,7 @@ class StoreService {
         copyStream(inputStream!!, out)
 
         val filePart = MultipartBody.Part.createFormData("file", file.name, RequestBody.create(MediaType.parse("image/*"), file))
-        return http.uploadImage(token, filePart)
+        return http.uploadImage(token, name, price.toString(), filePart)
     }
 
     @Throws(IOException::class)
