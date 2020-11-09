@@ -205,15 +205,18 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             var fileUri = uri.path
-            if (fileUri == null)
+            if (fileUri == null) {
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
-            // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
-            else {
-                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
+            } else {
+                if (fileUri.takeLast(5) != ".caff") {
+                    result.postValue(ViewResult(UPLOAD_REQUEST, false))
+                } else {
+                    var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
 
-                when {
-                    response.isSuccessful -> {
-                        result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                    when {
+                        response.isSuccessful -> {
+                            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                        }
                     }
                 }
             }
