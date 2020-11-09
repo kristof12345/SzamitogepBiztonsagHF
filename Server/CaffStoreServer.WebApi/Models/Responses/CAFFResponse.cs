@@ -8,7 +8,7 @@ namespace CaffStoreServer.WebApi.Models.Responses
 
         public string Name { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public string CreationDate { get; set; }
 
         public string Creator { get; set; }
 

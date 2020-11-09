@@ -25,7 +25,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.URI
 import java.net.URL
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val storeService: StoreService = StoreService()
@@ -90,9 +93,10 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     val list = response.body()
                     var caffsList = ArrayList<Caff>()
                     for (s in sort(list, orderBy, orderDir)) {
+                        var date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
                         caffsList.add(
                             Caff(
-                                s.id, s.name, s.creationDate, s.creator, s.duration,
+                                s.id, s.name, date, s.creator, s.duration,
                                 loadImage(s.thumbnailUrl), s.cost, s.bought, s.imageUrl
                             )
                         )
@@ -139,7 +143,16 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             val response = storeService.loadComments(sessionManager.fetchAuthToken()!!, caff.id).execute()
             when {
                 response.isSuccessful -> {
-                    val commentList = response.body()
+                    val list = response.body()
+                    var commentList = ArrayList<Comment>()
+                    for (s in list) {
+                        var date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
+                        commentList.add(
+                            Comment(
+                                s.id, s.userName, date, s.text
+                            )
+                        )
+                    }
                     comments.postValue(commentList)
                 }
             }
@@ -195,16 +208,22 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.getPath()
+            var fileUri = uri.encodedPath
             if (fileUri == null)
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
             // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
             else {
-                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, File(fileUri)).execute()
-                when {
-                    response.isSuccessful -> {
-                        result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                try {
+                    var file = File(fileUri)
+                    var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, file).execute()
+
+                    when {
+                        response.isSuccessful -> {
+                            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                        }
                     }
+                } catch (e: Exception) {
+                    var a = e.localizedMessage;
                 }
             }
         }

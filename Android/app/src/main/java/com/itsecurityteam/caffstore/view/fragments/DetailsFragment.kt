@@ -31,7 +31,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-
 class DetailsFragment : Fragment() {
     private lateinit var viewModel: StoreViewModel
     private var dialog: Dialog? = null

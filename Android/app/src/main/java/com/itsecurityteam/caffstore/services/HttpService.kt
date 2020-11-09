@@ -1,15 +1,14 @@
 package com.itsecurityteam.caffstore.services
 
-import com.itsecurityteam.caffstore.model.Comment
 import com.itsecurityteam.caffstore.model.requests.LoginRequest
 import com.itsecurityteam.caffstore.model.requests.RegisterRequest
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
+import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import com.itsecurityteam.caffstore.model.responses.LoginResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
-
 
 interface HttpService {
     @PUT("users")
@@ -20,6 +19,7 @@ interface HttpService {
 
     @GET("caffs")
     fun search(
+        @Header("Authorization") token: String,
         @Query("creator") creator: String?,
         @Query("title") title: String?,
         @Query("free") free: Boolean?,
@@ -27,7 +27,7 @@ interface HttpService {
     ): Call<List<CaffResponse>>
 
     @GET("caffs/{id}/comments")
-    fun getComments(@Header("Authorization") token: String, @Path("id") id: Long): Call<List<Comment>>
+    fun getComments(@Header("Authorization") token: String, @Path("id") id: Long): Call<List<CommentResponse>>
 
     @POST("caffs/{id}/buy")
     fun buy(@Header("Authorization") token: String, @Path("id") id: Long): Call<Void>
