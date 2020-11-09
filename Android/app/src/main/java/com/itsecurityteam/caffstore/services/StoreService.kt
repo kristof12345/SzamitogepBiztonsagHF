@@ -1,7 +1,8 @@
 package com.itsecurityteam.caffstore.services
 
-import android.util.Base64.encodeToString
+import android.net.Uri
 import com.google.gson.GsonBuilder
+import com.itsecurityteam.caffstore.CaffStoreApplication
 import com.itsecurityteam.caffstore.converter.DotNetDateConverter
 import com.itsecurityteam.caffstore.model.filter.Filter
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
@@ -12,8 +13,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.util.*
 
 
@@ -49,9 +49,24 @@ class StoreService {
         return http.comment(token, caffId!!, text)
     }
 
-    fun uploadCaff(token: String, name: String, price: Double, file: File): Call<CaffResponse> {
-        val filePart = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file))
+    fun uploadCaff(token: String, name: String, price: Double, uri: Uri): Call<CaffResponse> {
+        val inputStream: InputStream? = CaffStoreApplication.appContext.contentResolver.openInputStream(uri)
+        val file: File = File.createTempFile(name, ".caff")
+        file.deleteOnExit()
+        val out = FileOutputStream(file)
+        copyStream(inputStream!!, out)
+
+        val filePart = MultipartBody.Part.createFormData("file", file.name, RequestBody.create(MediaType.parse("image/*"), file))
         return http.uploadImage(token, filePart)
+    }
+
+    @Throws(IOException::class)
+    fun copyStream(input: InputStream, out: OutputStream) {
+        val buffer = ByteArray(1024)
+        var read: Int = 0;
+        while (input.read(buffer).also { read = it } != -1) {
+            out.write(buffer, 0, read)
+        }
     }
 
     fun downloadCaff(token: String, id: Long, uri: String) {

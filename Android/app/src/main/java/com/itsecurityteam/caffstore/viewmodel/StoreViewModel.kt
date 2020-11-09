@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.*
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -125,9 +124,6 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         return result;
     }
 
-    /**
-     *  Egy képet tölt le egy bitmapbe a megadott URL-ről
-     */
     private suspend fun loadImage(urlText: String): Bitmap {
         return withContext(Dispatchers.IO) {
             val url = URL(urlText)
@@ -206,15 +202,6 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    @Throws(IOException::class)
-    fun copyStream(input: InputStream, out: OutputStream) {
-        val buffer = ByteArray(1024)
-        var read: Int = 0;
-        while (input.read(buffer).also { read = it } != -1) {
-            out.write(buffer, 0, read)
-        }
-    }
-
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             var fileUri = uri.path
@@ -222,13 +209,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
             // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
             else {
-                val inputStream: InputStream? = CaffStoreApplication.appContext.getContentResolver().openInputStream(uri)
-                val file: File = File.createTempFile("prefix", "suffix")
-                file.deleteOnExit()
-                val out = FileOutputStream(file)
-                copyStream(inputStream!!, out)
-
-                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, file).execute()
+                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
 
                 when {
                     response.isSuccessful -> {
