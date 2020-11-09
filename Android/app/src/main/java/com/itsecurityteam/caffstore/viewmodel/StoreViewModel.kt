@@ -151,7 +151,6 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
     fun resultProcessed() {
         result.postValue(null)
     }

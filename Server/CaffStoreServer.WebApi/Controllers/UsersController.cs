@@ -9,11 +9,6 @@ namespace CaffStoreServer.WebApi.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        public UsersController()
-        {
-
-        }
-
         [HttpPut]
         public ActionResult<LoginResponse> Login([FromBody] LoginRequest request)
         {

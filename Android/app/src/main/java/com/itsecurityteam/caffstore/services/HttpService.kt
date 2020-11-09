@@ -38,7 +38,7 @@ interface HttpService {
 
     @Multipart
     @POST("caffs")
-    fun uploadImage(@Header("Authorization") token: String, @Part("name") name: RequestBody, @Part("name") price: RequestBody, @Part("image") file: RequestBody): Call<CaffResponse>
+    fun uploadImage(@Header("Authorization") token: String, @Part("name") name: RequestBody, @Part("price") price: RequestBody, @Part("image") file: RequestBody): Call<CaffResponse>
 
     @GET("caffs/{id}/download")
     fun downloadImage(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
