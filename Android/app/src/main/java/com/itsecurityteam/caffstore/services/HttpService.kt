@@ -20,7 +20,6 @@ interface HttpService {
 
     @GET("caffs")
     fun search(
-        @Header("Authorization") token: String,
         @Query("creator") creator: String?,
         @Query("title") title: String?,
         @Query("free") free: Boolean?,

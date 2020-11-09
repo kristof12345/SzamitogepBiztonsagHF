@@ -27,7 +27,7 @@ class StoreService {
     }
 
     fun loadCaffs(token: String, filter: Filter): Call<List<CaffResponse>> {
-        return http.search(token, filter.creator, filter.title, filter.free, filter.bought)
+        return http.search(filter.creator, filter.title, filter.free, filter.bought)
     }
 
     fun loadComments(token: String, caffId: Long): Call<List<Comment>> {

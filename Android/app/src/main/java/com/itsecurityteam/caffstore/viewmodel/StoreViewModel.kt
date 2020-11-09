@@ -83,9 +83,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun search() {
-        viewModelScope.launch {
-            val response =
-                storeService.loadCaffs(sessionManager.fetchAuthToken()!!, filter).execute()
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = storeService.loadCaffs(sessionManager.fetchAuthToken()!!, filter).execute()
             when {
                 response.isSuccessful -> {
                     val list = response.body()
@@ -136,9 +135,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         selectedCaff.value = caff
         comments.postValue(emptyList())
 
-        viewModelScope.launch {
-            val response =
-                storeService.loadComments(sessionManager.fetchAuthToken()!!, caff.id).execute()
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = storeService.loadComments(sessionManager.fetchAuthToken()!!, caff.id).execute()
             when {
                 response.isSuccessful -> {
                     val commentList = response.body()
@@ -156,7 +154,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun buy() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Termék megvásárlásának beállítása
             // Fontos, hogy a jelenleg kiválasztottat és a listában lévőt is frissíteni kell
             val response =
@@ -178,7 +176,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addComment(text: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = storeService.addComment(
                 sessionManager.fetchAuthToken()!!,
                 selectedCaff.value?.id,
@@ -196,7 +194,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             var fileUri = uri.getPath()
             if (fileUri == null)
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
@@ -213,7 +211,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun downloadCaff(uri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             var fileUri = uri.getPath()
             if (fileUri == null)
                 result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
@@ -226,14 +224,14 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun removeCurrentCaff() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             delay(500)
             result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
         }
     }
 
     fun removeComment(comment: Comment) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             delay(500)
             result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
         }
