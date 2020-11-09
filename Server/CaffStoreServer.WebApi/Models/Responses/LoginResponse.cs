@@ -1,4 +1,4 @@
-﻿namespace CaffStoreServer.WebApi.Models
+﻿namespace CaffStoreServer.WebApi.Models.Responses
 {
     public class LoginResponse
     {

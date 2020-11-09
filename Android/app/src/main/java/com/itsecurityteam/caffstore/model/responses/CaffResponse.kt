@@ -1,6 +1,5 @@
 package com.itsecurityteam.caffstore.model.responses
 
-import android.graphics.Bitmap
 import java.time.LocalDateTime
 
 data class CaffResponse(

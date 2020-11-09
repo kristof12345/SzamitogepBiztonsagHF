@@ -1,4 +1,6 @@
 ﻿using CaffStoreServer.WebApi.Models;
+using CaffStoreServer.WebApi.Models.Requests;
+using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -8,14 +10,14 @@ namespace CaffStoreServer.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         public UsersController()
-        { 
+        {
 
         }
 
         [HttpPut]
         public ActionResult<LoginResponse> Login([FromBody] LoginRequest request)
         {
-            if(request.Username == "admin")
+            if (request.Username == "admin")
             {
                 var response = new LoginResponse
                 {
@@ -35,6 +37,11 @@ namespace CaffStoreServer.WebApi.Controllers
 
             return NotFound();
         }
-        
+
+        [HttpPost]
+        public ActionResult Register([FromBody] RegisterRequest request)
+        {
+            return Ok();
+        }
     }
 }
