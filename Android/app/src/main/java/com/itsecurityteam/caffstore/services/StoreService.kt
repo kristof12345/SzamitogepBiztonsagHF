@@ -1,6 +1,6 @@
 package com.itsecurityteam.caffstore.services
 
-import android.net.Uri
+import android.util.Base64.encodeToString
 import com.google.gson.GsonBuilder
 import com.itsecurityteam.caffstore.converter.DotNetDateConverter
 import com.itsecurityteam.caffstore.model.filter.Filter
@@ -51,7 +51,7 @@ class StoreService {
 
     fun uploadCaff(token: String, name: String, price: Double, file: File): Call<CaffResponse> {
         val filePart = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file))
-        return http.uploadImage(token, name, price, filePart)
+        return http.uploadImage(token, filePart)
     }
 
     fun downloadCaff(token: String, id: Long, uri: String) {
