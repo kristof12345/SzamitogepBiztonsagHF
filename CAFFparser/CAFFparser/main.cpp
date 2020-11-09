@@ -21,10 +21,14 @@ int main(int argc, char* argv[])
 	cout << "currently running in: " << argv[0] << endl;
 	string caff_file = argv[1];
 	cout << ".caff file: " << caff_file << endl;
-	string outputpath = string(argv[2]) + "\\";
+	string outputpath = string(argv[2]) + "/";
 	cout << "output directory: " << outputpath << endl;
 
 	ifstream input(caff_file, ios::binary);
+	if (!input) {
+		ErrorHandler::Handle(string("Could not open CAFF file: " + caff_file));
+		return -1;
+	}
 	vector<unsigned char> buffer(istreambuf_iterator<char>(input), {});
 	input.close();
 
@@ -35,6 +39,11 @@ int main(int argc, char* argv[])
 	catch (const char* c)
 	{
 		ErrorHandler::Handle(c);
+		return -1;
+	}
+	catch (...)
+	{
+		ErrorHandler::Handle("Can not parse caff file");
 		return -1;
 	}
 

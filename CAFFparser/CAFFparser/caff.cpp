@@ -72,7 +72,7 @@ namespace CAFFparser
 			}
 
 			long long int signed_blocklength = ReadBinary<long long int>(data, length, cursor);
-			if (signed_blocklength <= 0)
+			if (signed_blocklength <= 0 || (size_t)signed_blocklength > length)
 			{
 				ErrorHandler::Handle("Block length invalid");
 				return false;
@@ -219,8 +219,13 @@ namespace CAFFparser
 
 		ofstream myfile;
 		myfile.open(file);
-		myfile << json;
-		myfile.close();
+		if (myfile) {
+			myfile << json;
+			myfile.close();
+		}
+		else {
+			ErrorHandler::Handle(string("Could not create json file: ") + file);
+		}
 	}
 
 }

@@ -3,9 +3,9 @@
 ########################################################################
 
 # Compiler settings - Can be customized.
-CC = g++
-CXXFLAGS = -std=c++11 -Wall -fstack-protector-all
-LDFLAGS = -z noexecstack
+CC = afl-g++
+CXXFLAGS = -std=c++11 -Wall
+LDFLAGS =
 
 # Makefile settings - Can be customized.
 APPNAME = CAFFparserBin
