@@ -24,11 +24,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.net.URI
+import java.io.*
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val storeService: StoreService = StoreService()
@@ -206,24 +206,34 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    @Throws(IOException::class)
+    fun copyStream(input: InputStream, out: OutputStream) {
+        val buffer = ByteArray(1024)
+        var read: Int = 0;
+        while (input.read(buffer).also { read = it } != -1) {
+            out.write(buffer, 0, read)
+        }
+    }
+
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.encodedPath
+            var fileUri = uri.path
             if (fileUri == null)
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
             // TODO: URI ellenőrzés. Az létezik, lehet belőle olvasni is, de mivel ITSec házi, valahogy nézni kéne, hogy értelmes-e a kiterjesztés legalább
             else {
-                try {
-                    var file = File(fileUri)
-                    var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, file).execute()
+                val inputStream: InputStream? = CaffStoreApplication.appContext.getContentResolver().openInputStream(uri)
+                val file: File = File.createTempFile("prefix", "suffix")
+                file.deleteOnExit()
+                val out = FileOutputStream(file)
+                copyStream(inputStream!!, out)
 
-                    when {
-                        response.isSuccessful -> {
-                            result.postValue(ViewResult(UPLOAD_REQUEST, true))
-                        }
+                var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, file).execute()
+
+                when {
+                    response.isSuccessful -> {
+                        result.postValue(ViewResult(UPLOAD_REQUEST, true))
                     }
-                } catch (e: Exception) {
-                    var a = e.localizedMessage;
                 }
             }
         }

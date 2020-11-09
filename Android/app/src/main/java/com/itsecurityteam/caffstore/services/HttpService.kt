@@ -5,6 +5,7 @@ import com.itsecurityteam.caffstore.model.requests.RegisterRequest
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import com.itsecurityteam.caffstore.model.responses.LoginResponse
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -36,8 +37,8 @@ interface HttpService {
     fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body text: String): Call<Void>
 
     @Multipart
-    @POST("caffs")
-    fun uploadImage(@Header("Authorization") token: String, @Part("name") name: RequestBody, @Part("price") price: RequestBody, @Part("image") file: RequestBody): Call<CaffResponse>
+    @POST("caffs/{name}/{price}")
+    fun uploadImage(@Header("Authorization") token: String, @Path("name") name: String, @Path("price") price: Double, @Part file: MultipartBody.Part): Call<CaffResponse>
 
     @GET("caffs/{id}/download")
     fun downloadImage(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>

@@ -1,11 +1,13 @@
 package com.itsecurityteam.caffstore.services
 
+import android.net.Uri
 import com.google.gson.GsonBuilder
 import com.itsecurityteam.caffstore.converter.DotNetDateConverter
 import com.itsecurityteam.caffstore.model.filter.Filter
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import okhttp3.MediaType
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -13,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+
 
 class StoreService {
     private val baseUrl = "https://10.0.2.2:5001/"
@@ -47,22 +50,8 @@ class StoreService {
     }
 
     fun uploadCaff(token: String, name: String, price: Double, file: File): Call<CaffResponse> {
-        val nameData: RequestBody = RequestBody.create(
-            MediaType.parse("text/plain"),
-            name
-        )
-
-        val priceData: RequestBody = RequestBody.create(
-            MediaType.parse("text/plain"),
-            price.toString()
-        )
-
-        val imageData: RequestBody = RequestBody.create(
-            MediaType.parse("multipart/form-data"),
-            file
-        )
-
-        return http.uploadImage(token, nameData, priceData, imageData)
+        val filePart = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file))
+        return http.uploadImage(token, name, price, filePart)
     }
 
     fun downloadCaff(token: String, id: Long, uri: String) {

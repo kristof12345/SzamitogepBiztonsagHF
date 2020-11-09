@@ -89,9 +89,19 @@ namespace CaffStoreServer.WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> UploadImage([FromBody] UploadCAFFRequest caff)
+        [Route("{name}/{price}")]
+        public ActionResult<CommentResponse> UploadImage([FromRoute] string name, [FromRoute] double price, IFormFile caff)
         {
             //TODO: Authorization token from header
+
+            var request = new UploadCAFFRequest
+            {
+                Image = caff,
+                Name = name,
+                Price = price
+            };
+
+            var filename = caff.FileName;
 
             var response = new CAFFResponse();
             return Ok(response);
@@ -99,7 +109,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}/download")]
-        public ActionResult<IFormFile> DownloadImage([FromBody] UploadCAFFRequest caff)
+        public ActionResult<IFormFile> DownloadImage([FromRoute] string id, [FromBody] UploadCAFFRequest caff)
         {
             //TODO: Authorization token from header
 
