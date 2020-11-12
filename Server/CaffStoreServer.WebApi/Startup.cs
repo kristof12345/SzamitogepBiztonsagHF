@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace CaffStoreServer.WebApi
@@ -69,6 +70,27 @@ namespace CaffStoreServer.WebApi
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings["Secret"])),
                     ClockSkew = TimeSpan.Zero
+                };
+                options.Events = new JwtBearerEvents()
+                {
+                    OnTokenValidated =  async context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        //get userid if type is "userid"
+                        var userid = context.Principal.Claims.Where(x => x.Type == "userid").FirstOrDefault()?.Value;
+                        if (userid == null)
+                        {
+                            context.Fail("invaild token");
+                        }
+                        try
+                        {
+                            await userService.GetByIdAsync(Convert.ToInt64(userid));
+                        } catch
+                        {
+                            context.Fail("invaild token");
+                        }
+                    },
+
                 };
             });
 
