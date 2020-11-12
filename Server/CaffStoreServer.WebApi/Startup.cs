@@ -2,6 +2,7 @@ using CaffStoreServer.WebApi.Context;
 using CaffStoreServer.WebApi.DataSeed;
 using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
@@ -33,6 +35,11 @@ namespace CaffStoreServer.WebApi
             services.AddDbContext<CaffStoreDbContext>(o =>
                 o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
 
+            services.Configure<TokenSettings>(
+                Configuration.GetSection(nameof(TokenSettings)));
+            services.AddSingleton<ITokenSettings>(sp =>
+                sp.GetRequiredService<IOptions<TokenSettings>>().Value);
+
 
             services.AddIdentity<User, IdentityRole<long>>(o =>
             {
@@ -45,7 +52,7 @@ namespace CaffStoreServer.WebApi
             .AddEntityFrameworkStores<CaffStoreDbContext>()
             .AddDefaultTokenProviders();
 
-            string secret = Configuration.GetValue<string>("AppSettings:Secret");
+            string secret = Configuration.GetValue<string>("TokenSettings:Secret");
 
             services.AddAuthentication(options =>
             {
@@ -59,17 +66,16 @@ namespace CaffStoreServer.WebApi
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateLifetime = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidIssuer = Configuration.GetValue<string>("TokenSettings:Issuer"),
+                    ValidAudience = Configuration.GetValue<string>("TokenSettings:Audience"),
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
+            services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IUserService, UserService>();
-
-            services.AddSingleton(new TokenService(secret));
 
             services.AddControllers();
 

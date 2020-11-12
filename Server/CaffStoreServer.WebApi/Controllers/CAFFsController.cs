@@ -1,7 +1,7 @@
-﻿using CaffStoreServer.WebApi.Models;
-using CaffStoreServer.WebApi.Models.Requests;
+﻿using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using CaffStoreServer.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,18 +13,12 @@ namespace CaffStoreServer.WebApi.Controllers
     [Route("[controller]")]
     public class CAFFsController : ControllerBase
     {
-        private readonly TokenService _tokenService;
-
-        public CAFFsController(TokenService tokenService)
-        {
-            _tokenService = tokenService;
-        }
-
         [HttpGet]
+        [Authorize]
         public ActionResult<List<CAFFResponse>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
             //TODO: Authorization token from header
-            var user = User;
+            var user = this.User;
 
             var list = new List<CAFFResponse>();
 
@@ -123,15 +117,6 @@ namespace CaffStoreServer.WebApi.Controllers
 
             //TODO: return the file
             return Ok();
-        }
-
-        protected new LoginResponse User
-        {
-            get
-            {
-                string token = Request.Headers["Authorization"];
-                return _tokenService.DecodeToken(token?.Substring(7));
-            }
         }
     }
 }

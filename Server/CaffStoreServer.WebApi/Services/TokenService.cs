@@ -1,70 +1,54 @@
-﻿using System;
-using Newtonsoft.Json;
-using JWT.Algorithms;
-using JWT.Builder;
+﻿using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
-using CaffStoreServer.WebApi.Models.Responses;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Linq;
+using System.Text;
+using CaffStoreServer.WebApi.Entities;
 
 namespace CaffStoreServer.WebApi.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
-        private readonly string _secret;
+        private readonly ITokenSettings _tokenSettings;
 
         private readonly JwtSecurityTokenHandler _tokenHandler = new JwtSecurityTokenHandler();
 
-        public TokenService(string secret)
+        public TokenService(ITokenSettings tokenSettings)
         {
-            _secret = secret;  
+            _tokenSettings = tokenSettings;
         }
 
-        public string GenerateToken(string username, long userId, UserType type, int expireMinutes = 60)
-        {
-            var token = new JwtBuilder()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(_secret)
-                .AddClaim("exp", DateTimeOffset.UtcNow.AddMinutes(expireMinutes).ToUnixTimeSeconds())
-                .AddClaim("username", username)
-                .AddClaim("type", type)
-                .AddClaim(ClaimTypes.Name, userId.ToString())
-                .AddClaim(ClaimTypes.Role, type == UserType.User ? "User" : "Administrator")
-                .Encode();
-
-            return token;
-        }
-
-        public LoginResponse DecodeToken(string token)
-        {
-            try
+        public string GenerateToken(string username, User user, int expireMinutes = 60)
+        {            var claims = new List<Claim>
             {
-                string json = new JwtBuilder()
-                    .WithAlgorithm(new HMACSHA256Algorithm())
-                    .WithSecret(_secret)
-                    .MustVerifySignature()
-                    .Decode(token);
-                return JsonConvert.DeserializeObject<LoginResponse>(json);
-            }
-            catch (JWT.Exceptions.TokenExpiredException)
-            {
-                return null;
-            }
-        }
+                new Claim("username", username),
+                new Claim("userid", user.Id.ToString()),
+                // TODO: persist user role
+                //new Claim(ClaimTypes.Role, type == UserType.User ? "User" : "Administrator")
+            };
+            var secretBytes = Encoding.UTF8.GetBytes(_tokenSettings.Secret);
+            var key = new SymmetricSecurityKey(secretBytes);
+            var algorithm = SecurityAlgorithms.HmacSha256;
 
-        public string DecodeUserId(string token)
-        {
-            var decodedToken = _tokenHandler.ReadToken(token) as JwtSecurityToken;
+            var signingCredentials = new SigningCredentials(key, algorithm);
 
-            return decodedToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-        }
+        
+            var token = new JwtSecurityToken(
+                _tokenSettings.Issuer,
+                _tokenSettings.Audience,
+                claims,
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(expireMinutes),
+                signingCredentials
+                );
 
-        public string DecodeUserRole(string token)
-        {
-            var decodedToken = _tokenHandler.ReadToken(token) as JwtSecurityToken;
+            var tokenJson = _tokenHandler.WriteToken(token);
 
-            return decodedToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+            return tokenJson;
         }
     }
 }
