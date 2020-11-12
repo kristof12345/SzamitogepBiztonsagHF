@@ -1,9 +1,7 @@
 ﻿using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Interfaces
@@ -16,5 +14,6 @@ namespace CaffStoreServer.WebApi.Interfaces
         Task<RegisterResponse> CreateUserAsync(RegisterRequest request);
         Task UpdateAsync(UpdateRequest request);
         Task DeleteAsync(long id);
+        Task<LoginResponse> LoginAsync(LoginRequest request);
     }
 }

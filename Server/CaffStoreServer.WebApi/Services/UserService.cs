@@ -37,6 +37,26 @@ namespace CaffStoreServer.WebApi.Services
             => await _userManager.FindByNameAsync(userName)
                 ?? throw new Exception("Invalid userName");
 
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        {
+            var user = await GetByUserNameAsync(request.Username);
+            if (user == null)
+                throw new UserNotFoundException();
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.Contains("Administrator") ? UserType.Admin : UserType.User;
+            var response = new LoginResponse
+            {
+                IsSuccess = true,
+                Token = _tokenService.GenerateToken(request.Username,
+                                                    user,
+                                                    role),
+                UserId = user.Id,
+                UserType = role
+            };
+            return response;
+        }
+
         public async Task<RegisterResponse> CreateUserAsync(RegisterRequest request)
         {
             var user = new User
@@ -63,7 +83,7 @@ namespace CaffStoreServer.WebApi.Services
                 {
                     IsSuccess = true,
                     UserId = user.Id,
-                    Token = _tokenService.GenerateToken(user.UserName, user),
+                    Token = _tokenService.GenerateToken(user.UserName, user, userType),
                     UserType = userType
                 };
             }

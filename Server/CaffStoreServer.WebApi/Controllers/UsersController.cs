@@ -5,6 +5,7 @@ using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,27 +29,14 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            if (request.Username == "admin")
+            try
             {
-                var user = await _userService.GetByUserNameAsync(request.Username);
-                var response = new LoginResponse
-                {
-                    IsSuccess = true,
-                    Token = _tokenService.GenerateToken(request.Username,
-                                                        user),
-                    UserId = 12,
-                    UserType = UserType.Admin
-                };
-
-                return Ok(response);
-            }
-
-            if (request.Username == "me")
+                var result = await _userService.LoginAsync(request);
+                return Ok(result);
+            } catch (Exception e)
             {
                 return Unauthorized();
             }
-
-            return NotFound();
         }
 
         [AllowAnonymous]
