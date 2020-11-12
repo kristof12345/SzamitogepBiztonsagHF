@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,8 +34,9 @@ namespace CaffStoreServer.WebApi
             services.AddDbContext<CaffStoreDbContext>(o =>
                 o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
 
+            var tokenSettings = Configuration.GetSection(nameof(TokenSettings));
             services.Configure<TokenSettings>(
-                Configuration.GetSection(nameof(TokenSettings)));
+                tokenSettings);
             services.AddSingleton<ITokenSettings>(sp =>
                 sp.GetRequiredService<IOptions<TokenSettings>>().Value);
 
@@ -52,8 +52,6 @@ namespace CaffStoreServer.WebApi
             .AddEntityFrameworkStores<CaffStoreDbContext>()
             .AddDefaultTokenProviders();
 
-            string secret = Configuration.GetValue<string>("TokenSettings:Secret");
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,10 +64,10 @@ namespace CaffStoreServer.WebApi
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateLifetime = true,
-                    ValidIssuer = Configuration.GetValue<string>("TokenSettings:Issuer"),
-                    ValidAudience = Configuration.GetValue<string>("TokenSettings:Audience"),
+                    ValidIssuer = tokenSettings["Issuer"],
+                    ValidAudience = tokenSettings["Audience"],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings["Secret"])),
                     ClockSkew = TimeSpan.Zero
                 };
             });
