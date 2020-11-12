@@ -36,6 +36,10 @@ namespace CaffStoreServer.WebApi.Services
             => await _userManager.FindByIdAsync(id.ToString())
                 ?? throw new Exception("Invalid id");
 
+        public async Task<User> GetByUserNameAsync(string userName)
+            => await _userManager.FindByNameAsync(userName)
+                ?? throw new Exception("Invalid userName");
+
         public async Task<RegisterResponse> CreateUserAsync(RegisterRequest request)
         {
             var user = new User

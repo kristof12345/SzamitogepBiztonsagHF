@@ -12,6 +12,7 @@ namespace CaffStoreServer.WebApi.Interfaces
     {
         Task<IEnumerable<User>> GetAsync();
         Task<User> GetByIdAsync(long id);
+        Task<User> GetByUserNameAsync(string userName);
         Task<RegisterResponse> CreateUserAsync(RegisterRequest request);
         Task UpdateAsync(UpdateRequest request, string token);
         Task DeleteAsync(long id, string token);
