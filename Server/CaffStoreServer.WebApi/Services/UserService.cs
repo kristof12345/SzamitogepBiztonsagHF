@@ -88,7 +88,11 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task DeleteAsync(long id)
         {
-            throw new Exception("User delete error");
+            var result = await _userManager.DeleteAsync(await GetByIdAsync(id));
+            if (result.Succeeded)
+            {
+                throw new Exception("User delete error");
+            }
         }
     }
 }
