@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -53,6 +54,11 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
+            if (!User.HasClaim(c => c.Type == "userid" && c.Value == request.UserId.ToString())
+                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
+            {
+                return Unauthorized();
+            }
             await _userService.UpdateAsync(request);
 
             return NoContent();
@@ -62,12 +68,13 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id)
         {
-            if (User.HasClaim(c => c.Type == "userid" && c.Value == id.ToString()))
+            if (!User.HasClaim(c => c.Type == "userid" && c.Value == id.ToString())
+                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
             {
-                await _userService.DeleteAsync(id);
-                return NoContent();
+                return Unauthorized();
             }
-            return Unauthorized();
+            await _userService.DeleteAsync(id);
+            return NoContent();
         }
 
     }
