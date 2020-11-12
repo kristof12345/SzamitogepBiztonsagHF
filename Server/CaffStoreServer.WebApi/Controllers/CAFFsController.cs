@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace CaffStoreServer.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("caffs")]
     public class CAFFsController : ControllerBase
     {
         [HttpGet]

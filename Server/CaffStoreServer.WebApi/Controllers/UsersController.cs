@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CaffStoreServer.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
