@@ -16,7 +16,6 @@ namespace CaffStoreServer.WebApi.Services
 {
     public class UserService : IUserService
     {
-        public string Token { private get; set; }
 
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
@@ -28,13 +27,13 @@ namespace CaffStoreServer.WebApi.Services
             _tokenService = tokenService;
         }
 
-        public async Task<IEnumerable<User>> GetAsync() 
+        public async Task<IEnumerable<User>> GetAsync()
             => await _userManager.Users
                                  .AsNoTracking()
                                  .ToListAsync();
-         
-        public async Task<User> GetByIdAsync(long id) 
-            => await _userManager.FindByIdAsync(id.ToString()) 
+
+        public async Task<User> GetByIdAsync(long id)
+            => await _userManager.FindByIdAsync(id.ToString())
                 ?? throw new Exception("Invalid id");
 
         public async Task<RegisterResponse> CreateUserAsync(RegisterRequest request)
@@ -62,8 +61,8 @@ namespace CaffStoreServer.WebApi.Services
                 return new RegisterResponse
                 {
                     IsSuccess = true,
-                    UserId = user.Id, 
-                    Token = _tokenService.GenerateToken(user.UserName, userType),
+                    UserId = user.Id,
+                    Token = _tokenService.GenerateToken(user.UserName, user.Id, userType),
                     UserType = userType
                 };
             }
@@ -73,25 +72,33 @@ namespace CaffStoreServer.WebApi.Services
             }
         }
 
-        public async Task UpdateAsync(UpdateRequest request)
+        public async Task UpdateAsync(UpdateRequest request, string token)
         {
-            var user = await GetByIdAsync(request.UserId);
-
-            user.UserName = request.Username;
-            user.Email = request.Email;
-
-            if (!(await _userManager.UpdateAsync(user)).Succeeded)
+            if (IsValidUser(request.UserId, token))
             {
-                throw new Exception("User update error");
+                var user = await GetByIdAsync(request.UserId);
+
+                user.UserName = request.Username;
+                user.Email = request.Email;
+
+                if (!(await _userManager.UpdateAsync(user)).Succeeded)
+                {
+                    throw new Exception("User update error");
+                }
             }
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(long id, string token)
         {
-            if (!(await _userManager.DeleteAsync(await GetByIdAsync(id))).Succeeded)
+            if (IsValidUser(id, token) && !(await _userManager.DeleteAsync(await GetByIdAsync(id))).Succeeded)
             {
                 throw new Exception("User delete error");
             }
         }
+
+        private bool IsValidUser(long id, string token) => 
+            long.TryParse(_tokenService.DecodeUserId(token), out long tokenUserId) &&
+                         (id == tokenUserId || 
+                          _tokenService.DecodeUserRole(token) == "Administrator");
     }
 }

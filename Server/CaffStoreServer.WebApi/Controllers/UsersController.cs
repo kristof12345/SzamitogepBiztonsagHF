@@ -4,6 +4,7 @@ using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using CaffStoreServer.WebApi.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -36,7 +37,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 var response = new LoginResponse
                 {
                     IsSuccess = true,
-                    Token = _tokenService.GenerateToken(request.Username, UserType.Admin),
+                    Token = _tokenService.GenerateToken(request.Username, request.UserId, UserType.Admin),
                     UserId = 12,
                     UserType = UserType.Admin
                 };
@@ -66,7 +67,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
-            await _userService.UpdateAsync(request);
+            await _userService.UpdateAsync(request, await getToken());
 
             return NoContent();
         }
@@ -75,7 +76,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id)
         {
-            await _userService.DeleteAsync(id);
+            await _userService.DeleteAsync(id, await getToken());
 
             return NoContent();
         }
@@ -88,5 +89,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 return _tokenService.DecodeToken(token?.Substring(7));
             }
         }
+
+        private async Task<string> getToken() => await HttpContext.GetTokenAsync("access_token");
     }
 }
