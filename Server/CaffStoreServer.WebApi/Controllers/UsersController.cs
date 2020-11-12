@@ -72,10 +72,10 @@ namespace CaffStoreServer.WebApi.Controllers
         }
 
         [Authorize(Roles = "Administrator,User")]
-        [HttpDelete]
-        public async Task<ActionResult> DeleteAsync([FromBody] DeleteRequest request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(long id)
         {
-            await _userService.DeleteAsync(request.UserId);
+            await _userService.DeleteAsync(id);
 
             return NoContent();
         }

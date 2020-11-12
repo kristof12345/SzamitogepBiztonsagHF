@@ -48,7 +48,7 @@ namespace CaffStoreServer.WebApi.Services
             if ((await _userManager.CreateAsync(user, request.Password)).Succeeded)
             {
                 UserType userType;
-                if (user.UserName.Contains("Adminn"))
+                if (user.UserName.Contains("admin"))
                 {
                     await _userManager.AddToRoleAsync(user, "Administrator");
                     userType = UserType.Admin;
@@ -63,7 +63,8 @@ namespace CaffStoreServer.WebApi.Services
                 {
                     IsSuccess = true,
                     UserId = user.Id, 
-                    Token = _tokenService.GenerateToken(user.UserName, userType)
+                    Token = _tokenService.GenerateToken(user.UserName, userType),
+                    UserType = userType
                 };
             }
             else

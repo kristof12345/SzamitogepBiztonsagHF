@@ -12,5 +12,7 @@ namespace CaffStoreServer.WebApi.Models.Responses
         public long UserId { get; set; }
 
         public string Token { get; set; }
+
+        public UserType UserType { get; set; }
     }
 }
