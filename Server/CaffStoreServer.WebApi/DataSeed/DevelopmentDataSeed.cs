@@ -28,7 +28,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                     {
                         if (i < adminCount)
                         {
-                            user = new User()
+                            user = new User
                             {
                                 Email = $"admin{i}@admin.xpl",
                                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -41,7 +41,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                         }
                         else
                         {
-                            user = new User()
+                            user = new User
                             {
                                 Email = $"user{i}@user.xpl",
                                 SecurityStamp = Guid.NewGuid().ToString(),

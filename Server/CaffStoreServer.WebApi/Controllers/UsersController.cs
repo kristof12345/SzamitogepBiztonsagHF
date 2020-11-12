@@ -1,8 +1,15 @@
-﻿using CaffStoreServer.WebApi.Models;
+﻿using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using CaffStoreServer.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
 {
@@ -10,6 +17,17 @@ namespace CaffStoreServer.WebApi.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
+        private readonly IUserService _userService;
+        private readonly TokenService _tokenService;
+
+        public UsersController(IUserService userService,
+                               TokenService tokenService)
+        {
+            _userService = userService;
+            _tokenService = tokenService;
+        }
+
+        [AllowAnonymous]
         [HttpPut]
         public ActionResult<LoginResponse> Login([FromBody] LoginRequest request)
         {
@@ -18,7 +36,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 var response = new LoginResponse
                 {
                     IsSuccess = true,
-                    Token = TokenService.GenerateToken(request.Username, UserType.Admin),
+                    Token = _tokenService.GenerateToken(request.Username, UserType.Admin),
                     UserId = 12,
                     UserType = UserType.Admin
                 };
@@ -34,12 +52,32 @@ namespace CaffStoreServer.WebApi.Controllers
             return NotFound();
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public ActionResult Register([FromBody] RegisterRequest request)
-        {
-            //TODO: create user
+        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request) 
+            => await _userService.CreateUserAsync(request);
 
-            return Ok();
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
+            => Ok(await _userService.GetAsync());
+
+        [Authorize(Roles = "Administrator,User")]
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
+        {
+            await _userService.UpdateAsync(request);
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "Administrator,User")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAsync([FromBody] DeleteRequest request)
+        {
+            await _userService.DeleteAsync(request.UserId);
+
+            return NoContent();
         }
 
         protected new LoginResponse User
@@ -47,7 +85,7 @@ namespace CaffStoreServer.WebApi.Controllers
             get
             {
                 string token = Request.Headers["Authorization"];
-                return TokenService.DecodeToken(token?.Substring(7));
+                return _tokenService.DecodeToken(token?.Substring(7));
             }
         }
     }

@@ -1,10 +1,13 @@
 using CaffStoreServer.WebApi.Context;
 using CaffStoreServer.WebApi.DataSeed;
 using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,7 +67,13 @@ namespace CaffStoreServer.WebApi
                 };
             });
 
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddSingleton(new TokenService(secret));
+
             services.AddControllers();
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,6 +94,8 @@ namespace CaffStoreServer.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

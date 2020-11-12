@@ -4,33 +4,41 @@ using JWT.Algorithms;
 using JWT.Builder;
 using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Responses;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace CaffStoreServer.WebApi.Services
 {
-    public static class TokenService
+    public class TokenService
     {
-        private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+        private readonly string _secret;
 
-        public static string GenerateToken(string username, UserType type, int expireMinutes = 60)
+        public TokenService(string secret)
+        {
+            _secret = secret;  
+        }
+
+        public string GenerateToken(string username, UserType type, int expireMinutes = 60)
         {
             var token = new JwtBuilder()
                 .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(Secret)
+                .WithSecret(_secret)
                 .AddClaim("exp", DateTimeOffset.UtcNow.AddMinutes(expireMinutes).ToUnixTimeSeconds())
                 .AddClaim("username", username)
                 .AddClaim("type", type)
+                .AddClaim(ClaimTypes.Role, type == UserType.User ? "User" : "Administrator")
                 .Encode();
 
             return token;
         }
 
-        public static LoginResponse DecodeToken(string token)
+        public LoginResponse DecodeToken(string token)
         {
             try
             {
                 string json = new JwtBuilder()
                     .WithAlgorithm(new HMACSHA256Algorithm())
-                    .WithSecret(Secret)
+                    .WithSecret(_secret)
                     .MustVerifySignature()
                     .Decode(token);
                 return JsonConvert.DeserializeObject<LoginResponse>(json);

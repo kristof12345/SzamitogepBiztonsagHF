@@ -13,6 +13,13 @@ namespace CaffStoreServer.WebApi.Controllers
     [Route("[controller]")]
     public class CAFFsController : ControllerBase
     {
+        private readonly TokenService _tokenService;
+
+        public CAFFsController(TokenService tokenService)
+        {
+            _tokenService = tokenService;
+        }
+
         [HttpGet]
         public ActionResult<List<CAFFResponse>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
@@ -123,7 +130,7 @@ namespace CaffStoreServer.WebApi.Controllers
             get
             {
                 string token = Request.Headers["Authorization"];
-                return TokenService.DecodeToken(token?.Substring(7));
+                return _tokenService.DecodeToken(token?.Substring(7));
             }
         }
     }
