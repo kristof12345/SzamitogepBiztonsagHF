@@ -35,7 +35,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                                 UserName = $"Admin{i}"
                             };
 
-                            await userManager.CreateAsync(user, "123456");
+                            await userManager.CreateAsync(user, "Pass123!");
 
                             await userManager.AddToRoleAsync(user, "Administrator");
                         }

@@ -102,7 +102,7 @@ namespace CaffStoreServer.WebApi.Controllers
             {
                 Image = file,
                 Name = name,
-                Price = double.Parse(price)
+                Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
             var response = new CAFFResponse();

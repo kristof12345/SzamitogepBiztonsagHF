@@ -66,6 +66,6 @@
     <string name="purchase_error">Unabe to purchase caff image</string>
     <string name="comment_error">Unabe to add comment</string>
     <string name="tooShortUsername">This username is too short.</string>
-    <string name="tooShortPassword">Minimum password length is 7.</string>
+    <string name="tooShortPassword">Minimum password length is 6.</string>
     <string name="tooWeakPassword">Password should contain at least 1 capital letter, 1 number and 1 special character.</string>
 </resources>

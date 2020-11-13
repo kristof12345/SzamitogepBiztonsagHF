@@ -61,4 +61,7 @@
     <string name="caff_delete_conf">CAFF törlése sikeres</string>
     <string name="purchase_error">A kép megvásárlása sikertelen</string>
     <string name="comment_error">A komment hozzáadása sikertelen</string>
+    <string name="tooShortUsername">Ez a felhasználónév túl rövid..</string>
+    <string name="tooShortPassword">A jelszó legalább 6 karakter hosszú.</string>
+    <string name="tooWeakPassword">A jelszónak tartalmaznia kell 1 nagybetűt, 1 számot és 1 speciális karaktert.</string>
 </resources>

@@ -144,8 +144,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 "(?=.*[a-z])" +         //at least 1 lower case letter
                 "(?=.*[A-Z])" +         //at least 1 upper case letter
                 "(?=.*[a-zA-Z])" +      //any letter
-                "(?=.*[@#$%^&+=])" +    //at least 1 special character
-                ".{8,}" +               //at least 8 characters
+                "(?=.*[@#$%^&+=!])" +    //at least 1 special character
+                ".{7,}" +               //at least 7 characters
                 "$");
         return passwordREGEX.matcher(password).matches()
     }
