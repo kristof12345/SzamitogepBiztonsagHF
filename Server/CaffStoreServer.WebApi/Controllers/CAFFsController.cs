@@ -1,7 +1,6 @@
 ﻿using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
-using CaffStoreServer.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
 {
@@ -26,8 +26,8 @@ namespace CaffStoreServer.WebApi.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public ActionResult<List<CAFFResponse>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
             _caffService.SearchAsync(UserId(), creator, title, free, bought);
@@ -66,11 +66,13 @@ namespace CaffStoreServer.WebApi.Controllers
             return Ok(list);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{id}/comments")]
-        public ActionResult<List<CommentResponse>> GetComments([FromRoute] string id)
+        public async Task<ActionResult<List<CommentResponse>>> GetCommentsAsync([FromRoute] string id)
         {
-            //TODO: Authorization token from header
+            await _commentService.GetForCaffAsync(id);
+
             var list = new List<CommentResponse>();
 
             var comment = new CommentResponse
@@ -86,30 +88,29 @@ namespace CaffStoreServer.WebApi.Controllers
             return Ok(list);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("{id}/buy")]
-        public ActionResult Buy([FromRoute] string id)
+        public async Task<ActionResult> BuyAsync([FromRoute] string id)
         {
-            //TODO: Authorization token from header
-
+            await _caffService.BuyAsync(UserId(), id);
             return Ok();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("{id}/comments")]
-        public ActionResult Comment([FromRoute] string id)
+        public async Task<ActionResult> CommentAsync([FromRoute] string id, [FromBody] string text)
         {
-            //TODO: Authorization token from header
-
+            await _commentService.Add(UserId(), id, text);
             return Ok();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("{name}/{price}")]
-        public ActionResult<CommentResponse> UploadImage(IFormFile file, [FromRoute] string name, [FromRoute] string price)
+        public async Task<ActionResult<CommentResponse>> UploadImageAsync(IFormFile file, [FromRoute] string name, [FromRoute] string price)
         {
-            //TODO: Authorization token from header
-
             var request = new UploadCAFFRequest
             {
                 Image = file,
@@ -117,43 +118,46 @@ namespace CaffStoreServer.WebApi.Controllers
                 Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
+            await _caffService.Upload(UserId(), request);
+
             var response = new CAFFResponse();
             return Ok(response);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{id}/download")]
-        public ActionResult<IFormFile> DownloadImage([FromRoute] string id)
+        public async Task<ActionResult<IFormFile>> DownloadImageAsync([FromRoute] string id)
         {
-            //TODO: Authorization token from header
-
-            //TODO: return the file
-            return Ok();
+            var file = await _caffService.Download(UserId(), id);
+            return Ok(file);
         }
 
         [Authorize]
         [HttpDelete]
         [Route("{id}")]
-        public ActionResult<IFormFile> DeleteCaff([FromRoute] string id)
+        public async Task<ActionResult<IFormFile>> DeleteCaffAsync([FromRoute] string id)
         {
             if (!IsAdmin())
             {
                 return Unauthorized();
             }
 
+            await _caffService.Delete(id);
             return Ok();
         }
 
         [Authorize]
         [HttpDelete]
         [Route("{caffId}/comments/{commentId}")]
-        public ActionResult<IFormFile> DeleteComment([FromRoute] string caffId, [FromRoute] string commentId)
+        public async Task<ActionResult<IFormFile>> DeleteCommentAsync([FromRoute] string caffId, [FromRoute] string commentId)
         {
             if (!IsAdmin())
             {
                 return Unauthorized();
             }
 
+            await _commentService.Delete(caffId, commentId);
             return Ok();
         }
 
