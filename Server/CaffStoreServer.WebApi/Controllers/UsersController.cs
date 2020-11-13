@@ -19,8 +19,7 @@ namespace CaffStoreServer.WebApi.Controllers
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
 
-        public UsersController(IUserService userService,
-                               ITokenService tokenService)
+        public UsersController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
             _tokenService = tokenService;
@@ -34,7 +33,8 @@ namespace CaffStoreServer.WebApi.Controllers
             {
                 var result = await _userService.LoginAsync(request);
                 return Ok(result);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Unauthorized();
             }
@@ -42,7 +42,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request) 
+        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
             => await _userService.CreateUserAsync(request);
 
         [Authorize]

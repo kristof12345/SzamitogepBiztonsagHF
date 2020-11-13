@@ -1,4 +1,5 @@
-﻿using CaffStoreServer.WebApi.Models.Requests;
+﻿using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using CaffStoreServer.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -15,12 +17,20 @@ namespace CaffStoreServer.WebApi.Controllers
     [Route("caffs")]
     public class CAFFsController : ControllerBase
     {
+        private readonly ICaffService _caffService;
+        private readonly ICommentService _commentService;
+
+        public CAFFsController(ICaffService caffService, ICommentService commentService)
+        {
+            _caffService = caffService;
+            _commentService = commentService;
+        }
+
         [HttpGet]
         [Authorize]
         public ActionResult<List<CAFFResponse>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            //TODO: Authorization token from header
-            var user = this.User;
+            _caffService.SearchAsync(UserId(), creator, title, free, bought);
 
             var list = new List<CAFFResponse>();
 
@@ -150,6 +160,11 @@ namespace CaffStoreServer.WebApi.Controllers
         private bool IsAdmin()
         {
             return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+        }
+
+        private string UserId()
+        {
+            return User.Claims.Where(c => c.Type == "userid").FirstOrDefault().Value;
         }
     }
 }
