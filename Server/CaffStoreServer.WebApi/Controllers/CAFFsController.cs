@@ -1,4 +1,5 @@
-﻿using CaffStoreServer.WebApi.Interfaces;
+﻿using AutoMapper;
+using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -19,51 +20,22 @@ namespace CaffStoreServer.WebApi.Controllers
     {
         private readonly ICaffService _caffService;
         private readonly ICommentService _commentService;
+        private readonly IMapper _mapper;
 
-        public CAFFsController(ICaffService caffService, ICommentService commentService)
+        public CAFFsController(ICaffService caffService, ICommentService commentService, IMapper mapper)
         {
             _caffService = caffService;
             _commentService = commentService;
+            _mapper = mapper;
         }
 
         [Authorize]
         [HttpGet]
-        public ActionResult<List<CAFFResponse>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
+        public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            _caffService.SearchAsync(UserId(), creator, title, free, bought);
-
-            var list = new List<CAFFResponse>();
-
-            var caff1 = new CAFFResponse
-            {
-                Id = 1,
-                Name = "This is caff 1",
-                Duration = 10,
-                Creator = "me",
-                CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
-                Cost = 3.14,
-                Bought = false,
-                ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-            };
-
-            var caff2 = new CAFFResponse
-            {
-                Id = 2,
-                Name = "This is caff 2",
-                Duration = 20,
-                Creator = "me",
-                CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
-                Cost = 3.14,
-                Bought = false,
-                ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-            };
-
-            list.Add(caff1);
-            list.Add(caff2);
-
-            return Ok(list);
+            var list = await _caffService.SearchAsync(UserId(), creator, title, free, bought);
+            var result = _mapper.Map<List<CAFFResponse>>(list);
+            return Ok(result);
         }
 
         [Authorize]
@@ -71,21 +43,9 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id}/comments")]
         public async Task<ActionResult<List<CommentResponse>>> GetCommentsAsync([FromRoute] string id)
         {
-            await _commentService.GetForCaffAsync(id);
-
-            var list = new List<CommentResponse>();
-
-            var comment = new CommentResponse
-            {
-                Id = 23,
-                UserName = "me",
-                Text = "Hello world!",
-                AddTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
-            };
-
-            list.Add(comment);
-
-            return Ok(list);
+            var list = await _commentService.GetForCaffAsync(id);
+            var result = _mapper.Map<List<CommentResponse>>(list);
+            return Ok(result);
         }
 
         [Authorize]

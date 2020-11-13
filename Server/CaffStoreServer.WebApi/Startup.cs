@@ -1,3 +1,4 @@
+using AutoMapper;
 using CaffStoreServer.WebApi.Context;
 using CaffStoreServer.WebApi.DataSeed;
 using CaffStoreServer.WebApi.Entities;
@@ -98,6 +99,10 @@ namespace CaffStoreServer.WebApi
 
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<ICaffService, CaffService>();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
