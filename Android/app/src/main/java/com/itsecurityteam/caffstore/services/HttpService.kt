@@ -6,7 +6,6 @@ import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import com.itsecurityteam.caffstore.model.responses.LoginResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -45,4 +44,7 @@ interface HttpService {
 
     @DELETE("caffs/{id}")
     fun deleteCaff(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
+
+    @DELETE("caffs/{caffId}/comments/{commentId}")
+    fun deleteComment(@Header("Authorization") token: String, @Path("caffId") caffId: Long, @Path("commentId") commentId: Long): Call<ResponseBody>
 }

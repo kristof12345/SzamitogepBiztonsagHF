@@ -127,5 +127,13 @@ namespace CaffStoreServer.WebApi.Controllers
             //TODO: Authorization for admin
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("{caffId}/comments/{commentId}")]
+        public ActionResult<IFormFile> DeleteComment([FromRoute] string caffId, [FromRoute] string commentId)
+        {
+            //TODO: Authorization for admin
+            return Ok();
+        }
     }
 }

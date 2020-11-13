@@ -81,6 +81,10 @@ class StoreService {
     }
 
     fun deleteCaff(token: String, id: Long): Call<ResponseBody> {
-        return http.downloadImage(token, id)
+        return http.deleteCaff(token, id)
+    }
+
+    fun deleteComment(token: String, caffId: Long, commentId: Long): Call<ResponseBody> {
+        return http.deleteComment(token, caffId, commentId)
     }
 }

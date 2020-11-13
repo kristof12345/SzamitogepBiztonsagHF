@@ -252,7 +252,15 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun removeComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
+            var response = storeService.deleteComment(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, comment.id).execute()
+            when {
+                response.isSuccessful -> {
+                    result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
+                }
+                else -> {
+                    result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, false, R.string.delete_comment_error))
+                }
+            }
         }
     }
 
