@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace CaffStoreServer.WebApi.Controllers
 {
@@ -38,7 +39,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
             var caff2 = new CAFFResponse
             {
-                Id = 1,
+                Id = 2,
                 Name = "This is caff 2",
                 Duration = 20,
                 Creator = "me",
@@ -120,20 +121,35 @@ namespace CaffStoreServer.WebApi.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<IFormFile> DeleteCaff([FromRoute] string id)
         {
-            //TODO: Authorization for admin
+            if (!IsAdmin())
+            {
+                return Unauthorized();
+            }
+
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("{caffId}/comments/{commentId}")]
         public ActionResult<IFormFile> DeleteComment([FromRoute] string caffId, [FromRoute] string commentId)
         {
-            //TODO: Authorization for admin
+            if (!IsAdmin())
+            {
+                return Unauthorized();
+            }
+
             return Ok();
+        }
+
+        private bool IsAdmin()
+        {
+            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
         }
     }
 }
