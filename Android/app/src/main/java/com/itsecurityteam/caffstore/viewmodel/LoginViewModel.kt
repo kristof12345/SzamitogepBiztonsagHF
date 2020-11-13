@@ -17,7 +17,6 @@ import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -48,9 +47,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 when {
                     response.isSuccessful -> {
                         val data = response.body()
-                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
-                        userType = data.type
+                        userType = data.userType
                         sessionManager.saveAuthToken(data.token!!)
+                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
                     }
                     response.code() == 404 -> {
                         // Username not found

@@ -4,5 +4,5 @@ class LoginResponse {
     var isSuccess: Boolean = false
     var userId: Long = 0
     var token: String? = null
-    var type: UserType = UserType.User
+    var userType: UserType = UserType.User
 }
