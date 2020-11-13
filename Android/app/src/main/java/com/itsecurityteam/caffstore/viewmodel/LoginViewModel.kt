@@ -137,7 +137,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             throw AndroidException(R.string.tooWeakPassword)
     }
 
-    fun isValidPasswordFormat(password: String): Boolean {
+    private fun isValidPasswordFormat(password: String): Boolean {
         val passwordREGEX = Pattern.compile("^" +
                 "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-z])" +         //at least 1 lower case letter

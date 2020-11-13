@@ -10,7 +10,9 @@ import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
@@ -45,7 +47,7 @@ class StoreService {
         return http.buy(token, caffId!!)
     }
 
-    fun addComment(token: String, caffId: Long?, text: String): Call<Void> {
+    fun addComment(token: String, caffId: Long?, text: String): Call<ResponseBody> {
         return http.comment(token, caffId!!, text)
     }
 
@@ -76,5 +78,9 @@ class StoreService {
             fileOutputStream.write(response.body().bytes())
         } catch (ex: Exception) {
         }
+    }
+
+    fun deleteCaff(token: String, id: Long): Call<ResponseBody> {
+        return http.downloadImage(token, id)
     }
 }

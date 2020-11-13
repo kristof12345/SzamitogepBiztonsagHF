@@ -34,7 +34,7 @@ interface HttpService {
     fun buy(@Header("Authorization") token: String, @Path("id") id: Long): Call<Void>
 
     @POST("caffs/{id}/comments")
-    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body text: String): Call<Void>
+    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body text: String): Call<ResponseBody>
 
     @Multipart
     @POST("caffs/{name}/{price}")
@@ -42,4 +42,7 @@ interface HttpService {
 
     @GET("caffs/{id}/download")
     fun downloadImage(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
+
+    @DELETE("caffs/{id}")
+    fun deleteCaff(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
 }

@@ -98,7 +98,7 @@ namespace CaffStoreServer.WebApi.Controllers
         public ActionResult<CommentResponse> UploadImage(IFormFile file, [FromRoute] string name, [FromRoute] string price)
         {
             //TODO: Authorization token from header
-            
+
             var request = new UploadCAFFRequest
             {
                 Image = file,
@@ -117,6 +117,14 @@ namespace CaffStoreServer.WebApi.Controllers
             //TODO: Authorization token from header
 
             //TODO: return the file
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public ActionResult<IFormFile> DeleteCaff([FromRoute] string id)
+        {
+            //TODO: Authorization for admin
             return Ok();
         }
     }

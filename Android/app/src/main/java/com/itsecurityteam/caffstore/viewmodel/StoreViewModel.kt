@@ -173,7 +173,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                         result.postValue(ViewResult(BUY_REQUEST, true))
                     }
                     caffs.value?.let {
-                        it.stream().filter{ a -> a.id == selected?.id}.forEach { a -> a.bought = true }
+                        it.stream().filter { a -> a.id == selected?.id }.forEach { a -> a.bought = true }
                     }
                 }
                 else -> {
@@ -237,7 +237,15 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun removeCurrentCaff() {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
+            var response = storeService.deleteCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!).execute()
+            when {
+                response.isSuccessful -> {
+                    result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
+                }
+                else -> {
+                    result.postValue(ViewResult(REMOVE_CAFF_REQUEST, false, R.string.delete_error))
+                }
+            }
         }
     }
 
