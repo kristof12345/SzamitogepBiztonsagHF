@@ -1,6 +1,6 @@
 # Szamitogep Biztonság HF
 
 ## Specifikációk
-A rendszer [specifikációi](docs/Specification.md).
+A rendszer [specifikációi](https://github.com/kristof12345/SzamitogepBiztonsagHF/wiki/Specifications).
 
-A [tesztelési tervek](docs/Testing.md).
+A [tesztelési tervek](docs/https://github.com/kristof12345/SzamitogepBiztonsagHF/wiki/Testing-plan).
