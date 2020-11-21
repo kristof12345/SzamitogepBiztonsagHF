@@ -15,12 +15,15 @@ namespace CaffStoreServer.WebApi.Services
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ITokenService _tokenService;
 
         public UserService(UserManager<User> userManager,
+                           SignInManager<User> signInManager,
                            ITokenService tokenService)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _tokenService = tokenService;
         }
 
@@ -39,9 +42,12 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
+            var signInResult = await _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
+            if (!signInResult.Succeeded)
+            {
+                throw new LoginFailedException("Invalid username or password.");
+            }
             var user = await GetByUserNameAsync(request.Username);
-            if (user == null)
-                throw new UserNotFoundException();
 
             var roles = await _userManager.GetRolesAsync(user);
             var role = roles.Contains("Administrator") ? UserType.Admin : UserType.User;
