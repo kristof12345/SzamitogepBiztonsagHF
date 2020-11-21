@@ -5,9 +5,11 @@ using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Services;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,18 @@ namespace CaffStoreServer.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddProblemDetails(options =>
+            {
+                options.IncludeExceptionDetails = (ctx, ex) => false;
+                options.Map<LoginFailedException>(
+                    (ctx, ex) =>
+                    {
+                        var pd = StatusCodeProblemDetails.Create(StatusCodes.Status401Unauthorized);
+                        pd.Title = ex.Message;
+                        return pd;
+                    }
+                );
+            });
             services.AddDbContext<CaffStoreDbContext>(o =>
                 o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
 
@@ -152,9 +166,10 @@ namespace CaffStoreServer.WebApi
                    .GetRequiredService<IServiceScopeFactory>()
                    .CreateScope()
                    .ServiceProvider);
+            } else
+            {
+                app.UseProblemDetails();
             }
-
-            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
 

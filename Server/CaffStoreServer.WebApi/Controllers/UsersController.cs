@@ -29,15 +29,8 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            try
-            {
-                var result = await _userService.LoginAsync(request);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return Unauthorized();
-            }
+            var result = await _userService.LoginAsync(request);
+            return Ok(result);
         }
 
         [AllowAnonymous]
