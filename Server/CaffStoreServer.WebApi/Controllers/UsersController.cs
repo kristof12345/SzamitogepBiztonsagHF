@@ -7,6 +7,7 @@ using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -64,7 +65,21 @@ namespace CaffStoreServer.WebApi.Controllers
                 return Unauthorized();
             }
 
-            return Ok(await _userService.GetAsync());
+            var users = new List<UserDTO>();
+            var result = await _userService.GetAsync();
+
+            foreach (var user in result)
+            {
+                users.Add(new UserDTO
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    UserType = user.UserRoles.Any(ur => ur.Role.NormalizedName == RoleConstants.AdminNormalizedRoleNome) ? UserType.Admin : UserType.User
+                });
+            }
+
+            return Ok(users);
         }
 
         [Authorize]
