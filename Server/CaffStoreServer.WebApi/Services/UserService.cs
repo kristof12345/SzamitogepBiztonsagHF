@@ -36,6 +36,7 @@ namespace CaffStoreServer.WebApi.Services
                 .ToListAsync();
         }
 
+
         public async Task<User> GetByIdAsync(long id)
         {
             var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role);
@@ -79,17 +80,8 @@ namespace CaffStoreServer.WebApi.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                UserType userType;
-                if (user.UserName.Contains("admin"))
-                {
-                    await _userManager.AddToRoleAsync(user, "Administrator");
-                    userType = UserType.Admin;
-                }
-                else
-                {
-                    await _userManager.AddToRoleAsync(user, "User");
-                    userType = UserType.User;
-                }
+                await _userManager.AddToRoleAsync(user, "User");
+                UserType userType = UserType.User;
 
                 return new RegisterResponse
                 {
