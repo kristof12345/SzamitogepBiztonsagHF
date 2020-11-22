@@ -32,9 +32,7 @@ namespace CaffStoreServer.WebApi.Services
         public async Task<IEnumerable<User>> GetAsync()
         {
             var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role);
-            return await _userManager.Users
-                .AsNoTracking()
-                .ToListAsync();
+            return await users.AsNoTracking().ToListAsync();
         }
 
 
