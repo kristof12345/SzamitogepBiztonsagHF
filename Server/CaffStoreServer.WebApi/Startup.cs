@@ -59,7 +59,7 @@ namespace CaffStoreServer.WebApi
                 sp.GetRequiredService<IOptions<TokenSettings>>().Value);
 
 
-            services.AddIdentity<User, IdentityRole<long>>(o =>
+            services.AddIdentity<User, Role>(o =>
             {
                 o.Password.RequireDigit = false;
                 o.Password.RequireLowercase = false;

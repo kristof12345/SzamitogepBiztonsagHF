@@ -22,12 +22,14 @@ namespace CaffStoreServer.WebApi.Services
             _tokenSettings = tokenSettings;
         }
 
-        public string GenerateToken(string username, User user, UserType type, int expireMinutes = 60)
-        {            var claims = new List<Claim>
+        public string GenerateToken(User user, int expireMinutes = 60)
+        {
+            var isAdministrator = user.UserRoles.Any(ur => ur.Role.NormalizedName == "ADMINISTRATOR");
+            var claims = new List<Claim>
             {
-                new Claim("username", username),
+                new Claim("username", user.UserName),
                 new Claim("userid", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, type == UserType.User ? "User" : "Administrator")
+                new Claim(ClaimTypes.Role, isAdministrator ? "Administrator" : "User")
             };
             var secretBytes = Encoding.UTF8.GetBytes(_tokenSettings.Secret);
             var key = new SymmetricSecurityKey(secretBytes);

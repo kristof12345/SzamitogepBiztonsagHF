@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Services
@@ -28,17 +29,24 @@ namespace CaffStoreServer.WebApi.Services
         }
 
         public async Task<IEnumerable<User>> GetAsync()
-            => await _userManager.Users
-                                 .AsNoTracking()
-                                 .ToListAsync();
+        {
+            var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role);
+            return await _userManager.Users
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
         public async Task<User> GetByIdAsync(long id)
-            => await _userManager.FindByIdAsync(id.ToString())
-                ?? throw new Exception("Invalid id");
+        {
+            var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role);
+            return await users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new Exception("Invalid id");
+        }
 
         public async Task<User> GetByUserNameAsync(string userName)
-            => await _userManager.FindByNameAsync(userName)
-                ?? throw new Exception("Invalid userName");
+        {
+            var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role);
+            return await users.FirstOrDefaultAsync(u => u.UserName == userName) ?? throw new Exception("Invalid userName");
+        }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
@@ -49,14 +57,11 @@ namespace CaffStoreServer.WebApi.Services
             }
             var user = await GetByUserNameAsync(request.Username);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.Contains("Administrator") ? UserType.Admin : UserType.User;
+            var role = user.UserRoles.Any(ur => ur.Role.NormalizedName == "ADMINISTRATOR") ? UserType.Admin : UserType.User;
             var response = new LoginResponse
             {
                 IsSuccess = true,
-                Token = _tokenService.GenerateToken(request.Username,
-                                                    user,
-                                                    role),
+                Token = _tokenService.GenerateToken(user),
                 UserId = user.Id,
                 UserType = role
             };
@@ -71,7 +76,8 @@ namespace CaffStoreServer.WebApi.Services
                 Email = request.Email
             };
 
-            if ((await _userManager.CreateAsync(user, request.Password)).Succeeded)
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (result.Succeeded)
             {
                 UserType userType;
                 if (user.UserName.Contains("admin"))
@@ -89,7 +95,7 @@ namespace CaffStoreServer.WebApi.Services
                 {
                     IsSuccess = true,
                     UserId = user.Id,
-                    Token = _tokenService.GenerateToken(user.UserName, user, userType),
+                    Token = _tokenService.GenerateToken(user),
                     UserType = userType
                 };
             }
