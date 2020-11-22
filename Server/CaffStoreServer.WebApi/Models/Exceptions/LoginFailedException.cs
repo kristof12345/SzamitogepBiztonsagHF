@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace CaffStoreServer.WebApi.Services
+namespace CaffStoreServer.WebApi.Models.Exceptions
 {
     [Serializable]
     internal class LoginFailedException : Exception

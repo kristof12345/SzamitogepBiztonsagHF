@@ -1,6 +1,7 @@
 ﻿using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
+using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Identity;
@@ -93,6 +94,9 @@ namespace CaffStoreServer.WebApi.Services
             }
             else
             {
+                var duplicateUserNameError = result.Errors.FirstOrDefault(e => e.Code == "DuplicateUserName");
+                if (duplicateUserNameError != null)
+                    throw new BadRequestException(duplicateUserNameError.Description);
                 throw new Exception("User create error");
             }
         }

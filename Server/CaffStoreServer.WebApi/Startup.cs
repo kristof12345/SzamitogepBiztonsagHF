@@ -4,6 +4,7 @@ using CaffStoreServer.WebApi.DataSeed;
 using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
+using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Services;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,6 +45,14 @@ namespace CaffStoreServer.WebApi
                     (ctx, ex) =>
                     {
                         var pd = StatusCodeProblemDetails.Create(StatusCodes.Status401Unauthorized);
+                        pd.Title = ex.Message;
+                        return pd;
+                    }
+                );
+                options.Map<BadRequestException>(
+                    (ctx, ex) =>
+                    {
+                        var pd = StatusCodeProblemDetails.Create(StatusCodes.Status400BadRequest);
                         pd.Title = ex.Message;
                         return pd;
                     }
