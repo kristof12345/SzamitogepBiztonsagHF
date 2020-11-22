@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "fec84026-aa30-41ea-96aa-7db66d200639",
+		"name": "CaffStore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e988eba8-b1c0-44b9-a9a5-b63d418c8736",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.username).eql(\"TestUser\");\r",
+							"    \t\t\tpm.expect(jsonData.userType).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"name\": \"Papp Kristof\",\r\n    \"password\": \"Password123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate username registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e7b89342-822c-4e02-b9ca-1d7bfa3aa9d9",
+						"exec": [
+							"pm.test(\"Test duplicate username\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(409);\r",
+							"    \t\t\tvar textData = pm.response.text();\r",
+							"    \t\t\tpm.expect(textData).eql(\"User name 'TestUser' is already taken.\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"name\": \"Papp Kristof\",\r\n    \"password\": \"Password123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a46f2e0a-3477-4aec-a86f-155af793a434",
+						"exec": [
+							"pm.test(\"Test invalid login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"    \t\t\tvar textData = pm.response.text();\r",
+							"    \t\t\tpm.expect(textData).eql(\"Invalid username or password.\");\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"User1\",\r\n    \"password\": \"Invalid\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d07ee3a1-ee2b-4a15-a6a7-66807011d34d",
+						"exec": [
+							"pm.test(\"Test user login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.isSuccess).eql(true);\r",
+							"    \t\t\tpm.expect(jsonData.userType).eql(0);\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"User1\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Try get all users unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "36455948-5a31-424a-b96b-80a7af4f7c01",
+						"exec": [
+							"pm.test(\"Test get all users without authorization\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(409);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"name\": \"Papp Kristof\",\r\n    \"password\": \"Password123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "684e06e3-b505-425f-bdec-dad4eb7c27cf",
+						"exec": [
+							"pm.test(\"Test admin login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.isSuccess).eql(true);\r",
+							"    \t\t\tpm.expect(jsonData.userType).eql(1);\r",
+							"                pm.environment.set(\"token\", jsonData.token);\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Admin0\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6748ee2-f8f4-4e07-a9e5-e3023d1779e2",
+						"exec": [
+							"pm.test(\"Test get all users\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"                var jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(4);\r",
+							"                var user = jsonData[3];\r",
+							"                pm.expect(user.username).eql(\"TestUser\");\r",
+							"                pm.expect(user.email).eql(\"pappkristof@gmail.com\");\r",
+							"                pm.expect(user.userType).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
