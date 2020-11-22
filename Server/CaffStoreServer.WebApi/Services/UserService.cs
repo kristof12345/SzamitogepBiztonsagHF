@@ -89,7 +89,8 @@ namespace CaffStoreServer.WebApi.Services
                     IsSuccess = true,
                     UserId = user.Id,
                     Token = _tokenService.GenerateToken(user),
-                    UserType = userType
+                    UserType = userType,
+                    Username = user.UserName
                 };
             }
             else

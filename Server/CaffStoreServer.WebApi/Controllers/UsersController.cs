@@ -1,11 +1,11 @@
 ﻿using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
+using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -29,19 +29,43 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            var result = await _userService.LoginAsync(request);
-            return Ok(result);
+            try
+            {
+                var result = await _userService.LoginAsync(request);
+                return Ok(result);
+            }
+            catch (LoginFailedException e)
+            {
+                return Unauthorized(e.Message);
+            }
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
-            => await _userService.CreateUserAsync(request);
+        {
+            try
+            {
+                var result = await _userService.CreateUserAsync(request);
+                return Ok(result);
+            }
+            catch (BadRequestException e)
+            {
+                return Conflict(e.Message);
+            }
+        }
 
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
-            => Ok(await _userService.GetAsync());
+        {
+            if (!IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _userService.GetAsync());
+        }
 
         [Authorize]
         [HttpPut("update")]
@@ -70,5 +94,9 @@ namespace CaffStoreServer.WebApi.Controllers
             return NoContent();
         }
 
+        private bool IsAdmin()
+        {
+            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName);
+        }
     }
 }

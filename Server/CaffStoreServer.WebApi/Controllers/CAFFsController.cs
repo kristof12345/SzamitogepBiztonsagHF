@@ -6,7 +6,6 @@ using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
