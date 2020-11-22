@@ -24,12 +24,12 @@ namespace CaffStoreServer.WebApi.Services
 
         public string GenerateToken(User user, int expireMinutes = 60)
         {
-            var isAdministrator = user.UserRoles.Any(ur => ur.Role.NormalizedName == "ADMINISTRATOR");
+            var isAdministrator = user.UserRoles.Any(ur => ur.Role.NormalizedName == RoleConstants.AdminNormalizedRoleNome);
             var claims = new List<Claim>
             {
                 new Claim("username", user.UserName),
                 new Claim("userid", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, isAdministrator ? "Administrator" : "User")
+                new Claim(ClaimTypes.Role, isAdministrator ? RoleConstants.AdminRoleName : RoleConstants.UserRoleName)
             };
             var secretBytes = Encoding.UTF8.GetBytes(_tokenSettings.Secret);
             var key = new SymmetricSecurityKey(secretBytes);

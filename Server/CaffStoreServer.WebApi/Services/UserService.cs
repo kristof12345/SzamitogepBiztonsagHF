@@ -59,7 +59,7 @@ namespace CaffStoreServer.WebApi.Services
             }
             var user = await GetByUserNameAsync(request.Username);
 
-            var role = user.UserRoles.Any(ur => ur.Role.NormalizedName == "ADMINISTRATOR") ? UserType.Admin : UserType.User;
+            var role = user.UserRoles.Any(ur => ur.Role.NormalizedName == RoleConstants.AdminNormalizedRoleNome) ? UserType.Admin : UserType.User;
             var response = new LoginResponse
             {
                 IsSuccess = true,
@@ -81,7 +81,7 @@ namespace CaffStoreServer.WebApi.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
                 UserType userType = UserType.User;
 
                 return new RegisterResponse

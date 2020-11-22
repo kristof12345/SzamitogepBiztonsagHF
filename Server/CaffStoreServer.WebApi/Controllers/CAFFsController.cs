@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -123,7 +124,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
         private bool IsAdmin()
         {
-            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName);
         }
 
         private string UserId()

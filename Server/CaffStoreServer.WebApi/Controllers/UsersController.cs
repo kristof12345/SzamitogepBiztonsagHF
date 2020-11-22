@@ -48,7 +48,7 @@ namespace CaffStoreServer.WebApi.Controllers
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
             if (!User.HasClaim(c => c.Type == "userid" && c.Value == request.UserId.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
+                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName))
             {
                 return Unauthorized();
             }
@@ -62,7 +62,7 @@ namespace CaffStoreServer.WebApi.Controllers
         public async Task<ActionResult> DeleteAsync(long id)
         {
             if (!User.HasClaim(c => c.Type == "userid" && c.Value == id.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
+                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName))
             {
                 return Unauthorized();
             }

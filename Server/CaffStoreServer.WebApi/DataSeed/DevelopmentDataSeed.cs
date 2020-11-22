@@ -1,4 +1,5 @@
 ﻿using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,7 @@ namespace CaffStoreServer.WebApi.DataSeed
 
                             await userManager.CreateAsync(user, "Pass123!");
 
-                            await userManager.AddToRoleAsync(user, "ADMINISTRATOR");
+                            await userManager.AddToRoleAsync(user, RoleConstants.AdminRoleName);
                         }
                         else
                         {
@@ -50,7 +51,7 @@ namespace CaffStoreServer.WebApi.DataSeed
 
                             await userManager.CreateAsync(user, "123456");
 
-                            await userManager.AddToRoleAsync(user, "USER");
+                            await userManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
                         }
 
                         users.Add(user);

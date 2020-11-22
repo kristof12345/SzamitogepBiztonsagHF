@@ -1,11 +1,8 @@
 ﻿using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Context
 {
@@ -55,22 +52,18 @@ namespace CaffStoreServer.WebApi.Context
                     .IsRequired();
             });
 
-            const string AdministratorRoleName = "Administrator";
-
             modelBuilder.Entity<Role>().HasData(new Role
             {
                 Id = 1,
-                Name = AdministratorRoleName,
-                NormalizedName = AdministratorRoleName.ToUpper()
+                Name = RoleConstants.AdminRoleName,
+                NormalizedName = RoleConstants.AdminNormalizedRoleNome
             });
-
-            const string UserRoleName = "User";
 
             modelBuilder.Entity<Role>().HasData(new Role
             {
                 Id = 2,
-                Name = UserRoleName,
-                NormalizedName = UserRoleName.ToUpper()
+                Name = RoleConstants.UserRoleName,
+                NormalizedName = RoleConstants.UserNormalizedRoleName
             });
         }
     }
