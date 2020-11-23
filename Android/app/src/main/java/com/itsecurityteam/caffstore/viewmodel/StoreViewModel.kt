@@ -41,6 +41,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val REMOVE_CAFF_REQUEST = 1102
     }
 
+    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm";
+
     private val caffs = MutableLiveData<List<Caff>>()
     val caffsProp: LiveData<List<Caff>>
         get() = caffs
@@ -91,7 +93,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     val list = response.body()
                     var caffsList = ArrayList<Caff>()
                     for (s in sort(list, orderBy, orderDir)) {
-                        var date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
+                        var date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         caffsList.add(
                             Caff(
                                 s.id, s.name, date, s.creator, s.duration,
@@ -141,7 +143,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     val list = response.body()
                     var commentList = ArrayList<Comment>()
                     for (s in list) {
-                        var date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
+                        var date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         commentList.add(
                             Comment(
                                 s.id, s.userName, date, s.text

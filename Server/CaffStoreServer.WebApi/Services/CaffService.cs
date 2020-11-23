@@ -12,9 +12,9 @@ namespace CaffStoreServer.WebApi.Services
 {
     public class CaffService : ICaffService
     {
-        public Task<IEnumerable<Caff>> BuyAsync(string userId, string caffId)
+        public Task BuyAsync(string userId, string caffId)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task Delete(string id)

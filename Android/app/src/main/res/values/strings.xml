@@ -46,7 +46,7 @@
     <string name="already_bought">Bought</string>
     <string name="buy">Buy (%1$.2f €)</string>
     <string name="confirm_buy">\"Are you sure to buy this CAFF?</string>
-    <string name="bought_success">CAFF brought successful</string>
+    <string name="bought_success">Successful purchase</string>
     <string name="invalid_file_type">Invalid type of file</string>
     <string name="permission_title">Storage permission</string>
     <string name="permission_reason" >This application requires storage permission for the download/upload of the CAFF files</string>
@@ -63,8 +63,8 @@
     <string name="delete_confirm">Are you sure to delete this item?</string>
     <string name="comment_delete_conf">Comment has been successfully remove</string>
     <string name="caff_delete_conf">CAFF has been successfully deleted.</string>
-    <string name="purchase_error">Unabe to purchase caff image</string>
-    <string name="comment_error">Unabe to add comment</string>
+    <string name="purchase_error">Unable to purchase caff image</string>
+    <string name="comment_error">Unable to add comment</string>
     <string name="tooShortUsername">This username is too short.</string>
     <string name="tooShortPassword">Minimum password length is 6.</string>
     <string name="tooWeakPassword">Password should contain at least 1 capital letter, 1 number and 1 special character.</string>
