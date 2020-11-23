@@ -1,9 +1,9 @@
 ﻿using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,50 @@ namespace CaffStoreServer.WebApi.DataSeed
     public class DevelopmentDataSeed
     {
         public static async void Initialize(IServiceProvider serviceProvider)
+        {
+            await SeedUsers(serviceProvider);
+            await SeedCaffs(serviceProvider);
+        }
+
+        private static async Task SeedCaffs(IServiceProvider serviceProvider)
+        {
+            var caffService = serviceProvider.GetRequiredService<ICaffService>();
+
+            var list = new List<Caff> {
+                new Caff
+                {
+                    Name = "This is caff 1",
+                    Duration = 10,
+                    Creator = "me",
+                    CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
+                    Cost = 3.14,
+                    Bought = false,
+                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                },
+                new Caff
+                {
+                    Name = "This is caff 2",
+                    Duration = 20,
+                    Creator = "me",
+                    CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
+                    Cost = 3.14,
+                    Bought = false,
+                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                }
+            };
+            var hasData = await caffService.Any();
+            if (!hasData)
+            {
+                foreach (var caff in list)
+                {
+                    await caffService.Create(caff);
+                }
+            }
+        }
+
+        private static async Task SeedUsers(IServiceProvider serviceProvider)
         {
             const int adminCount = 1;
             const int userCount = 2;
