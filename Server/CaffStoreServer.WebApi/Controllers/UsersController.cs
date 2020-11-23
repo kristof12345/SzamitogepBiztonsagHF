@@ -30,30 +30,16 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            try
-            {
-                var result = await _userService.LoginAsync(request);
-                return Ok(result);
-            }
-            catch (LoginFailedException e)
-            {
-                return Unauthorized(e.Message);
-            }
+            var result = await _userService.LoginAsync(request);
+            return Ok(result);
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
         {
-            try
-            {
-                var result = await _userService.CreateUserAsync(request);
-                return Ok(result);
-            }
-            catch (BadRequestException e)
-            {
-                return Conflict(e.Message);
-            }
+            var result = await _userService.CreateUserAsync(request);
+            return Ok(result);
         }
 
         [Authorize]
