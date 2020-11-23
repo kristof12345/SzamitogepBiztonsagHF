@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -84,13 +85,15 @@ namespace CaffStoreServer.WebApi.Controllers
             return Ok(response);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{id}/download")]
         public async Task<ActionResult<IFormFile>> DownloadImageAsync([FromRoute] string id)
         {
-            var file = await _caffService.Download(UserId(), id);
-            return Ok(file);
+            //var userId = UserId();
+            var userId = "3";
+            var file = await _caffService.Download(userId, id);
+            return File(file, "image/caff", id + ".caff");
         }
 
         [Authorize]

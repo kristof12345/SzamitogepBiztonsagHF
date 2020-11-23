@@ -4,6 +4,8 @@ using CaffStoreServer.WebApi.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Services
@@ -20,9 +22,13 @@ namespace CaffStoreServer.WebApi.Services
             throw new NotImplementedException();
         }
 
-        public Task<IFormFile> Download(string v, string id)
+        public async Task<byte[]> Download(string v, string id)
         {
-            throw new NotImplementedException();
+            string filename = "1.caff";
+            string filepath = AppDomain.CurrentDomain.BaseDirectory + "/" + filename;
+            byte[] filedata = await File.ReadAllBytesAsync(filepath);
+
+            return filedata;
         }
 
         public async Task<IEnumerable<Caff>> SearchAsync(string userId, string creator, string title, bool free, bool bought)
