@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
-using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Extensions;
 using CaffStoreServer.WebApi.Interfaces;
-using CaffStoreServer.WebApi.Models;
-using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -19,13 +15,11 @@ namespace CaffStoreServer.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService, ITokenService tokenService, IMapper _mapper)
+        public UsersController(IUserService userService, IMapper _mapper)
         {
             _userService = userService;
-            _tokenService = tokenService;
             this._mapper = _mapper;
         }
 
@@ -49,7 +43,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsersAsync()
         {
-            if (!IsAdmin())
+            if (!User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -64,8 +58,8 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
-            if (!User.HasClaim(c => c.Type == "userid" && c.Value == request.UserId.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName))
+            if (User.UserId() != request.UserId.ToString()
+                && !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -78,18 +72,13 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id)
         {
-            if (!User.HasClaim(c => c.Type == "userid" && c.Value == id.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName))
+            if (User.UserId() != id.ToString()
+                && !User.IsAdmin())
             {
                 return Unauthorized();
             }
             await _userService.DeleteAsync(id);
             return NoContent();
-        }
-
-        private bool IsAdmin()
-        {
-            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName);
         }
     }
 }

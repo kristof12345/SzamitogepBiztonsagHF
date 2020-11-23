@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using CaffStoreServer.WebApi.Extensions;
 using CaffStoreServer.WebApi.Interfaces;
-using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -33,7 +31,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            var list = await _caffService.SearchAsync(UserId(), creator, title, free, bought);
+            var list = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
             var result = _mapper.Map<List<CAFFResponse>>(list);
             return Ok(result);
         }
@@ -53,7 +51,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id}/buy")]
         public async Task<ActionResult> BuyAsync([FromRoute] string id)
         {
-            await _caffService.BuyAsync(UserId(), id);
+            await _caffService.BuyAsync(User.UserId(), id);
             return Ok();
         }
 
@@ -62,7 +60,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id}/comments")]
         public async Task<ActionResult> CommentAsync([FromRoute] string id, [FromBody] string text)
         {
-            await _commentService.Add(UserId(), id, text);
+            await _commentService.Add(User.UserId(), id, text);
             return Ok();
         }
 
@@ -78,7 +76,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
-            await _caffService.Upload(UserId(), request);
+            await _caffService.Upload(User.UserId(), request);
 
             var response = new CAFFResponse();
             return Ok(response);
@@ -89,7 +87,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id}/download")]
         public async Task<ActionResult<IFormFile>> DownloadImageAsync([FromRoute] string id)
         {
-            var file = await _caffService.Download(UserId(), id);
+            var file = await _caffService.Download(User.UserId(), id);
             return Ok(file);
         }
 
@@ -98,7 +96,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id}")]
         public async Task<ActionResult<IFormFile>> DeleteCaffAsync([FromRoute] string id)
         {
-            if (!IsAdmin())
+            if (!User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -112,23 +110,13 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{caffId}/comments/{commentId}")]
         public async Task<ActionResult<IFormFile>> DeleteCommentAsync([FromRoute] string caffId, [FromRoute] string commentId)
         {
-            if (!IsAdmin())
+            if (!User.IsAdmin())
             {
                 return Unauthorized();
             }
 
             await _commentService.Delete(caffId, commentId);
             return Ok();
-        }
-
-        private bool IsAdmin()
-        {
-            return User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName);
-        }
-
-        private string UserId()
-        {
-            return User.Claims.Where(c => c.Type == "userid").FirstOrDefault().Value;
         }
     }
 }
