@@ -1,4 +1,5 @@
 ﻿using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Extensions;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Exceptions;
@@ -57,7 +58,7 @@ namespace CaffStoreServer.WebApi.Services
             }
             var user = await GetByUserNameAsync(request.Username);
 
-            var role = user.UserRoles.Any(ur => ur.Role.NormalizedName == RoleConstants.AdminNormalizedRoleNome) ? UserType.Admin : UserType.User;
+            var role = user.IsAdmin() ? UserType.Admin : UserType.User;
             var response = new LoginResponse
             {
                 IsSuccess = true,
