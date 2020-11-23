@@ -39,7 +39,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpGet]
         [Route("{id}/comments")]
-        public async Task<ActionResult<List<CommentResponse>>> GetCommentsAsync([FromRoute] string id)
+        public async Task<ActionResult<List<CommentResponse>>> GetCommentsAsync([FromRoute] long id)
         {
             var list = await _commentService.GetForCaffAsync(id);
             var result = _mapper.Map<List<CommentResponse>>(list);

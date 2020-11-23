@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CaffStoreServer.WebApi.Entities
 {
@@ -11,6 +12,7 @@ namespace CaffStoreServer.WebApi.Entities
         public int Duration { get; set; }
         public string ThumbnailUrl { get; set; }
         public double Cost { get; set; }
+        public List<Comment> Comments { get; set; }
         [NotMapped]
         public bool Bought { get; set; } //It's not stored in db, because it only refers to a specific user
         public string ImageUrl { get; set; }

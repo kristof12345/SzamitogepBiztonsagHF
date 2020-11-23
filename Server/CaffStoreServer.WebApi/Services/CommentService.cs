@@ -18,7 +18,7 @@ namespace CaffStoreServer.WebApi.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<Comment>> GetForCaffAsync(string id)
+        public async Task<List<Comment>> GetForCaffAsync(long id)
         {
             var list = new List<Comment>
             {

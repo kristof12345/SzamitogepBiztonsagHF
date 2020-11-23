@@ -6,7 +6,7 @@ namespace CaffStoreServer.WebApi.Interfaces
 {
     public interface ICommentService
     {
-        Task<List<Comment>> GetForCaffAsync(string id);
+        Task<List<Comment>> GetForCaffAsync(long id);
         Task Add(string userId, string id, string text);
         Task Delete(string caffId, string commentId);
     }

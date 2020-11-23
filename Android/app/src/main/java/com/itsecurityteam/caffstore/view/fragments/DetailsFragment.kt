@@ -78,7 +78,7 @@ class DetailsFragment : Fragment() {
                         i++
                         continue
                     }
-                    
+
                     viewModel.downloadCaff(file.toUri())
                     break
                 }

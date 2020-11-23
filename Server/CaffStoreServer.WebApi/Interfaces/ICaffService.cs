@@ -12,5 +12,7 @@ namespace CaffStoreServer.WebApi.Interfaces
         Task Upload(string userId, UploadCAFFRequest request);
         Task<byte[]> Download(string v, string id);
         Task Delete(string id);
+        Task<Caff> Create(Caff caff);
+        Task<bool> Any();
     }
 }
