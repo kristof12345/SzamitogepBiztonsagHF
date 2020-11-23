@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "fec84026-aa30-41ea-96aa-7db66d200639",
-		"name": "CaffStore",
+		"name": "CaffStore user management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -29,7 +29,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"name\": \"Papp Kristof\",\r\n    \"password\": \"Password123!\"\r\n}",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"password\": \"Password123!\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

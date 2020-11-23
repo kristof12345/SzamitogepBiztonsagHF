@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "b37c1510-0664-46c0-8d5c-132749c73c26",
+		"name": "CaffStore caff management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List all caffs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46b9fa6f-317c-40f3-b769-d8fb8b13ff3d",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(3);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
+							"                pm.expect(jsonData[1].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[1].name).eql(\"This is caff 3\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIxIiwidXNlcmlkIjoiNSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2MDYxNDM4MTMsImV4cCI6MTYwNjE0NzQxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.2KYwZMxNaBmIcxa1Q9fVJ8TDVwcu4R2S_RJEYD_RGgE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List free caffs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6add6e1b-5acd-465d-932c-f77bf2651bfa",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[0].cost).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIxIiwidXNlcmlkIjoiNSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2MDYxNDM4MTMsImV4cCI6MTYwNjE0NzQxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.2KYwZMxNaBmIcxa1Q9fVJ8TDVwcu4R2S_RJEYD_RGgE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs by title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b12c5d9c-e9c8-41fe-a86e-43edff988ee6",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIxIiwidXNlcmlkIjoiNSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2MDYxNDM4MTMsImV4cCI6MTYwNjE0NzQxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.2KYwZMxNaBmIcxa1Q9fVJ8TDVwcu4R2S_RJEYD_RGgE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs?title=1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs by creator",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ea52dfc-48ea-402a-8cc9-cd738c5a20a4",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[0].name).eql(\"This is caff 3\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIxIiwidXNlcmlkIjoiNSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2MDYxNDM4MTMsImV4cCI6MTYwNjE0NzQxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.2KYwZMxNaBmIcxa1Q9fVJ8TDVwcu4R2S_RJEYD_RGgE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs?creator=me",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					],
+					"query": [
+						{
+							"key": "creator",
+							"value": "me"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb067d41-7a62-4ae9-b991-178f92dc3263",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
