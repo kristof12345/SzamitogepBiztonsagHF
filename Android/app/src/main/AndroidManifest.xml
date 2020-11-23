@@ -8,6 +8,7 @@
 
     <application
         android:name="com.itsecurityteam.caffstore.CaffStoreApplication"
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

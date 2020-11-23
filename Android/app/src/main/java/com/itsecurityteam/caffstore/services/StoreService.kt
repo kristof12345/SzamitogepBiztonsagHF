@@ -73,11 +73,8 @@ class StoreService {
 
     fun downloadCaff(token: String, id: Long, uri: String) {
         var response = http.downloadImage(token, id).execute()
-        try {
-            var fileOutputStream = FileOutputStream(uri)
-            fileOutputStream.write(response.body().bytes())
-        } catch (ex: Exception) {
-        }
+        var fileOutputStream = FileOutputStream(uri)
+        fileOutputStream.write(response.body().bytes())
     }
 
     fun deleteCaff(token: String, id: Long): Call<ResponseBody> {
