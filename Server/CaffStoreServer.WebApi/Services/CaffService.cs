@@ -53,14 +53,13 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task<IEnumerable<Caff>> SearchAsync(string userId, string creator, string title, bool free, bool bought)
         {
-            //TODO: filter
-            var results = await _context.Caffs.Where(c => c.Creator.Contains(creator)).Include(c => c.Comments).ToListAsync();
-            return results;
+            //TODO: Apply filters
+            return await _context.Caffs.Include(c => c.Comments).ToListAsync();
         }
 
         public Task Upload(string userId, UploadCAFFRequest request)
         {
-            //TODO: Save file, call create
+            //TODO: Save file, call create()
             throw new NotImplementedException();
         }
     }

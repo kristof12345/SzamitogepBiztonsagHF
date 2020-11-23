@@ -28,10 +28,9 @@ namespace CaffStoreServer.WebApi.DataSeed
                 {
                     Name = "This is caff 1",
                     Duration = 10,
-                    Creator = "me",
+                    Creator = "kristof",
                     CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
                     Cost = 3.14,
-                    Bought = false,
                     ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
                     ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
                 },
@@ -41,8 +40,17 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Duration = 20,
                     Creator = "me",
                     CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
-                    Cost = 3.14,
-                    Bought = false,
+                    Cost = 0,
+                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                },
+                new Caff
+                {
+                    Name = "This is caff 3",
+                    Duration = 20,
+                    Creator = "me",
+                    CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
+                    Cost = 5.16,
                     ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
                     ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
                 }
