@@ -10,6 +10,9 @@ namespace CaffStoreServer.WebApi.Context
         IdentityUserClaim<long>, UserRole, IdentityUserLogin<long>,
         IdentityRoleClaim<long>, IdentityUserToken<long>>
     {
+
+        public DbSet<Caff> Caffs { get; set; }
+
         public CaffStoreDbContext(DbContextOptions<CaffStoreDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -64,6 +67,15 @@ namespace CaffStoreServer.WebApi.Context
                 Id = 2,
                 Name = RoleConstants.UserRoleName,
                 NormalizedName = RoleConstants.UserNormalizedRoleName
+            });
+
+            modelBuilder.Entity<Caff>(b =>
+            {
+                // Each Caff can have multiple comments
+                b.HasMany(e => e.Comments)
+                    .WithOne()
+                    .HasForeignKey(uc => uc.CaffId)
+                    .IsRequired();
             });
         }
     }
