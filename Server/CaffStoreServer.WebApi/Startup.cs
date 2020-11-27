@@ -70,11 +70,11 @@ namespace CaffStoreServer.WebApi
 
             services.AddIdentity<User, Role>(o =>
             {
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 6;
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireUppercase = true;
+                o.Password.RequireNonAlphanumeric = true;
+                o.Password.RequiredLength = 7;
             })
             .AddEntityFrameworkStores<CaffStoreDbContext>()
             .AddDefaultTokenProviders();

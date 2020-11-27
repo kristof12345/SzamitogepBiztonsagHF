@@ -77,7 +77,7 @@ class RegisterFragment : Fragment() {
             val pass = tilRegPassword.editText!!.text!!.toString()
             val confirm = it!!.toString()
 
-            if (pass != confirm) throw AndroidException(R.string.app_name)
+            if (pass != confirm) throw AndroidException(R.string.confirm_mismatch)
         }
         ok = ok && validateField(tilRegEmail) { viewModel.validateEmail(it) }
 
