@@ -58,9 +58,9 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("{id}/comments")]
-        public async Task<ActionResult> CommentAsync([FromRoute] string id, [FromBody] string text)
+        public async Task<ActionResult> CommentAsync([FromRoute] string id, [FromBody] CommentRequest comment)
         {
-            await _commentService.Add(User.UserId(), id, text);
+            await _commentService.Add(User.UserId(), id, comment.Text);
             return Ok();
         }
 
