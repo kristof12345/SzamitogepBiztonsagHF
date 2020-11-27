@@ -513,6 +513,59 @@
 			"response": []
 		},
 		{
+			"name": "Delete caff unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e32d8865-f79a-423e-a980-7e8df42dd0f0",
+						"exec": [
+							"pm.test(\"Test delete caff unauthorized\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Admin login",
 			"event": [
 				{
@@ -669,6 +722,59 @@
 						"caffs",
 						"{{id}}",
 						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete caff",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b933da0d-6bc1-4481-870d-a3ef4aa48707",
+						"exec": [
+							"pm.test(\"Test delete caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}"
 					]
 				}
 			},
