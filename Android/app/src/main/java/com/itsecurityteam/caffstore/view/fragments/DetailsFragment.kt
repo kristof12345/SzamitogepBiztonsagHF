@@ -261,7 +261,7 @@ class DetailsFragment : Fragment() {
 
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietComment)
-            viewModel.addComment(editText.toString())
+            viewModel.addComment(editText.text.toString())
             dialog.dismiss()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->

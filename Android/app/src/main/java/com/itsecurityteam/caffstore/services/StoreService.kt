@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.itsecurityteam.caffstore.CaffStoreApplication
 import com.itsecurityteam.caffstore.converter.DotNetDateConverter
 import com.itsecurityteam.caffstore.model.filter.Filter
+import com.itsecurityteam.caffstore.model.requests.CommentRequest
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import okhttp3.MediaType
@@ -48,7 +49,8 @@ class StoreService {
     }
 
     fun addComment(token: String, caffId: Long?, text: String): Call<ResponseBody> {
-        return http.comment(token, caffId!!, text)
+        val comment = CommentRequest(text);
+        return http.comment(token, caffId!!, comment)
     }
 
     fun uploadCaff(token: String, name: String, price: Double, uri: Uri): Call<CaffResponse> {
