@@ -47,10 +47,12 @@ namespace CaffStoreServer.WebApi.Services
             throw new NotImplementedException();
         }
 
-        public async Task<byte[]> Download(string v, string id)
+        public async Task<byte[]> Download(string userId, int id)
         {
-            string filename = "1.caff";
-            string filepath = AppDomain.CurrentDomain.BaseDirectory + "/" + filename;
+            var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
+            if (caff == null)
+                throw new EntityNotFoundException("Caff not found");
+            string filepath = caff.ImageUrl;
             byte[] filedata = await File.ReadAllBytesAsync(filepath);
 
             return filedata;
@@ -62,7 +64,7 @@ namespace CaffStoreServer.WebApi.Services
             return await _context.Caffs.Include(c => c.Comments).ToListAsync();
         }
 
-        public async Task Upload(string userId, UploadCAFFRequest request)
+        public async Task<Caff> Upload(string userId, UploadCAFFRequest request)
         {
             var ext = Path.GetExtension(request.Image.FileName).ToLowerInvariant();
 
@@ -80,7 +82,16 @@ namespace CaffStoreServer.WebApi.Services
                 await request.Image.CopyToAsync(stream);
             }
 
-            //TODO: Save file, call create()
+            // TODO parse CAFF file
+
+            var caff = new Caff
+            {
+                Name = request.Name,
+                Cost = request.Price,
+                ImageUrl = filePath
+                // TODO fill properties after parsing with data from the json
+            };
+            return await Create(caff);
         }
     }
 }

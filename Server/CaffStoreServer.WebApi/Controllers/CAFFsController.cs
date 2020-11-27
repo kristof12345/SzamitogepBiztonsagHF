@@ -76,16 +76,21 @@ namespace CaffStoreServer.WebApi.Controllers
                 Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
-            await _caffService.Upload(User.UserId(), request);
+            var caff = await _caffService.Upload(User.UserId(), request);
 
-            var response = new CAFFResponse();
+            var response = new CAFFResponse { 
+                Id = caff.Id,
+                Name = caff.Name,
+                Cost = caff.Cost,
+                ImageUrl = $"{caff.Id}/download"
+            };
             return Ok(response);
         }
 
         [Authorize]
         [HttpGet]
-        [Route("{id}/download")]
-        public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] string id)
+        [Route("{id:int}/download")]
+        public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] int id)
         {
             var file = await _caffService.Download(User.UserId(), id);
             return File(file, "image/caff", id + ".caff");
