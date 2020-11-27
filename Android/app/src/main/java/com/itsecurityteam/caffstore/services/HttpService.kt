@@ -1,5 +1,6 @@
 package com.itsecurityteam.caffstore.services
 
+import com.itsecurityteam.caffstore.model.requests.CommentRequest
 import com.itsecurityteam.caffstore.model.requests.LoginRequest
 import com.itsecurityteam.caffstore.model.requests.RegisterRequest
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
@@ -33,7 +34,7 @@ interface HttpService {
     fun buy(@Header("Authorization") token: String, @Path("id") id: Long): Call<Void>
 
     @POST("caffs/{id}/comments")
-    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body text: String): Call<ResponseBody>
+    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body comment: CommentRequest): Call<ResponseBody>
 
     @Multipart
     @POST("caffs/{name}/{price}")
