@@ -67,7 +67,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("{name}/{price}")]
-        public async Task<ActionResult<CommentResponse>> UploadImageAsync(IFormFile file, [FromRoute] string name, [FromRoute] string price)
+        public async Task<ActionResult<CommentResponse>> UploadCaffAsync(IFormFile file, [FromRoute] string name, [FromRoute] string price)
         {
             var request = new UploadCAFFRequest
             {
@@ -85,7 +85,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpGet]
         [Route("{id}/download")]
-        public async Task<ActionResult<IFormFile>> DownloadImageAsync([FromRoute] string id)
+        public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] string id)
         {
             var file = await _caffService.Download(User.UserId(), id);
             return File(file, "image/caff", id + ".caff");
