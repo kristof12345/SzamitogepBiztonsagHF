@@ -94,7 +94,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult<IFormFile>> DeleteCaffAsync([FromRoute] string id)
+        public async Task<ActionResult> DeleteCaffAsync([FromRoute] string id)
         {
             if (!User.IsAdmin())
             {
@@ -108,7 +108,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Authorize]
         [HttpDelete]
         [Route("{caffId}/comments/{commentId}")]
-        public async Task<ActionResult<IFormFile>> DeleteCommentAsync([FromRoute] string caffId, [FromRoute] string commentId)
+        public async Task<ActionResult> DeleteCommentAsync([FromRoute] string caffId, [FromRoute] string commentId)
         {
             if (!User.IsAdmin())
             {
