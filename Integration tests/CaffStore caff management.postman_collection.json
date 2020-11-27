@@ -409,6 +409,224 @@
 							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
 							"    \t\t\tpm.expect(jsonData[1].userName).eql(\"User1\");\r",
 							"                pm.expect(jsonData[1].text).eql(\"This caff is great!\");\r",
+							"                pm.environment.set(\"commentid\", jsonData[1].id);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dabb3f5f-7184-48e6-b9cd-cd443d18494c",
+						"exec": [
+							"pm.test(\"Test delete comment unauthorized\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments/{{commentid}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments",
+						"{{commentid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "41769898-e85b-4659-8c66-ab314d3f538b",
+						"exec": [
+							"pm.test(\"Test admin login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.isSuccess).eql(true);\r",
+							"                pm.environment.set(\"token\", jsonData.token);\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Admin0\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9178b33-1495-41b4-bac3-39bb7bad8bad",
+						"exec": [
+							"pm.test(\"Test delete comment\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments/{{commentid}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments",
+						"{{commentid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get deleted comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f97b78af-0bbe-4b61-8f74-b418ccb610f7",
+						"exec": [
+							"pm.test(\"Test deleted comment\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"me\");\r",
+							"                pm.expect(jsonData[0].text).eql(\"Hello world!\");\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
