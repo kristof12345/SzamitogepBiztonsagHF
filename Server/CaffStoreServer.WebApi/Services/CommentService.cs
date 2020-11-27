@@ -8,12 +8,12 @@ namespace CaffStoreServer.WebApi.Services
 {
     public class CommentService : ICommentService
     {
-        public Task Add(string userId, string id, string text)
+        public Task Add(string userId, long id, string text)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(string caffId, string commentId)
+        public Task Delete(long caffId, string commentId)
         {
             throw new NotImplementedException();
         }

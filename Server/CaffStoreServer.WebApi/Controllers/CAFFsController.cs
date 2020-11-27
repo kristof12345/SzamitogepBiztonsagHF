@@ -38,7 +38,7 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("{id}/comments")]
+        [Route("{id:long}/comments")]
         public async Task<ActionResult<List<CommentResponse>>> GetCommentsAsync([FromRoute] long id)
         {
             var list = await _commentService.GetForCaffAsync(id);
@@ -48,8 +48,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("{id}/buy")]
-        public async Task<ActionResult> BuyAsync([FromRoute] string id)
+        [Route("{id:long}/buy")]
+        public async Task<ActionResult> BuyAsync([FromRoute] long id)
         {
             await _caffService.BuyAsync(User.UserId(), id);
             return Ok();
@@ -57,8 +57,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("{id}/comments")]
-        public async Task<ActionResult> CommentAsync([FromRoute] string id, [FromBody] CommentRequest comment)
+        [Route("{id:long}/comments")]
+        public async Task<ActionResult> CommentAsync([FromRoute] long id, [FromBody] CommentRequest comment)
         {
             await _commentService.Add(User.UserId(), id, comment.Text);
             return Ok();
@@ -89,8 +89,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("{id:int}/download")]
-        public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] int id)
+        [Route("{id:long}/download")]
+        public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] long id)
         {
             var file = await _caffService.Download(User.UserId(), id);
             return File(file, "image/caff", id + ".caff");
@@ -98,8 +98,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult> DeleteCaffAsync([FromRoute] string id)
+        [Route("{id:long}")]
+        public async Task<ActionResult> DeleteCaffAsync([FromRoute] long id)
         {
             if (!User.IsAdmin())
             {
@@ -112,8 +112,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("{caffId}/comments/{commentId}")]
-        public async Task<ActionResult> DeleteCommentAsync([FromRoute] string caffId, [FromRoute] string commentId)
+        [Route("{caffId:long}/comments/{commentId}")]
+        public async Task<ActionResult> DeleteCommentAsync([FromRoute] long caffId, [FromRoute] string commentId)
         {
             if (!User.IsAdmin())
             {

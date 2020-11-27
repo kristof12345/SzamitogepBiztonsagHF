@@ -25,7 +25,7 @@ namespace CaffStoreServer.WebApi.Services
             _fileSettings = fileSettings;
         }
 
-        public Task BuyAsync(string userId, string caffId)
+        public Task BuyAsync(string userId, long caffId)
         {
             return Task.CompletedTask;
         }
@@ -42,12 +42,18 @@ namespace CaffStoreServer.WebApi.Services
             return await _context.Caffs.AnyAsync();
         }
 
-        public Task Delete(string id)
+        public async Task Delete(long id)
         {
-            throw new NotImplementedException();
+            var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
+            if (caff == null)
+                throw new EntityNotFoundException("Caff not found");
+            File.Delete(caff.ImageUrl);
+            // TODO delete files generated with parser (thumbnails, json)
+            _context.Remove(caff);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<byte[]> Download(string userId, int id)
+        public async Task<byte[]> Download(string userId, long id)
         {
             var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
             if (caff == null)
