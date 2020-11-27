@@ -67,6 +67,12 @@ namespace CaffStoreServer.WebApi
             services.AddSingleton<ITokenSettings>(sp =>
                 sp.GetRequiredService<IOptions<TokenSettings>>().Value);
 
+            var fileSettings = Configuration.GetSection(nameof(FileSettings));
+            services.Configure<FileSettings>(
+                fileSettings);
+            services.AddSingleton<IFileSettings>(sp =>
+                sp.GetRequiredService<IOptions<FileSettings>>().Value);
+
 
             services.AddIdentity<User, Role>(o =>
             {

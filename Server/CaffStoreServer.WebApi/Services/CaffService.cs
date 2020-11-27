@@ -1,6 +1,7 @@
 ﻿using CaffStoreServer.WebApi.Context;
 using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
+using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Models.Requests;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,13 @@ namespace CaffStoreServer.WebApi.Services
     public class CaffService : ICaffService
     {
         private CaffStoreDbContext _context;
-
+        private readonly IFileSettings _fileSettings;
         private string[] permittedExtensions = { ".caff" };
-        private readonly int maxFileSize = 32 * 1024 * 1024;
 
-        public CaffService(CaffStoreDbContext context)
+        public CaffService(CaffStoreDbContext context, IFileSettings fileSettings)
         {
             _context = context;
+            _fileSettings = fileSettings;
         }
 
         public Task BuyAsync(string userId, string caffId)
@@ -61,17 +62,25 @@ namespace CaffStoreServer.WebApi.Services
             return await _context.Caffs.Include(c => c.Comments).ToListAsync();
         }
 
-        public Task Upload(string userId, UploadCAFFRequest request)
+        public async Task Upload(string userId, UploadCAFFRequest request)
         {
             var ext = Path.GetExtension(request.Image.FileName).ToLowerInvariant();
 
             if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
                 throw new BadRequestException("Not supported file extension");
-            if (request.Image.Length > maxFileSize)
+            if (request.Image.Length > _fileSettings.MaxSizeInMegaBytes * 1024 * 1024)
                 throw new BadRequestException("Size limit reached");
 
+            Directory.CreateDirectory(_fileSettings.FilePath);
+            var filePath = Path.Combine(_fileSettings.FilePath,
+            Path.GetRandomFileName() + ".caff");
+
+            using (var stream = File.Create(filePath))
+            {
+                await request.Image.CopyToAsync(stream);
+            }
+
             //TODO: Save file, call create()
-            throw new NotImplementedException();
         }
     }
 }
