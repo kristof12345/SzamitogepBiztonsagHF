@@ -66,8 +66,9 @@
     <string name="purchase_error">Unable to purchase caff image</string>
     <string name="comment_error">Unable to add comment</string>
     <string name="tooShortUsername">This username is too short.</string>
-    <string name="tooShortPassword">Minimum password length is 6.</string>
+    <string name="tooShortPassword">Minimum password length is 7.</string>
     <string name="tooWeakPassword">Password should contain at least 1 capital letter, 1 number and 1 special character.</string>
     <string name="delete_error">Unable to delete CAFF</string>
     <string name="delete_comment_error">Unable to delete comment</string>
+    <string name="confirm_mismatch">Confirm must match with the password</string>
 </resources>
