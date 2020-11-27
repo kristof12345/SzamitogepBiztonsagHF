@@ -67,10 +67,12 @@ namespace CaffStoreServer.WebApi.Services
         public async Task<IEnumerable<Caff>> SearchAsync(string userId, string creator, string title, bool? free, bool? bought)
         {
             //TODO: Filter with bought
-            var caffs = _context.Caffs.Include(c => c.Comments)
-                .Where(c => string.IsNullOrEmpty(creator) || c.Creator == creator)
-                .Where(c => string.IsNullOrEmpty(title) || c.Name == title);
+            var caffs = _context.Caffs.Include(c => c.Comments).AsQueryable();
 
+            if (!string.IsNullOrEmpty(creator))
+                caffs = caffs.Where(c => c.Creator == creator);
+            if (!string.IsNullOrEmpty(title))
+                caffs = caffs.Where(c => c.Name == title);
             if (free == true)
                 caffs = caffs.Where(c => c.Cost == 0);
             if (free == false)
