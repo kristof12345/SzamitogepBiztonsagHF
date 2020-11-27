@@ -66,6 +66,7 @@
 							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
 							"                pm.expect(jsonData[1].name).eql(\"This is caff 2\");\r",
 							"                pm.expect(jsonData[1].name).eql(\"This is caff 3\");\r",
+							"                pm.environment.set(\"id\", jsonData[0].id);\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -299,12 +300,12 @@
 					"script": {
 						"id": "48031b75-0d2d-41be-b766-fb7821399298",
 						"exec": [
-							"pm.test(\"Test get comments fo caff\", function(){\r",
+							"pm.test(\"Test get comments for caff\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"    \t\t\tvar jsonData = pm.response.json();\r",
-							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
-							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
-							"                pm.expect(jsonData[0].name).eql(\"This is caff 3\");\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"me\");\r",
+							"                pm.expect(jsonData[0].text).eql(\"Hello world!\");\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -317,7 +318,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzZXIxIiwidXNlcmlkIjoiNSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2MDYxNDM4MTMsImV4cCI6MTYwNjE0NzQxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.2KYwZMxNaBmIcxa1Q9fVJ8TDVwcu4R2S_RJEYD_RGgE",
+							"value": "{{token}}",
 							"type": "string"
 						}
 					]
@@ -325,7 +326,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:5001/caffs/",
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -333,7 +334,123 @@
 					"port": "5001",
 					"path": [
 						"caffs",
-						""
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5c5f4a0-6bde-4099-9ba2-272e0095373d",
+						"exec": [
+							"pm.test(\"Test add comments for caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"This caff is great!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get added comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6e88e5fd-afeb-4034-9e22-2af7037403be",
+						"exec": [
+							"pm.test(\"Test add comments for caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
+							"    \t\t\tpm.expect(jsonData[1].userName).eql(\"User1\");\r",
+							"                pm.expect(jsonData[1].text).eql(\"This caff is great!\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
 					]
 				}
 			},
