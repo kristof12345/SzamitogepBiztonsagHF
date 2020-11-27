@@ -2,6 +2,7 @@ using AutoMapper;
 using CaffStoreServer.WebApi.Context;
 using CaffStoreServer.WebApi.DataSeed;
 using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Extensions;
 using CaffStoreServer.WebApi.Interfaces;
 using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Exceptions;
@@ -109,14 +110,16 @@ namespace CaffStoreServer.WebApi
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                         //get userid if type is "userid"
-                        var userid = context.Principal.Claims.Where(x => x.Type == "userid").FirstOrDefault()?.Value;
+                        var userid = context.Principal.UserId();
                         if (userid == null)
                         {
                             context.Fail("invaild token");
                         }
                         try
                         {
-                            await userService.GetByIdAsync(Convert.ToInt64(userid));
+                            var user = await userService.GetByIdAsync(Convert.ToInt64(userid));
+                            if (context.Principal.IsAdmin() && !user.IsAdmin())
+                                context.Fail("invaild token");
                         } catch
                         {
                             context.Fail("invaild token");
