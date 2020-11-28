@@ -74,6 +74,12 @@ namespace CaffStoreServer.WebApi
             services.AddSingleton<IFileSettings>(sp =>
                 sp.GetRequiredService<IOptions<FileSettings>>().Value);
 
+            var caffparserSettings = Configuration.GetSection(nameof(CAFFparserSettings));
+            services.Configure<CAFFparserSettings>(
+                caffparserSettings);
+            services.AddSingleton<ICAFFparserSettings>(sp =>
+                sp.GetRequiredService<IOptions<CAFFparserSettings>>().Value);
+
 
             services.AddIdentity<User, Role>(o =>
             {

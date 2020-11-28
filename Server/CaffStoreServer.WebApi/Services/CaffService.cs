@@ -5,6 +5,7 @@ using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Exceptions;
 using CaffStoreServer.WebApi.Models.Requests;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,12 +18,14 @@ namespace CaffStoreServer.WebApi.Services
     {
         private CaffStoreDbContext _context;
         private readonly IFileSettings _fileSettings;
+        private readonly ICAFFparserSettings _parserSettings;
         private string[] permittedExtensions = { ".caff" };
 
-        public CaffService(CaffStoreDbContext context, IFileSettings fileSettings)
+        public CaffService(CaffStoreDbContext context, IFileSettings fileSettings, ICAFFparserSettings parserSettings)
         {
             _context = context;
             _fileSettings = fileSettings;
+            _parserSettings = parserSettings;
         }
 
         public Task BuyAsync(string userId, long caffId)
@@ -90,23 +93,67 @@ namespace CaffStoreServer.WebApi.Services
             if (request.Image.Length > _fileSettings.MaxSizeInMegaBytes * 1024 * 1024)
                 throw new BadRequestException("Size limit reached");
 
+            var extension = ".caff";
             Directory.CreateDirectory(_fileSettings.FilePath);
             var filePath = Path.Combine(_fileSettings.FilePath,
-            Path.GetRandomFileName() + ".caff");
+            Path.GetRandomFileName() + extension);
 
             using (var stream = File.Create(filePath))
             {
                 await request.Image.CopyToAsync(stream);
             }
 
-            // TODO parse CAFF file
+            var directory = filePath.Substring(0, filePath.Length - extension.Length);
+            Directory.CreateDirectory(directory);
+
+            string creator;
+            DateTime creationDate;
+            int duration = 0;
+            string thumbnail = Path.Combine(directory, "1_img.bmp");
+            try
+            {
+                System.Diagnostics.Process.Start(_parserSettings.ParserExe, $"{filePath} {directory}");
+
+                var metadataJsonFile = Path.Combine(directory, "output.json");
+                if (!File.Exists(metadataJsonFile))
+                    throw new Exception("CAFF parsing did not produce metadata");
+
+                if (!File.Exists(thumbnail))
+                    throw new Exception("CAFF parsing did not produce thumbnail image");
+
+                var jsonContent = File.ReadAllText(metadataJsonFile);
+                dynamic jToken = JToken.Parse(jsonContent);
+
+                creator = jToken.Credits.creator;
+                creationDate = new DateTime(
+                    jToken.Credits.year,
+                    jToken.Credits.month,
+                    jToken.Credits.day,
+                    jToken.Credits.hour,
+                    jToken.Credits.minute,
+                    0
+                    );
+
+                foreach (var anim in jToken.Animations)
+                {
+                    duration += anim.duration;
+                }
+            }
+            catch
+            {
+                Directory.Delete(directory);
+                throw;
+            }
 
             var caff = new Caff
             {
                 Name = request.Name,
                 Cost = request.Price,
-                ImageUrl = filePath
-                // TODO fill properties after parsing with data from the json
+                ImageUrl = filePath,
+                Creator = creator,
+                CreationDate = creationDate.ToString(), // TODO DateTime?
+                Duration = duration,
+                ThumbnailUrl = thumbnail
             };
             return await Create(caff);
         }
