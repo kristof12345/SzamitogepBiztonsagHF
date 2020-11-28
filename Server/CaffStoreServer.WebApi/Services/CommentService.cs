@@ -20,7 +20,6 @@ namespace CaffStoreServer.WebApi.Services
         {
             var comment = new Comment
             {
-                Id = "1",
                 AddTime = DateTime.Now.ToString(),
                 UserName = userId,
                 CaffId = id
@@ -41,7 +40,7 @@ namespace CaffStoreServer.WebApi.Services
             {
                 new Comment
                 {
-                    Id = "23",
+                    Id = 23,
                     CaffId = id,
                     UserName = "me",
                     Text = "Hello world!",

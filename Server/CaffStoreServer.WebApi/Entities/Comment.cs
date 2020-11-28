@@ -2,7 +2,7 @@
 {
     public class Comment
     {
-        public string Id { get; set; }
+        public long Id { get; set; }
         public long CaffId { get; set; }
         public string UserName { get; set; }
         public string AddTime { get; set; }
