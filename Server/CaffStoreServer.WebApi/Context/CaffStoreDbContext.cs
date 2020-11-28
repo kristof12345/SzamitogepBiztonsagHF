@@ -12,6 +12,7 @@ namespace CaffStoreServer.WebApi.Context
     {
 
         public DbSet<Caff> Caffs { get; set; }
+        public DbSet<Caff> Thumbnails { get; set; }
 
         public CaffStoreDbContext(DbContextOptions<CaffStoreDbContext> options) : base(options) { }
 
@@ -75,6 +76,12 @@ namespace CaffStoreServer.WebApi.Context
                 b.HasMany(e => e.Comments)
                     .WithOne()
                     .HasForeignKey(uc => uc.CaffId)
+                    .IsRequired();
+
+                // Each Caff can have multiple comments
+                b.HasMany(e => e.Thumbnails)
+                    .WithOne(th => th.Caff)
+                    .HasForeignKey(th => th.CaffId)
                     .IsRequired();
             });
         }

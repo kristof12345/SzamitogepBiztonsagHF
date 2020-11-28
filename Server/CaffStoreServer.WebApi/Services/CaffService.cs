@@ -47,11 +47,17 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task Delete(long id)
         {
-            var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
+            var caff = await _context.Caffs.Include(c => c.Thumbnails).FirstOrDefaultAsync(c => c.Id == id);
             if (caff == null)
                 throw new EntityNotFoundException("Caff not found");
-            File.Delete(caff.ImageUrl);
-            // TODO delete files generated with parser (thumbnails, json)
+            File.Delete(caff.ImagePath);
+            foreach (var thumbnail in caff.Thumbnails)
+            {
+                File.Delete(thumbnail.FilePath);
+            }
+            var extension = ".caff";
+            var directory = caff.ImagePath.Substring(0, caff.ImagePath.Length - extension.Length);
+            Directory.Delete(directory, true);
             _context.Remove(caff);
             await _context.SaveChangesAsync();
         }
@@ -61,7 +67,7 @@ namespace CaffStoreServer.WebApi.Services
             var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
             if (caff == null)
                 throw new EntityNotFoundException("Caff not found");
-            string filepath = caff.ImageUrl;
+            string filepath = caff.ImagePath;
             byte[] filedata = await File.ReadAllBytesAsync(filepath);
 
             return filedata;
@@ -152,15 +158,24 @@ namespace CaffStoreServer.WebApi.Services
                 throw;
             }
 
+            var thumbnails = new List<Thumbnail>();
+            foreach (var file in Directory.GetFiles(directory, "*.bmp"))
+            {
+                thumbnails.Add(new Thumbnail
+                {
+                    FilePath = file
+                });
+            }
+
             var caff = new Caff
             {
                 Name = request.Name,
                 Cost = request.Price,
-                ImageUrl = filePath,
+                ImagePath = filePath,
                 Creator = creator,
                 CreationDate = creationDate.ToString(), // TODO DateTime?
                 Duration = duration,
-                ThumbnailUrl = thumbnail
+                Thumbnails = thumbnails
             };
             return await Create(caff);
         }
