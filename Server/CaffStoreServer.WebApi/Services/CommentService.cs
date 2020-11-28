@@ -1,4 +1,5 @@
-﻿using CaffStoreServer.WebApi.Entities;
+﻿using CaffStoreServer.WebApi.Context;
+using CaffStoreServer.WebApi.Entities;
 using CaffStoreServer.WebApi.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,25 @@ namespace CaffStoreServer.WebApi.Services
 {
     public class CommentService : ICommentService
     {
-        public Task Add(string userId, long id, string text)
+        private CaffStoreDbContext _context;
+
+        public CommentService(CaffStoreDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task Add(string userId, long id, string text)
+        {
+            var comment = new Comment
+            {
+                Id = "1",
+                AddTime = DateTime.Now.ToString(),
+                UserName = userId,
+                CaffId = id
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
         }
 
         public Task Delete(long caffId, string commentId)
