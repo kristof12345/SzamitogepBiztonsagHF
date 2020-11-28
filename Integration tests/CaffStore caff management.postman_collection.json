@@ -6,6 +6,51 @@
 	},
 	"item": [
 		{
+			"name": "User registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "456750d6-806a-41a3-94e3-d744cf147c57",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.username).eql(\"TestUser\");\r",
+							"    \t\t\tpm.expect(jsonData.userType).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "User login",
 			"event": [
 				{
@@ -30,7 +75,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"User1\",\r\n    \"password\": \"123456\"\r\n}",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"password\": \"Pass123!\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,7 +110,7 @@
 							"    \t\t\tpm.expect(jsonData.length).eql(3);\r",
 							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
 							"                pm.expect(jsonData[1].name).eql(\"This is caff 2\");\r",
-							"                pm.expect(jsonData[1].name).eql(\"This is caff 3\");\r",
+							"                pm.expect(jsonData[2].name).eql(\"This is caff 3\");\r",
 							"                pm.environment.set(\"id\", jsonData[0].id);\r",
 							"\t\t});"
 						],
