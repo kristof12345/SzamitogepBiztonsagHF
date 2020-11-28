@@ -23,56 +23,77 @@ namespace CaffStoreServer.WebApi.DataSeed
         {
             var caffService = serviceProvider.GetRequiredService<ICaffService>();
 
-            var list = new List<Caff> {
-                new Caff
-                {
-                    Name = "This is caff 1",
-                    Duration = 10,
-                    Creator = "kristof",
-                    CreationDate = DateTime.Now,
-                    Cost = 3.14,
-                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    Thumbnails = new List<Thumbnail> {
-                        new Thumbnail
-                        {
-                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-                        }
-                    }
-                },
-                new Caff
-                {
-                    Name = "This is caff 2",
-                    Duration = 20,
-                    Creator = "me",
-                    CreationDate = DateTime.Now.AddDays(-1),
-                    Cost = 0,
-                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    Thumbnails = new List<Thumbnail> {
-                        new Thumbnail
-                        {
-                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-                        }
-                    }
-                },
-                new Caff
-                {
-                    Name = "This is caff 3",
-                    Duration = 20,
-                    Creator = "me",
-                    CreationDate = DateTime.Now.AddDays(-1),
-                    Cost = 5.16,
-                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    Thumbnails = new List<Thumbnail> {
-                        new Thumbnail
-                        {
-                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-                        }
-                    }
-                }
-            };
             var hasData = await caffService.Any();
             if (!hasData)
             {
+                var list = new List<Caff> {
+                    new Caff
+                    {
+                        Name = "This is caff 1",
+                        Duration = 10,
+                        Creator = "kristof",
+                        CreationDate = DateTime.Now,
+                        Cost = 3.14,
+                        ImagePath = "Resources\\Files\\j3mcu3zp.ivk.caff",
+                        Thumbnails = new List<Thumbnail> {
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\j3mcu3zp.ivk\\1_img.bmp"
+                            },
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\j3mcu3zp.ivk\\2_img.bmp"
+                            },
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\j3mcu3zp.ivk\\3_img.bmp"
+                            },
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\j3mcu3zp.ivk\\4_img.bmp"
+                            }
+                        }
+                    },
+                    new Caff
+                    {
+                        Name = "This is caff 2",
+                        Duration = 20,
+                        Creator = "me",
+                        CreationDate = DateTime.Now.AddDays(-1),
+                        Cost = 0,
+                        ImagePath = "Resources\\Files\\nsadtvi5.n33.caff",
+                        Thumbnails = new List<Thumbnail> {
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\nsadtvi5.n33\\1_img.bmp"
+                            },
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\nsadtvi5.n33\\2_img.bmp"
+                            }
+                        }
+                    },
+                    new Caff
+                    {
+                        Name = "This is caff 3",
+                        Duration = 20,
+                        Creator = "me",
+                        CreationDate = DateTime.Now.AddDays(-1),
+                        Cost = 5.16,
+                        ImagePath = "Resources\\Files\\wdqixxwf.13i.caff",
+                        Thumbnails = new List<Thumbnail> {
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\wdqixxwf.13i\\1_img.bmp"
+                            },
+                            new Thumbnail
+                            {
+                                FilePath = "Resources\\Files\\wdqixxwf.13i\\2_img.bmp"
+                            }
+                        }
+                    }
+                };
+
                 foreach (var caff in list)
                 {
                     await caffService.Create(caff);

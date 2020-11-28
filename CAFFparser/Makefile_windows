@@ -4,7 +4,7 @@
 
 # Compiler settings - Can be customized.
 CC = g++
-CXXFLAGS = -std=c++11 -Wall -fstack-protector-all
+CXXFLAGS = -std=c++11 -Wall
 LDFLAGS =
 
 # Makefile settings - Can be customized.
@@ -18,8 +18,8 @@ SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
 # UNIX-based OS variables & settings
-RM = rm
-DELOBJ = $(OBJ)
+RM = del
+DELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
 # Windows OS variables & settings
 DEL = del
 EXE = .exe

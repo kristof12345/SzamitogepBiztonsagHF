@@ -1,0 +1,85 @@
+{
+	"Header": {
+		"header_size": 20,
+		"num_anim": 20
+	},
+	"Credits": {
+		"year": 2020,
+		"month": 7,
+		"day": 2,
+		"hour": 14,
+		"minute": 50,
+		"creator_len": 14,
+		"creator": "Second_Creator"
+	},
+	"Animations": [
+		{
+			"duration": 1000,
+			"ciff": {
+				"Header": {
+					"header_size": 81,
+					"content_size": 2001000,
+					"width": 1000,
+					"height": 667,
+					"caption": "Beautiful scenery",
+					"tags": [
+						"landscape",
+						"sunset",
+						"mountains"
+					]
+				}
+			}
+		},
+		{
+			"duration": 1000,
+			"ciff": {
+				"Header": {
+					"header_size": 81,
+					"content_size": 2001000,
+					"width": 1000,
+					"height": 667,
+					"caption": "Beautiful scenery",
+					"tags": [
+						"landscape",
+						"sunset",
+						"mountains"
+					]
+				}
+			}
+		},
+		{
+			"duration": 1000,
+			"ciff": {
+				"Header": {
+					"header_size": 81,
+					"content_size": 2001000,
+					"width": 1000,
+					"height": 667,
+					"caption": "Beautiful scenery",
+					"tags": [
+						"landscape",
+						"sunset",
+						"mountains"
+					]
+				}
+			}
+		},
+		{
+			"duration": 1000,
+			"ciff": {
+				"Header": {
+					"header_size": 81,
+					"content_size": 2001000,
+					"width": 1000,
+					"height": 667,
+					"caption": "Beautiful scenery",
+					"tags": [
+						"landscape",
+						"sunset",
+						"mountains"
+					]
+				}
+			}
+		}
+	]
+}
