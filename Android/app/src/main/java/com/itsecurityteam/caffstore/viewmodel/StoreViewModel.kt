@@ -246,6 +246,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             var response = storeService.deleteCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!).execute()
             when {
                 response.isSuccessful -> {
+                    search()
                     result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
                 }
                 else -> {
