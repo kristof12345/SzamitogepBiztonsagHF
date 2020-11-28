@@ -121,8 +121,8 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("{caffId:long}/comments/{commentId}")]
-        public async Task<ActionResult> DeleteCommentAsync([FromRoute] long caffId, [FromRoute] string commentId)
+        [Route("{caffId:long}/comments/{commentId:long}")]
+        public async Task<ActionResult> DeleteCommentAsync([FromRoute] long caffId, [FromRoute] long commentId)
         {
             if (!User.IsAdmin())
             {

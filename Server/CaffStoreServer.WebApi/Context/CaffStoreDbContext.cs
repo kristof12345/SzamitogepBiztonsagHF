@@ -85,7 +85,7 @@ namespace CaffStoreServer.WebApi.Context
                     .HasForeignKey(uc => uc.CaffId)
                     .IsRequired();
 
-                // Each Caff can have multiple comments
+                // Each Caff can have multiple thumbnails
                 b.HasMany(e => e.Thumbnails)
                     .WithOne(th => th.Caff)
                     .HasForeignKey(th => th.CaffId)
