@@ -90,8 +90,7 @@ class RegisterFragment : Fragment() {
 
         setAvailability(false)
         viewModel.register(
-            tietRegName.text.toString(), tietRegEmail.text.toString(),
-            tietRegPassword.text.toString()
+            tietRegName.text.toString(), tietRegPassword.text.toString(), tietRegEmail.text.toString()
         )
     }
 
