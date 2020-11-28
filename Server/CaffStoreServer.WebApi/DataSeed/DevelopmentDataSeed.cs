@@ -68,7 +68,7 @@ namespace CaffStoreServer.WebApi.DataSeed
         private static async Task SeedUsers(IServiceProvider serviceProvider)
         {
             const int adminCount = 1;
-            const int userCount = 2;
+            const int userCount = 0;
 
             var users = new List<User>();
 
@@ -101,7 +101,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                                 UserName = $"User{i}"
                             };
 
-                            await userManager.CreateAsync(user, "123456");
+                            await userManager.CreateAsync(user, "Pass123!");
 
                             await userManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
                         }
