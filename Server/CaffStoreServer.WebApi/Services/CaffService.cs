@@ -111,7 +111,10 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task<IEnumerable<Caff>> SearchAsync(long userId, string creator, string title, bool free, bool bought)
         {
-            var caffs = _context.Caffs.Include(c => c.Comments).AsQueryable();
+            var caffs = _context.Caffs
+                .Include(c => c.Comments)
+                .Include(c => c.Thumbnails)
+                .AsQueryable();
             var purchasedCaffIds = await _context.PurchasedCaffs
                 .Where(pc => pc.UserId == userId)
                 .Select(pc => pc.CaffId)

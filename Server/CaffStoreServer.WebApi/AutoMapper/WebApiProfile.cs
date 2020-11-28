@@ -22,6 +22,8 @@ namespace CaffStoreServer.WebApi.AutoMapper
                 .AfterMap((entity, dto, ctx) =>
                 {
                     dto.CreationDate = entity.CreationDate.ToShortDateString() + " " + entity.CreationDate.ToString("H:mm:ss"); //Androidon jelenleg ilyen formában várja az időpontot
+                    dto.ThumbnailUrl = $"caffs/{entity.Id}/thumbnails/{entity.Thumbnails.First().Id}";
+                    dto.ImageUrl = $"caffs/{entity.Id}/download";
                 });
             CreateMap<User, UserDTO>()
                 .AfterMap((entity, dto, ctx) =>
