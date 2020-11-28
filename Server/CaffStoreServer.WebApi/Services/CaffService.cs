@@ -64,16 +64,20 @@ namespace CaffStoreServer.WebApi.Services
         public async Task Delete(long id)
         {
             var caff = await _context.Caffs.Include(c => c.Thumbnails).FirstOrDefaultAsync(c => c.Id == id);
-            if (caff == null)
-                throw new EntityNotFoundException("Caff not found");
-            File.Delete(caff.ImagePath);
-            foreach (var thumbnail in caff.Thumbnails)
+            try
             {
-                File.Delete(thumbnail.FilePath);
+                if (caff == null)
+                    throw new EntityNotFoundException("Caff not found");
+                File.Delete(caff.ImagePath);
+                foreach (var thumbnail in caff.Thumbnails)
+                {
+                    File.Delete(thumbnail.FilePath);
+                }
+                var extension = ".caff";
+                var directory = caff.ImagePath.Substring(0, caff.ImagePath.Length - extension.Length);
+                Directory.Delete(directory, true);
             }
-            var extension = ".caff";
-            var directory = caff.ImagePath.Substring(0, caff.ImagePath.Length - extension.Length);
-            Directory.Delete(directory, true);
+            catch (Exception) { } //TODO: handle exception
             _context.Remove(caff);
             await _context.SaveChangesAsync();
         }
