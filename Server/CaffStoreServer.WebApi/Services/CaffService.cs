@@ -28,9 +28,25 @@ namespace CaffStoreServer.WebApi.Services
             _parserSettings = parserSettings;
         }
 
-        public Task BuyAsync(string userId, long caffId)
+        public async Task BuyAsync(long userId, long caffId)
         {
-            return Task.CompletedTask;
+            var user = await _context.Users
+                .Include(u => u.PurchasedCaffs)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                throw new UserNotFoundException();
+            if (user.PurchasedCaffs.Any(pc => pc.CaffId == caffId))
+                throw new BadRequestException("Caff already purchased");
+            var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == caffId);
+            if (caff == null)
+                throw new BadRequestException("Not existing caff");
+            user.PurchasedCaffs.Add(new PurchasedCaff
+            {
+                User = user,
+                Caff = caff,
+                PurchasedOn = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Caff> Create(Caff caff)

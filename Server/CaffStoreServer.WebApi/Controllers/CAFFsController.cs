@@ -6,6 +6,7 @@ using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -51,7 +52,9 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id:long}/buy")]
         public async Task<ActionResult> BuyAsync([FromRoute] long id)
         {
-            await _caffService.BuyAsync(User.UserId(), id);
+            if (User.UserId() == null)
+                return Unauthorized();
+            await _caffService.BuyAsync(Convert.ToInt64(User.UserId()), id);
             return Ok();
         }
 

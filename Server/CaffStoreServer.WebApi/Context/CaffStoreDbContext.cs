@@ -45,6 +45,12 @@ namespace CaffStoreServer.WebApi.Context
                     .WithOne(e => e.User)
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
+
+                // Each User can purchase many caffs
+                b.HasMany(e => e.PurchasedCaffs)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<Role>(b =>
@@ -82,6 +88,14 @@ namespace CaffStoreServer.WebApi.Context
                 b.HasMany(e => e.Thumbnails)
                     .WithOne(th => th.Caff)
                     .HasForeignKey(th => th.CaffId)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<PurchasedCaff>(b =>
+            {
+                b.HasOne(e => e.Caff)
+                    .WithMany()
+                    .HasForeignKey(pc => pc.CaffId)
                     .IsRequired();
             });
         }
