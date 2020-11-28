@@ -109,10 +109,13 @@ namespace CaffStoreServer.WebApi.Services
             return filedata;
         }
 
-        public async Task<IEnumerable<Caff>> SearchAsync(string userId, string creator, string title, bool? free, bool? bought)
+        public async Task<IEnumerable<Caff>> SearchAsync(long userId, string creator, string title, bool free, bool bought)
         {
-            //TODO: Filter with bought
             var caffs = _context.Caffs.Include(c => c.Comments).AsQueryable();
+            var purchasedCaffIds = await _context.PurchasedCaffs
+                .Where(pc => pc.UserId == userId)
+                .Select(pc => pc.CaffId)
+                .ToListAsync();
 
             if (!string.IsNullOrEmpty(creator))
                 caffs = caffs.Where(c => c.Creator == creator);
@@ -120,11 +123,13 @@ namespace CaffStoreServer.WebApi.Services
                 caffs = caffs.Where(c => c.Name == title);
             if (free == true)
                 caffs = caffs.Where(c => c.Cost == 0);
+            if (bought == true)
+                caffs = caffs.Where(c => purchasedCaffIds.Contains(c.Id));
 
             return await caffs.ToListAsync();
         }
 
-        public async Task<Caff> Upload(string userId, UploadCAFFRequest request)
+        public async Task<Caff> Upload(long userId, UploadCAFFRequest request)
         {
             var ext = Path.GetExtension(request.Image.FileName).ToLowerInvariant();
 

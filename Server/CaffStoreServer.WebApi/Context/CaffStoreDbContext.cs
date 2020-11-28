@@ -12,7 +12,8 @@ namespace CaffStoreServer.WebApi.Context
     {
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Caff> Caffs { get; set; }
-        public DbSet<Caff> Thumbnails { get; set; }
+        public DbSet<Thumbnail> Thumbnails { get; set; }
+        public DbSet<PurchasedCaff> PurchasedCaffs { get; set; }
 
         public CaffStoreDbContext(DbContextOptions<CaffStoreDbContext> options) : base(options) { }
 

@@ -30,9 +30,9 @@ namespace CaffStoreServer.WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool? free, [FromQuery] bool? bought)
+        public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            var list = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
+            var list = await _caffService.SearchAsync(Convert.ToInt64(User.UserId()), creator, title, free, bought);
             var result = _mapper.Map<List<CAFFResponse>>(list);
             return Ok(result);
         }
@@ -79,7 +79,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
-            var caff = await _caffService.Upload(User.UserId(), request);
+            var caff = await _caffService.Upload(Convert.ToInt64(User.UserId()), request);
 
             var response = new CAFFResponse { 
                 Id = caff.Id,
