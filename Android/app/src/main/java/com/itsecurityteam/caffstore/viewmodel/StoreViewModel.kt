@@ -128,8 +128,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun loadImage(urlText: String?): Bitmap {
         return withContext(Dispatchers.IO) {
             var text = urlText
-            if (text == null)
-                text = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+            //if (text == null)
+            text = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
 
             val url = URL(text)
             return@withContext BitmapFactory.decodeStream(url.openConnection().getInputStream())
@@ -138,6 +138,11 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun select(caff: Caff) {
         selectedCaff.value = caff
+        selected(caff)
+        selectedCaff.postValue(caff)
+    }
+
+    private fun selected(caff: Caff) {
         comments.postValue(emptyList())
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -157,9 +162,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     comments.postValue(commentList)
                 }
             }
-
             caff.image = loadImage(caff?.url)
-            selectedCaff.postValue(caff)
         }
     }
 
@@ -198,6 +201,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             ).execute()
             when {
                 response.isSuccessful -> {
+                    search()
+                    selected(selectedCaff.value!!)
                     result.postValue(ViewResult(ADD_COMMENT_REQUEST, true))
                 }
                 else -> {
@@ -220,6 +225,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
                     when {
                         response.isSuccessful -> {
+                            search()
                             result.postValue(ViewResult(UPLOAD_REQUEST, true))
                         }
                     }
@@ -262,6 +268,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             var response = storeService.deleteComment(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, comment.id).execute()
             when {
                 response.isSuccessful -> {
+                    search()
+                    selected(selectedCaff.value!!)
                     result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
                 }
                 else -> {
