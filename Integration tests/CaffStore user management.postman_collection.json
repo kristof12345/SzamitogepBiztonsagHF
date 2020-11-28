@@ -332,11 +332,12 @@
 							"pm.test(\"Test get all users\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"                var jsonData = pm.response.json();\r",
-							"    \t\t\tpm.expect(jsonData.length).eql(4);\r",
-							"                var user = jsonData[3];\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
+							"                var user = jsonData[1];\r",
 							"                pm.expect(user.username).eql(\"TestUser\");\r",
 							"                pm.expect(user.email).eql(\"pappkristof@gmail.com\");\r",
 							"                pm.expect(user.userType).eql(0);\r",
+							"                pm.environment.set(\"userid\", user.id);\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -377,6 +378,59 @@
 					"port": "5001",
 					"path": [
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "094a4c59-0f89-44ba-b71c-dcc04abf4c94",
+						"exec": [
+							"pm.test(\"Test delete user\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(204);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users/{{userid}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users",
+						"{{userid}}"
 					]
 				}
 			},
