@@ -14,5 +14,6 @@ namespace CaffStoreServer.WebApi.Interfaces
         Task Delete(long id);
         Task<Caff> Create(Caff caff);
         Task<bool> Any();
+        Task<byte[]> DownloadThumbnail(long caffId, long thumbnailId);
     }
 }

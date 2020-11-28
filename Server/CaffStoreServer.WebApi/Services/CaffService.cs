@@ -73,6 +73,19 @@ namespace CaffStoreServer.WebApi.Services
             return filedata;
         }
 
+        public async Task<byte[]> DownloadThumbnail(long caffId, long thumbnailId)
+        {
+            var caff = await _context.Caffs.Include(c => c.Thumbnails).FirstOrDefaultAsync(c => c.Id == caffId);
+            if (caff == null)
+                throw new EntityNotFoundException("Caff not found");
+            string filepath = caff.Thumbnails.FirstOrDefault(th => th.Id == thumbnailId)?.FilePath;
+            if (filepath == null)
+                throw new EntityNotFoundException("Thumbnail not found");
+            byte[] filedata = await File.ReadAllBytesAsync(filepath);
+
+            return filedata;
+        }
+
         public async Task<IEnumerable<Caff>> SearchAsync(string userId, string creator, string title, bool? free, bool? bought)
         {
             //TODO: Filter with bought

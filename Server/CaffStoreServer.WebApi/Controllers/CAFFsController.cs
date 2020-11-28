@@ -96,6 +96,14 @@ namespace CaffStoreServer.WebApi.Controllers
             return File(file, "image/caff", id + ".caff");
         }
 
+        [HttpGet]
+        [Route("{caffId:long}/thumbnails/{thumbnailId:long}")]
+        public async Task<ActionResult<IFormFile>> DownloadThumbnailAsync([FromRoute] long caffId, [FromRoute] long thumbnailId)
+        {
+            var file = await _caffService.DownloadThumbnail(caffId, thumbnailId);
+            return File(file, "image/bmp", thumbnailId + ".bmp");
+        }
+
         [Authorize]
         [HttpDelete]
         [Route("{id:long}")]
