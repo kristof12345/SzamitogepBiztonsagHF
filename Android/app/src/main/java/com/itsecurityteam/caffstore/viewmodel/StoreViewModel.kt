@@ -41,7 +41,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val REMOVE_CAFF_REQUEST = 1102
     }
 
-    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm";
+    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm:ss";
 
     private val caffs = MutableLiveData<List<Caff>>()
     val caffsProp: LiveData<List<Caff>>
