@@ -1,4 +1,6 @@
 ﻿using CaffStoreServer.WebApi.Models;
+using CaffStoreServer.WebApi.Models.Exceptions;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -12,9 +14,17 @@ namespace CaffStoreServer.WebApi.Extensions
                 .HasClaim(c => c.Type == ClaimTypes.Role && c.Value == RoleConstants.AdminRoleName) ?? false;
         }
 
-        public static string UserId(this ClaimsPrincipal user)
+        public static long UserId(this ClaimsPrincipal user)
         {
-            return user?.Claims.Where(c => c.Type == "userid").FirstOrDefault()?.Value;
+            try
+            {
+                var userIdStr = user?.Claims.Where(c => c.Type == "userid").FirstOrDefault()?.Value;
+                return Convert.ToInt64(userIdStr);
+            } catch
+            {
+                throw new AuthorizationException();
+            }
+            
         }
     }
 }

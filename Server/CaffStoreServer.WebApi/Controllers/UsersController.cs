@@ -69,7 +69,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpPut("update")]
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
-            if (User.UserId() != request.UserId.ToString()
+            if (User.UserId() != request.UserId
                 && !User.IsAdmin())
             {
                 return Unauthorized();
@@ -83,7 +83,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id)
         {
-            if (User.UserId() != id.ToString()
+            if (User.UserId() != id
                 && !User.IsAdmin())
             {
                 return Unauthorized();

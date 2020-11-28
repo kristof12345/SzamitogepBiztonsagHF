@@ -32,7 +32,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            var list = await _caffService.SearchAsync(Convert.ToInt64(User.UserId()), creator, title, free, bought);
+            var list = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
             var result = _mapper.Map<List<CAFFResponse>>(list);
             return Ok(result);
         }
@@ -52,9 +52,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id:long}/buy")]
         public async Task<ActionResult> BuyAsync([FromRoute] long id)
         {
-            if (User.UserId() == null)
-                return Unauthorized();
-            await _caffService.BuyAsync(Convert.ToInt64(User.UserId()), id);
+            await _caffService.BuyAsync(User.UserId(), id);
             return Ok();
         }
 
@@ -79,7 +77,7 @@ namespace CaffStoreServer.WebApi.Controllers
                 Price = double.Parse(price, CultureInfo.InvariantCulture)
             };
 
-            var caff = await _caffService.Upload(Convert.ToInt64(User.UserId()), request);
+            var caff = await _caffService.Upload(User.UserId(), request);
 
             var response = new CAFFResponse { 
                 Id = caff.Id,
@@ -95,7 +93,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id:long}/download")]
         public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] long id)
         {
-            var file = await _caffService.Download(Convert.ToInt64(User.UserId()), id);
+            var file = await _caffService.Download(User.UserId(), id);
             return File(file, "image/caff", id + ".caff");
         }
 

@@ -16,12 +16,12 @@ namespace CaffStoreServer.WebApi.Services
             _context = context;
         }
 
-        public async Task Add(string userId, long id, string text)
+        public async Task Add(long userId, long id, string text)
         {
             var comment = new Comment
             {
                 AddTime = DateTime.Now.ToString(),
-                UserName = userId,
+                UserName = userId.ToString(),
                 CaffId = id
             };
 

@@ -50,6 +50,14 @@ namespace CaffStoreServer.WebApi
                         return pd;
                     }
                 );
+                options.Map<AuthorizationException>(
+                    (ctx, ex) =>
+                    {
+                        var pd = StatusCodeProblemDetails.Create(StatusCodes.Status401Unauthorized);
+                        pd.Title = ex.Message;
+                        return pd;
+                    }
+                );
                 options.Map<BadRequestException>(
                     (ctx, ex) =>
                     {
@@ -115,14 +123,9 @@ namespace CaffStoreServer.WebApi
                     OnTokenValidated =  async context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        //get userid if type is "userid"
-                        var userid = context.Principal.UserId();
-                        if (userid == null)
-                        {
-                            context.Fail("invaild token");
-                        }
                         try
                         {
+                            var userid = context.Principal.UserId();
                             var user = await userService.GetByIdAsync(Convert.ToInt64(userid));
                             if (context.Principal.IsAdmin() && !user.IsAdmin())
                                 context.Fail("invaild token");
