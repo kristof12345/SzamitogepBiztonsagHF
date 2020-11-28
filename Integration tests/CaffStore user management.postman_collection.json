@@ -29,7 +29,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"password\": \"Password123!\"\r\n}",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"password\": \"Pass123!\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -148,8 +148,8 @@
 						"exec": [
 							"pm.test(\"Test invalid login\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(401);\r",
-							"    \t\t\tvar textData = pm.response.text();\r",
-							"    \t\t\tpm.expect(textData).eql(\"Invalid username or password.\");\r",
+							"    \t\t\tvar textData = pm.response.json();\r",
+							"    \t\t\tpm.expect(textData.title).eql(\"Invalid username or password.\");\r",
 							"\t\t});\r",
 							""
 						],

@@ -43,7 +43,10 @@ namespace CaffStoreServer.WebApi.Controllers
             }
             catch (Exception e)
             {
-                return Conflict(e.Message);
+                if (e.Message == "User create error")
+                    return Conflict(e.Message);
+
+                else throw e;
             }
         }
 
