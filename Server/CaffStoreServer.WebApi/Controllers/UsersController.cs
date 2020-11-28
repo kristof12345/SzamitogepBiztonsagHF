@@ -44,9 +44,9 @@ namespace CaffStoreServer.WebApi.Controllers
             catch (Exception e)
             {
                 if (e.Message == "User create error")
+                    return BadRequest("Password does not match requirements.");
+                else
                     return Conflict(e.Message);
-
-                else throw e;
             }
         }
 
