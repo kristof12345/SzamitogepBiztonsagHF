@@ -10,11 +10,9 @@ namespace CaffStoreServer.WebApi.Entities
         public string CreationDate { get; set; }
         public string Creator { get; set; }
         public int Duration { get; set; }
-        public string ThumbnailUrl { get; set; }
+        public virtual ICollection<Thumbnail> Thumbnails { get; set; }
         public double Cost { get; set; }
-        public List<Comment> Comments { get; set; }
-        [NotMapped]
-        public bool Bought { get; set; } //It's not stored in db, because it only refers to a specific user
-        public string ImageUrl { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public string ImagePath { get; set; }
     }
 }

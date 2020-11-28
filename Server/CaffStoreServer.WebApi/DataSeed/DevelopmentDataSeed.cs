@@ -31,8 +31,13 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Creator = "kristof",
                     CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
                     Cost = 3.14,
-                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    Thumbnails = new List<Thumbnail> {
+                        new Thumbnail
+                        {
+                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                        }
+                    }
                 },
                 new Caff
                 {
@@ -41,8 +46,13 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Creator = "me",
                     CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
                     Cost = 0,
-                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    Thumbnails = new List<Thumbnail> {
+                        new Thumbnail
+                        {
+                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                        }
+                    }
                 },
                 new Caff
                 {
@@ -51,8 +61,13 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Creator = "me",
                     CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
                     Cost = 5.16,
-                    ImageUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
-                    ThumbnailUrl = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                    ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
+                    Thumbnails = new List<Thumbnail> {
+                        new Thumbnail
+                        {
+                            FilePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+                        }
+                    }
                 }
             };
             var hasData = await caffService.Any();
