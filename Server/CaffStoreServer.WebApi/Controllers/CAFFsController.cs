@@ -34,6 +34,13 @@ namespace CaffStoreServer.WebApi.Controllers
         {
             var list = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
             var result = _mapper.Map<List<CAFFResponse>>(list);
+            // Add baseurl
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/";
+            foreach (var item in result)
+            {
+                item.ImageUrl = baseUrl + item.ImageUrl;
+                item.ThumbnailUrl = baseUrl + item.ThumbnailUrl;
+            }
             return Ok(result);
         }
 
