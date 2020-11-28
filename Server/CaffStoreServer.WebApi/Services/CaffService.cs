@@ -112,7 +112,8 @@ namespace CaffStoreServer.WebApi.Services
             string thumbnail = Path.Combine(directory, "1_img.bmp");
             try
             {
-                System.Diagnostics.Process.Start(_parserSettings.ParserExe, $"{filePath} {directory}");
+                var process = System.Diagnostics.Process.Start(_parserSettings.ParserExe, $"{filePath} {directory}");
+                process.WaitForExit();
 
                 var metadataJsonFile = Path.Combine(directory, "output.json");
                 if (!File.Exists(metadataJsonFile))
@@ -124,19 +125,25 @@ namespace CaffStoreServer.WebApi.Services
                 var jsonContent = File.ReadAllText(metadataJsonFile);
                 dynamic jToken = JToken.Parse(jsonContent);
 
+                var year = jToken.Credits.year.ToObject<int>();
+                var month = jToken.Credits.month.ToObject<int>();
+                var day = jToken.Credits.day.ToObject<int>();
+                var hour = jToken.Credits.hour.ToObject<int>();
+                var minute = jToken.Credits.minute.ToObject<int>();
+
                 creator = jToken.Credits.creator;
                 creationDate = new DateTime(
-                    jToken.Credits.year,
-                    jToken.Credits.month,
-                    jToken.Credits.day,
-                    jToken.Credits.hour,
-                    jToken.Credits.minute,
+                    year,
+                    month,
+                    day,
+                    hour,
+                    minute,
                     0
                     );
 
                 foreach (var anim in jToken.Animations)
                 {
-                    duration += anim.duration;
+                    duration += anim.duration.ToObject<int>();
                 }
             }
             catch
