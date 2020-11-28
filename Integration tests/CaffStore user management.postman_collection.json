@@ -103,8 +103,9 @@
 						"id": "5bb360a5-0917-427a-a78e-aa051e57b3f2",
 						"exec": [
 							"pm.test(\"Test bad password\", function(){\r",
-							"    \t\t\tpm.response.to.have.status(400);\r",
-							"    \t\t\tvar textData = pm.response.text();\r",
+							"    \t\t\tpm.response.to.have.status(409);\r",
+							"    \t\t\tvar jsonData = pm.response.text();\r",
+							"    \t\t\tpm.expect(jsonData).eql(\"User create error\");\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
