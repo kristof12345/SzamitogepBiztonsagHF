@@ -97,8 +97,6 @@ namespace CaffStoreServer.WebApi.Services
                 caffs = caffs.Where(c => c.Name == title);
             if (free == true)
                 caffs = caffs.Where(c => c.Cost == 0);
-            if (free == false)
-                caffs = caffs.Where(c => c.Cost != 0);
 
             return await caffs.ToListAsync();
         }
