@@ -125,9 +125,13 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         return result;
     }
 
-    private suspend fun loadImage(urlText: String): Bitmap {
+    private suspend fun loadImage(urlText: String?): Bitmap {
         return withContext(Dispatchers.IO) {
-            val url = URL(urlText)
+            var text = urlText
+            if (text == null)
+                text = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
+
+            val url = URL(text)
             return@withContext BitmapFactory.decodeStream(url.openConnection().getInputStream())
         }
     }
@@ -154,7 +158,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
-            caff.image = loadImage(caff.url)
+            caff.image = loadImage(caff?.url)
             selectedCaff.postValue(caff)
         }
     }
