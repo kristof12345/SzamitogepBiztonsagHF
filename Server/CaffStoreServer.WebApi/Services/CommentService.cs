@@ -44,7 +44,7 @@ namespace CaffStoreServer.WebApi.Services
                     CaffId = id,
                     UserName = "me",
                     Text = "Hello world!",
-                    AddTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), //Androidon jelenleg ilyen formában várja az időpontot
+                    AddTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("H:mm:ss"), //Androidon jelenleg ilyen formában várja az időpontot
                 }
             };
             return await Task.FromResult(list);
