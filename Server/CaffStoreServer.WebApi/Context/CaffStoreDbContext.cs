@@ -10,7 +10,7 @@ namespace CaffStoreServer.WebApi.Context
         IdentityUserClaim<long>, UserRole, IdentityUserLogin<long>,
         IdentityRoleClaim<long>, IdentityUserToken<long>>
     {
-
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Caff> Caffs { get; set; }
         public DbSet<Caff> Thumbnails { get; set; }
 

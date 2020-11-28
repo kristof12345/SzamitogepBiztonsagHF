@@ -4,14 +4,16 @@ using CaffStoreServer.WebApi.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CaffStoreServer.WebApi.Migrations
 {
     [DbContext(typeof(CaffStoreDbContext))]
-    partial class CaffStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201128133553_CreateComments")]
+    partial class CreateComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
