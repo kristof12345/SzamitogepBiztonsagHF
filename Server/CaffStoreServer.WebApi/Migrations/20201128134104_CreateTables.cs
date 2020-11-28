@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CaffStoreServer.WebApi.Migrations
 {
-    public partial class init : Migration
+    public partial class CreateTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,24 @@ namespace CaffStoreServer.WebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Caff",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<string>(nullable: true),
+                    Creator = table.Column<string>(nullable: true),
+                    Duration = table.Column<int>(nullable: false),
+                    Cost = table.Column<double>(nullable: false),
+                    ImagePath = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Caff", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,15 +172,57 @@ namespace CaffStoreServer.WebApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "b776197b-87d5-44bf-8020-4cd4054a1ebc", "Administrator", "ADMINISTRATOR" });
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CaffId = table.Column<long>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    AddTime = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Caff_CaffId",
+                        column: x => x.CaffId,
+                        principalTable: "Caff",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Thumbnail",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilePath = table.Column<string>(nullable: true),
+                    CaffId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Thumbnail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Thumbnail_Caff_CaffId",
+                        column: x => x.CaffId,
+                        principalTable: "Caff",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2L, "345bfff7-a73f-415b-8587-1f5558cb094a", "User", "USER" });
+                values: new object[] { 1L, "d8d502ae-8f95-47cb-9715-2177df761706", "Administrator", "ADMINISTRATOR" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { 2L, "7454af5f-4e8d-490c-92ef-1ea9ecbbce84", "User", "USER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -202,6 +262,16 @@ namespace CaffStoreServer.WebApi.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_CaffId",
+                table: "Comments",
+                column: "CaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Thumbnail_CaffId",
+                table: "Thumbnail",
+                column: "CaffId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -222,10 +292,19 @@ namespace CaffStoreServer.WebApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnail");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Caff");
         }
     }
 }

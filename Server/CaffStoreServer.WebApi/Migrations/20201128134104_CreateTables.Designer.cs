@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CaffStoreServer.WebApi.Migrations
 {
     [DbContext(typeof(CaffStoreDbContext))]
-    [Migration("20201123150615_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20201128134104_CreateTables")]
+    partial class CreateTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,24 +40,23 @@ namespace CaffStoreServer.WebApi.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ThumbnailUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Caffs");
+                    b.ToTable("Caff");
                 });
 
             modelBuilder.Entity("CaffStoreServer.WebApi.Entities.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AddTime")
                         .HasColumnType("nvarchar(max)");
@@ -75,7 +74,7 @@ namespace CaffStoreServer.WebApi.Migrations
 
                     b.HasIndex("CaffId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("CaffStoreServer.WebApi.Entities.Role", b =>
@@ -110,17 +109,37 @@ namespace CaffStoreServer.WebApi.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "f457dfaf-25c4-4c8d-a5cf-f00d677142cb",
+                            ConcurrencyStamp = "d8d502ae-8f95-47cb-9715-2177df761706",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "9e29cc8a-8178-4632-b4c0-4b9c7552e8e8",
+                            ConcurrencyStamp = "7454af5f-4e8d-490c-92ef-1ea9ecbbce84",
                             Name = "User",
                             NormalizedName = "USER"
                         });
+                });
+
+            modelBuilder.Entity("CaffStoreServer.WebApi.Entities.Thumbnail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("CaffId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaffId");
+
+                    b.ToTable("Thumbnail");
                 });
 
             modelBuilder.Entity("CaffStoreServer.WebApi.Entities.User", b =>
@@ -295,6 +314,15 @@ namespace CaffStoreServer.WebApi.Migrations
                 {
                     b.HasOne("CaffStoreServer.WebApi.Entities.Caff", null)
                         .WithMany("Comments")
+                        .HasForeignKey("CaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CaffStoreServer.WebApi.Entities.Thumbnail", b =>
+                {
+                    b.HasOne("CaffStoreServer.WebApi.Entities.Caff", "Caff")
+                        .WithMany("Thumbnails")
                         .HasForeignKey("CaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

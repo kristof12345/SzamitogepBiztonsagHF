@@ -51,8 +51,10 @@ namespace CaffStoreServer.WebApi.Migrations
 
             modelBuilder.Entity("CaffStoreServer.WebApi.Entities.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AddTime")
                         .HasColumnType("nvarchar(max)");
@@ -105,14 +107,14 @@ namespace CaffStoreServer.WebApi.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "b612d1a8-ebf8-4e0e-a634-90dc193f01ee",
+                            ConcurrencyStamp = "d8d502ae-8f95-47cb-9715-2177df761706",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "ada4925c-e510-4097-a0a8-c7e0ef253a6c",
+                            ConcurrencyStamp = "7454af5f-4e8d-490c-92ef-1ea9ecbbce84",
                             Name = "User",
                             NormalizedName = "USER"
                         });
