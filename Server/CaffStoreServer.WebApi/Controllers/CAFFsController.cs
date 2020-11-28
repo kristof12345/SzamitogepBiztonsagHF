@@ -95,7 +95,7 @@ namespace CaffStoreServer.WebApi.Controllers
         [Route("{id:long}/download")]
         public async Task<ActionResult<IFormFile>> DownloadCaffAsync([FromRoute] long id)
         {
-            var file = await _caffService.Download(User.UserId(), id);
+            var file = await _caffService.Download(Convert.ToInt64(User.UserId()), id);
             return File(file, "image/caff", id + ".caff");
         }
 

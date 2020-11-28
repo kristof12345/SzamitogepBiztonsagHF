@@ -78,8 +78,15 @@ namespace CaffStoreServer.WebApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<byte[]> Download(string userId, long id)
+        public async Task<byte[]> Download(long userId, long id)
         {
+            var user = await _context.Users
+                .Include(u => u.PurchasedCaffs)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                throw new UserNotFoundException("User not found");
+            if (!user.PurchasedCaffs.Any(pc => pc.CaffId == id))
+                throw new BadRequestException("Caff not purchased");
             var caff = await _context.Caffs.FirstOrDefaultAsync(c => c.Id == id);
             if (caff == null)
                 throw new EntityNotFoundException("Caff not found");
