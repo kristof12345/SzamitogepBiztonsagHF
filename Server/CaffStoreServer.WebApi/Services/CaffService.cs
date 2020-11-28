@@ -131,6 +131,7 @@ namespace CaffStoreServer.WebApi.Services
 
         public async Task<Caff> Upload(long userId, UploadCAFFRequest request)
         {
+            // TODO What to do with userId?
             var ext = Path.GetExtension(request.Image.FileName).ToLowerInvariant();
 
             if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
@@ -212,7 +213,7 @@ namespace CaffStoreServer.WebApi.Services
                 Cost = request.Price,
                 ImagePath = filePath,
                 Creator = creator,
-                CreationDate = creationDate.ToString(), // TODO DateTime?
+                CreationDate = creationDate,
                 Duration = duration,
                 Thumbnails = thumbnails
             };

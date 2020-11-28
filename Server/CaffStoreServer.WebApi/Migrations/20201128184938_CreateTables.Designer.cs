@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CaffStoreServer.WebApi.Migrations
 {
     [DbContext(typeof(CaffStoreDbContext))]
-    [Migration("20201128163252_AddedPurchasedCaffsDbSet")]
-    partial class AddedPurchasedCaffsDbSet
+    [Migration("20201128184938_CreateTables")]
+    partial class CreateTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,8 +31,8 @@ namespace CaffStoreServer.WebApi.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<string>("CreationDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Creator")
                         .HasColumnType("nvarchar(max)");
@@ -58,8 +58,8 @@ namespace CaffStoreServer.WebApi.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AddTime")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("CaffId")
                         .HasColumnType("bigint");
@@ -67,8 +67,8 @@ namespace CaffStoreServer.WebApi.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -134,14 +134,14 @@ namespace CaffStoreServer.WebApi.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "d170930d-9587-49ce-94dc-f9c0252bd594",
+                            ConcurrencyStamp = "5a119780-60b6-4b81-96e2-e56e6b825d1c",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "ef16f6b7-c7aa-44a3-a3f6-6025b6fad62f",
+                            ConcurrencyStamp = "634d30a2-af07-4921-a8ee-cdecbd93a40a",
                             Name = "User",
                             NormalizedName = "USER"
                         });

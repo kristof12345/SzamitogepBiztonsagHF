@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CaffStoreServer.WebApi.Entities
 {
@@ -7,7 +7,7 @@ namespace CaffStoreServer.WebApi.Entities
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public string CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public string Creator { get; set; }
         public int Duration { get; set; }
         public virtual ICollection<Thumbnail> Thumbnails { get; set; }

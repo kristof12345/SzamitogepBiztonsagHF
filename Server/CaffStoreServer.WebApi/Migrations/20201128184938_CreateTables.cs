@@ -49,13 +49,13 @@ namespace CaffStoreServer.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Caff",
+                name: "Caffs",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
-                    CreationDate = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
                     Creator = table.Column<string>(nullable: true),
                     Duration = table.Column<int>(nullable: false),
                     Cost = table.Column<double>(nullable: false),
@@ -63,7 +63,7 @@ namespace CaffStoreServer.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Caff", x => x.Id);
+                    table.PrimaryKey("PK_Caffs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,23 +179,50 @@ namespace CaffStoreServer.WebApi.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaffId = table.Column<long>(nullable: false),
-                    UserName = table.Column<string>(nullable: true),
-                    AddTime = table.Column<string>(nullable: true),
+                    UserId = table.Column<long>(nullable: false),
+                    AddTime = table.Column<DateTime>(nullable: false),
                     Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Caff_CaffId",
+                        name: "FK_Comments_Caffs_CaffId",
                         column: x => x.CaffId,
-                        principalTable: "Caff",
+                        principalTable: "Caffs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Thumbnail",
+                name: "PurchasedCaffs",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(nullable: false),
+                    CaffId = table.Column<long>(nullable: false),
+                    PurchasedOn = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchasedCaffs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PurchasedCaffs_Caffs_CaffId",
+                        column: x => x.CaffId,
+                        principalTable: "Caffs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PurchasedCaffs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Thumbnails",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -205,11 +232,11 @@ namespace CaffStoreServer.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Thumbnail", x => x.Id);
+                    table.PrimaryKey("PK_Thumbnails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Thumbnail_Caff_CaffId",
+                        name: "FK_Thumbnails_Caffs_CaffId",
                         column: x => x.CaffId,
-                        principalTable: "Caff",
+                        principalTable: "Caffs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -217,12 +244,12 @@ namespace CaffStoreServer.WebApi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "d8d502ae-8f95-47cb-9715-2177df761706", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { 1L, "5a119780-60b6-4b81-96e2-e56e6b825d1c", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2L, "7454af5f-4e8d-490c-92ef-1ea9ecbbce84", "User", "USER" });
+                values: new object[] { 2L, "634d30a2-af07-4921-a8ee-cdecbd93a40a", "User", "USER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -269,8 +296,18 @@ namespace CaffStoreServer.WebApi.Migrations
                 column: "CaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Thumbnail_CaffId",
-                table: "Thumbnail",
+                name: "IX_PurchasedCaffs_CaffId",
+                table: "PurchasedCaffs",
+                column: "CaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PurchasedCaffs_UserId",
+                table: "PurchasedCaffs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Thumbnails_CaffId",
+                table: "Thumbnails",
                 column: "CaffId");
         }
 
@@ -295,7 +332,10 @@ namespace CaffStoreServer.WebApi.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Thumbnail");
+                name: "PurchasedCaffs");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -304,7 +344,7 @@ namespace CaffStoreServer.WebApi.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Caff");
+                name: "Caffs");
         }
     }
 }

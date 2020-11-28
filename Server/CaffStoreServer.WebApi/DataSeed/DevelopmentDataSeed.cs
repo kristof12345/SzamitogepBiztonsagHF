@@ -29,7 +29,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Name = "This is caff 1",
                     Duration = 10,
                     Creator = "kristof",
-                    CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("H:mm:ss"), //Androidon jelenleg ilyen formában várja az időpontot
+                    CreationDate = DateTime.Now,
                     Cost = 3.14,
                     ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
                     Thumbnails = new List<Thumbnail> {
@@ -44,7 +44,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Name = "This is caff 2",
                     Duration = 20,
                     Creator = "me",
-                    CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToString("H:mm:ss"), //Androidon jelenleg ilyen formában várja az időpontot
+                    CreationDate = DateTime.Now.AddDays(-1),
                     Cost = 0,
                     ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
                     Thumbnails = new List<Thumbnail> {
@@ -59,7 +59,7 @@ namespace CaffStoreServer.WebApi.DataSeed
                     Name = "This is caff 3",
                     Duration = 20,
                     Creator = "me",
-                    CreationDate = DateTime.Now.AddDays(-1).ToShortDateString() + " " + DateTime.Now.ToString("H:mm:ss"), //Androidon jelenleg ilyen formában várja az időpontot
+                    CreationDate = DateTime.Now.AddDays(-1),
                     Cost = 5.16,
                     ImagePath = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png",
                     Thumbnails = new List<Thumbnail> {

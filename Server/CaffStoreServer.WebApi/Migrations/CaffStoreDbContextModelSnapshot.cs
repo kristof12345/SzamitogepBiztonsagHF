@@ -29,8 +29,8 @@ namespace CaffStoreServer.WebApi.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<string>("CreationDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Creator")
                         .HasColumnType("nvarchar(max)");
@@ -132,14 +132,14 @@ namespace CaffStoreServer.WebApi.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "343c84a7-f88b-4bf0-ae47-1d5da347b2c9",
+                            ConcurrencyStamp = "5a119780-60b6-4b81-96e2-e56e6b825d1c",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "0831e576-20b0-4641-a466-d269d247735f",
+                            ConcurrencyStamp = "634d30a2-af07-4921-a8ee-cdecbd93a40a",
                             Name = "User",
                             NormalizedName = "USER"
                         });

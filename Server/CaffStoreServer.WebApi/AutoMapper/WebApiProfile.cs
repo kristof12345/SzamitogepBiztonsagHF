@@ -17,7 +17,12 @@ namespace CaffStoreServer.WebApi.AutoMapper
                 {
                     dto.AddTime = entity.AddTime.ToShortDateString() + " " + entity.AddTime.ToString("H:mm:ss"); //Androidon jelenleg ilyen formában várja az időpontot
                 });
-            CreateMap<Caff, CAFFResponse>();
+            CreateMap<Caff, CAFFResponse>()
+                .ForMember(c => c.CreationDate, opt => opt.Ignore())
+                .AfterMap((entity, dto, ctx) =>
+                {
+                    dto.CreationDate = entity.CreationDate.ToShortDateString() + " " + entity.CreationDate.ToString("H:mm:ss"); //Androidon jelenleg ilyen formában várja az időpontot
+                });
             CreateMap<User, UserDTO>()
                 .AfterMap((entity, dto, ctx) =>
                 {
