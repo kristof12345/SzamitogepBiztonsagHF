@@ -86,12 +86,11 @@ namespace CaffStoreServer.WebApi.Controllers
 
             var caff = await _caffService.Upload(User.UserId(), request);
 
-            var response = new CAFFResponse { 
-                Id = caff.Id,
-                Name = caff.Name,
-                Cost = caff.Cost,
-                ImageUrl = $"{caff.Id}/download"
-            };
+            var response = _mapper.Map<CAFFResponse>(caff);
+            // Add baseurl
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/";
+            response.ImageUrl = baseUrl + response.ImageUrl;
+            response.ThumbnailUrl = baseUrl + response.ThumbnailUrl;
             return Ok(response);
         }
 
