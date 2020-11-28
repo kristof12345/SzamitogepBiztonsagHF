@@ -20,7 +20,7 @@ namespace CaffStoreServer.WebApi.Services
         {
             var comment = new Comment
             {
-                AddTime = DateTime.Now.ToString(),
+                AddTime = DateTime.Now,
                 UserName = userId.ToString(),
                 CaffId = id
             };
@@ -44,7 +44,7 @@ namespace CaffStoreServer.WebApi.Services
                     CaffId = id,
                     UserName = "me",
                     Text = "Hello world!",
-                    AddTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("H:mm:ss"), //Androidon jelenleg ilyen formában várja az időpontot
+                    AddTime = DateTime.Now
                 }
             };
             return await Task.FromResult(list);
