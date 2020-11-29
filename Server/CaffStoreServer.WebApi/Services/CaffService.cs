@@ -125,9 +125,9 @@ namespace CaffStoreServer.WebApi.Services
                 .ToListAsync();
 
             if (!string.IsNullOrEmpty(creator))
-                caffs = caffs.Where(c => c.Creator.Contains(creator));
+                caffs = caffs.Where(c => c.Creator.ToLower().Contains(creator.ToLower()));
             if (!string.IsNullOrEmpty(title))
-                caffs = caffs.Where(c => c.Name.Contains(title));
+                caffs = caffs.Where(c => c.Name.ToLower().Contains(title.ToLower()));
             if (free == true)
                 caffs = caffs.Where(c => c.Cost == 0);
             if (bought == true)
