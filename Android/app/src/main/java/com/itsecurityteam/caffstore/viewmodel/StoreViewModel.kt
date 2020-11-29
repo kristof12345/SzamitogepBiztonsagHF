@@ -18,15 +18,17 @@ import com.itsecurityteam.caffstore.model.filter.OrderBy
 import com.itsecurityteam.caffstore.model.filter.OrderDirection
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.UserType
+import com.itsecurityteam.caffstore.services.CertificateProvider
 import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.StoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.Exception
+
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val storeService: StoreService = StoreService()
@@ -40,6 +42,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val REMOVE_COMMENT_REQUEST = 1101
         const val REMOVE_CAFF_REQUEST = 1102
     }
+
+    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm:ss"
 
     private val caffs = MutableLiveData<List<Caff>>()
     val caffsProp: LiveData<List<Caff>>
@@ -89,9 +93,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             when {
                 response.isSuccessful -> {
                     val list = response.body()
-                    var caffsList = ArrayList<Caff>()
+                    val caffsList = ArrayList<Caff>()
                     for (s in sort(list, orderBy, orderDir)) {
-                        var date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
+                        val date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         caffsList.add(
                             Caff(
                                 s.id, s.name, date, s.creator, s.duration,
@@ -120,18 +124,26 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         if (direction == OrderDirection.Descending)
             result = result.reversed()
 
-        return result;
+        return result
     }
 
-    private suspend fun loadImage(urlText: String): Bitmap {
+    private suspend fun loadImage(urlText: String?): Bitmap {
         return withContext(Dispatchers.IO) {
-            val url = URL(urlText)
-            return@withContext BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            try {
+                return@withContext BitmapFactory.decodeStream(storeService.loadImage(urlText))
+            } catch (e: Exception) {
+                return@withContext BitmapFactory.decodeStream(storeService.loadPlaceholderImage())
+            }
         }
     }
 
     fun select(caff: Caff) {
         selectedCaff.value = caff
+        selected(caff)
+        selectedCaff.postValue(caff)
+    }
+
+    private fun selected(caff: Caff) {
         comments.postValue(emptyList())
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -139,9 +151,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             when {
                 response.isSuccessful -> {
                     val list = response.body()
-                    var commentList = ArrayList<Comment>()
+                    val commentList = ArrayList<Comment>()
                     for (s in list) {
-                        var date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm"))
+                        val date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         commentList.add(
                             Comment(
                                 s.id, s.userName, date, s.text
@@ -151,9 +163,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     comments.postValue(commentList)
                 }
             }
-
-            caff.image = loadImage(caff.url)
-            selectedCaff.postValue(caff)
+            caff.image = caff.thumbnail
         }
     }
 
@@ -173,7 +183,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                         result.postValue(ViewResult(BUY_REQUEST, true))
                     }
                     caffs.value?.let {
-                        it.stream().filter{ a -> a.id == selected?.id}.forEach { a -> a.bought = true }
+                        it.stream().filter { a -> a.id == selected?.id }.forEach { a -> a.bought = true }
                     }
                 }
                 else -> {
@@ -192,6 +202,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             ).execute()
             when {
                 response.isSuccessful -> {
+                    search()
+                    selected(selectedCaff.value!!)
                     result.postValue(ViewResult(ADD_COMMENT_REQUEST, true))
                 }
                 else -> {
@@ -203,48 +215,79 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.path
-            if (fileUri == null) {
-                result.postValue(ViewResult(UPLOAD_REQUEST, false))
-            } else {
-                if (fileUri.takeLast(5) != ".caff") {
+            try {
+                val fileUri = uri.path
+                if (fileUri == null) {
                     result.postValue(ViewResult(UPLOAD_REQUEST, false))
                 } else {
-                    var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
+                    if (fileUri.takeLast(5) != ".caff") {
+                        result.postValue(ViewResult(UPLOAD_REQUEST, false))
+                    } else {
+                        val response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
 
-                    when {
-                        response.isSuccessful -> {
-                            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                        when {
+                            response.isSuccessful -> {
+                                search()
+                                result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                            }
+                            else -> {
+                                result.postValue(ViewResult(UPLOAD_REQUEST, false, R.string.caff_upload_error))
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                result.postValue(ViewResult(UPLOAD_REQUEST, false, R.string.caff_upload_error))
             }
         }
     }
 
     fun downloadCaff(uri: Uri) {
-        viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.path
-            if (fileUri == null)
-                result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
-            else {
-                storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
-                result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val fileUri = uri.path
+                if (fileUri == null)
+                    result.postValue(ViewResult(DOWNLOAD_REQUEST, false, R.string.caff_download_error))
+                else {
+                    storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
+                    result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+                }
             }
+        } catch (e: Exception) {
+            result.postValue(ViewResult(DOWNLOAD_REQUEST, false, R.string.caff_download_error))
         }
     }
 
     fun removeCurrentCaff() {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
+            val response = storeService.deleteCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!).execute()
+            when {
+                response.isSuccessful -> {
+                    search()
+                    result.postValue(ViewResult(REMOVE_CAFF_REQUEST, true))
+                }
+                else -> {
+                    result.postValue(ViewResult(REMOVE_CAFF_REQUEST, false, R.string.delete_error))
+                }
+            }
         }
     }
 
     fun removeComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
+            val response = storeService.deleteComment(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, comment.id).execute()
+            when {
+                response.isSuccessful -> {
+                    search()
+                    selected(selectedCaff.value!!)
+                    result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, true))
+                }
+                else -> {
+                    result.postValue(ViewResult(REMOVE_COMMENT_REQUEST, false, R.string.delete_comment_error))
+                }
+            }
         }
     }
 

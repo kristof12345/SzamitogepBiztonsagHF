@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace CaffStoreServer.WebApi.Models.Responses
+﻿namespace CaffStoreServer.WebApi.Models.Responses
 {
     public class LoginResponse
     {

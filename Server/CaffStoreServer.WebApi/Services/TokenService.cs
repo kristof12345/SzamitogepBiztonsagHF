@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Linq;
 using System.Text;
 using CaffStoreServer.WebApi.Entities;
+using CaffStoreServer.WebApi.Extensions;
 
 namespace CaffStoreServer.WebApi.Services
 {
@@ -22,12 +23,13 @@ namespace CaffStoreServer.WebApi.Services
             _tokenSettings = tokenSettings;
         }
 
-        public string GenerateToken(string username, User user, UserType type, int expireMinutes = 60)
-        {            var claims = new List<Claim>
+        public string GenerateToken(User user, int expireMinutes = 60)
+        {
+            var claims = new List<Claim>
             {
-                new Claim("username", username),
+                new Claim("username", user.UserName),
                 new Claim("userid", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, type == UserType.User ? "User" : "Administrator")
+                new Claim(ClaimTypes.Role, user.IsAdmin() ? RoleConstants.AdminRoleName : RoleConstants.UserRoleName)
             };
             var secretBytes = Encoding.UTF8.GetBytes(_tokenSettings.Secret);
             var key = new SymmetricSecurityKey(secretBytes);

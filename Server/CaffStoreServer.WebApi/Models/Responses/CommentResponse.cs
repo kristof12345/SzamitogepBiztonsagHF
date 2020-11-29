@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CaffStoreServer.WebApi.Models.Responses
+﻿namespace CaffStoreServer.WebApi.Models.Responses
 {
     public class CommentResponse
     {

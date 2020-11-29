@@ -79,7 +79,6 @@ class DetailsFragment : Fragment() {
                         continue
                     }
 
-                    file.createNewFile()
                     viewModel.downloadCaff(file.toUri())
                     break
                 }
@@ -216,15 +215,10 @@ class DetailsFragment : Fragment() {
 
     private fun setView(it: Caff?) {
         it?.let {
-            if (it.image == null) {
-                ivDetailsImage.visibility = View.GONE
-                ivDetailsImage.maxHeight = 0
-            } else {
-                ivDetailsImage.setImageBitmap(it.image)
-                ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
-                ivDetailsImage.visibility = View.VISIBLE
-                bitmapAvailable = true
-            }
+            ivDetailsImage.setImageBitmap(it.thumbnail)
+            ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
+            ivDetailsImage.visibility = View.VISIBLE
+            bitmapAvailable = true
 
             tvDetailsCreator.text = it.creator
 
@@ -262,7 +256,7 @@ class DetailsFragment : Fragment() {
 
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val editText = (dialog as AlertDialog).findViewById<TextInputEditText>(R.id.tietComment)
-            viewModel.addComment(editText.toString())
+            viewModel.addComment(editText.text.toString())
             dialog.dismiss()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->

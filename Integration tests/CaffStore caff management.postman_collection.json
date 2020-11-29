@@ -1,0 +1,832 @@
+{
+	"info": {
+		"_postman_id": "b37c1510-0664-46c0-8d5c-132749c73c26",
+		"name": "CaffStore caff management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "456750d6-806a-41a3-94e3-d744cf147c57",
+						"exec": [
+							"pm.test(\"Test register\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.username).eql(\"TestUser\");\r",
+							"    \t\t\tpm.expect(jsonData.userType).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"email\": \"pappkristof@gmail.com\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "95c23913-f0a8-49ba-bcc1-8ed042a230f1",
+						"exec": [
+							"pm.test(\"Test user login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.isSuccess).eql(true);\r",
+							"                pm.environment.set(\"token\", jsonData.token);\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"TestUser\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all caffs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46b9fa6f-317c-40f3-b769-d8fb8b13ff3d",
+						"exec": [
+							"pm.test(\"Test list caffs\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(3);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
+							"                pm.expect(jsonData[1].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[2].name).eql(\"This is caff 3\");\r",
+							"                pm.environment.set(\"id\", jsonData[0].id);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List free caffs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6add6e1b-5acd-465d-932c-f77bf2651bfa",
+						"exec": [
+							"pm.test(\"Test search free caffs\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[0].cost).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs?free=true",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					],
+					"query": [
+						{
+							"key": "free",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs by title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b12c5d9c-e9c8-41fe-a86e-43edff988ee6",
+						"exec": [
+							"pm.test(\"Test search caffs by title\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 3\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs?title=This is caff 3",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "This is caff 3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs by creator",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ea52dfc-48ea-402a-8cc9-cd738c5a20a4",
+						"exec": [
+							"pm.test(\"Test search caffs by creator\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
+							"                pm.expect(jsonData[1].name).eql(\"This is caff 3\");\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs?creator=me",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					],
+					"query": [
+						{
+							"key": "creator",
+							"value": "me"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List caffs unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb067d41-7a62-4ae9-b991-178f92dc3263",
+						"exec": [
+							"pm.test(\"Test try get caffs without login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48031b75-0d2d-41be-b766-fb7821399298",
+						"exec": [
+							"pm.test(\"Test get comments for caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5c5f4a0-6bde-4099-9ba2-272e0095373d",
+						"exec": [
+							"pm.test(\"Test add comments for caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"This caff is great!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get added comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6e88e5fd-afeb-4034-9e22-2af7037403be",
+						"exec": [
+							"pm.test(\"Test added comment for caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"TestUser\");\r",
+							"                pm.expect(jsonData[0].text).eql(\"This caff is great!\");\r",
+							"                pm.environment.set(\"commentid\", jsonData[0].id);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dabb3f5f-7184-48e6-b9cd-cd443d18494c",
+						"exec": [
+							"pm.test(\"Test delete comment unauthorized\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments/{{commentid}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments",
+						"{{commentid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete caff unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e32d8865-f79a-423e-a980-7e8df42dd0f0",
+						"exec": [
+							"pm.test(\"Test delete caff unauthorized\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(401);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "41769898-e85b-4659-8c66-ab314d3f538b",
+						"exec": [
+							"pm.test(\"Test admin login\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.isSuccess).eql(true);\r",
+							"                pm.environment.set(\"token\", jsonData.token);\r",
+							"\t\t});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Admin0\",\r\n    \"password\": \"Pass123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/users",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9178b33-1495-41b4-bac3-39bb7bad8bad",
+						"exec": [
+							"pm.test(\"Test delete comment\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments/{{commentid}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments",
+						"{{commentid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get deleted comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f97b78af-0bbe-4b61-8f74-b418ccb610f7",
+						"exec": [
+							"pm.test(\"Test deleted comment\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"    \t\t\tvar jsonData = pm.response.json();\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(0);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete caff",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b933da0d-6bc1-4481-870d-a3ef4aa48707",
+						"exec": [
+							"pm.test(\"Test delete caff\", function(){\r",
+							"    \t\t\tpm.response.to.have.status(200);\r",
+							"\t\t});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/caffs/{{id}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"caffs",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

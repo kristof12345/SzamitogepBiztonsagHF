@@ -1,12 +1,12 @@
 package com.itsecurityteam.caffstore.services
 
+import com.itsecurityteam.caffstore.model.requests.CommentRequest
 import com.itsecurityteam.caffstore.model.requests.LoginRequest
 import com.itsecurityteam.caffstore.model.requests.RegisterRequest
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.CommentResponse
 import com.itsecurityteam.caffstore.model.responses.LoginResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -34,7 +34,7 @@ interface HttpService {
     fun buy(@Header("Authorization") token: String, @Path("id") id: Long): Call<Void>
 
     @POST("caffs/{id}/comments")
-    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body text: String): Call<Void>
+    fun comment(@Header("Authorization") token: String, @Path("id") id: Long, @Body comment: CommentRequest): Call<ResponseBody>
 
     @Multipart
     @POST("caffs/{name}/{price}")
@@ -42,4 +42,10 @@ interface HttpService {
 
     @GET("caffs/{id}/download")
     fun downloadImage(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
+
+    @DELETE("caffs/{id}")
+    fun deleteCaff(@Header("Authorization") token: String, @Path("id") id: Long): Call<ResponseBody>
+
+    @DELETE("caffs/{caffId}/comments/{commentId}")
+    fun deleteComment(@Header("Authorization") token: String, @Path("caffId") caffId: Long, @Path("commentId") commentId: Long): Call<ResponseBody>
 }

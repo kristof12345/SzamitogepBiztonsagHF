@@ -51,7 +51,7 @@
     <string name="reg_success">Regisztráció sikeres</string>
     <string name="image">Kép</string>
     <string name="invalid_user_name">Ez a felhasználó nem létezik</string>
-    <string name="invalid_password">Helytelen jelszó</string>
+    <string name="invalid_password_or_user">Felhasználónév, vagy jelszó hibás</string>
     <string name="network_error">Hálózati hiba</string>
     <string name="duplicate_user_name">Ez a felhasználónév már foglalt</string>
     <string name="invalid_email_address">Helytelen email cím</string>
@@ -61,4 +61,12 @@
     <string name="caff_delete_conf">CAFF törlése sikeres</string>
     <string name="purchase_error">A kép megvásárlása sikertelen</string>
     <string name="comment_error">A komment hozzáadása sikertelen</string>
+    <string name="tooShortUsername">Ez a felhasználónév túl rövid..</string>
+    <string name="tooShortPassword">A jelszó legalább 7 karakter hosszú.</string>
+    <string name="tooWeakPassword">A jelszónak tartalmaznia kell 1 nagybetűt, 1 számot és 1 speciális karaktert.</string>
+    <string name="delete_error">A CAFF törlése sikertelen.</string>
+    <string name="delete_comment_error">Komment törlése sikertelen.</string>
+    <string name="confirm_mismatch">Megerősítésnek meg kell egyeznie a jelszóval</string>
+    <string name="caff_upload_error">CAFF feltöltése sikertelen. Érvénytelen fájl.</string>
+    <string name="caff_download_error">Caff file letöltése sikertelen</string>
 </resources>

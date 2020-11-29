@@ -15,9 +15,7 @@ import com.itsecurityteam.caffstore.model.responses.UserType
 import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.UserService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,23 +42,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = userService.login(name, pass).execute()
-                delay(2000)
                 when {
                     response.isSuccessful -> {
                         val data = response.body()
-                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
-                        userType = data.type
+                        userType = data.userType
                         sessionManager.saveAuthToken(data.token!!)
-                    }
-                    response.code() == 404 -> {
-                        // Username not found
-                        networkResult.postValue(
-                            ViewResult(
-                                LOGIN_REQUEST,
-                                false,
-                                R.string.invalid_user_name
-                            )
-                        )
+                        networkResult.postValue(ViewResult(LOGIN_REQUEST, true))
                     }
                     response.code() == 401 -> {
                         // Incorrect password
@@ -68,10 +55,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             ViewResult(
                                 LOGIN_REQUEST,
                                 false,
-                                R.string.invalid_password
+                                R.string.invalid_password_or_user
                             )
                         )
                     }
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 networkResult.postValue(
@@ -89,7 +77,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = userService.register(name, pass, email).execute()
-                delay(2000)
                 when {
                     response.isSuccessful -> {
                         networkResult.postValue(ViewResult(REGISTER_REQUEST, true))
@@ -104,6 +91,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             )
                         )
                     }
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 networkResult.postValue(
@@ -138,15 +126,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             throw AndroidException(R.string.tooWeakPassword)
     }
 
-    fun isValidPasswordFormat(password: String): Boolean {
+    private fun isValidPasswordFormat(password: String): Boolean {
         val passwordREGEX = Pattern.compile("^" +
                 "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-z])" +         //at least 1 lower case letter
                 "(?=.*[A-Z])" +         //at least 1 upper case letter
                 "(?=.*[a-zA-Z])" +      //any letter
-                "(?=.*[@#$%^&+=])" +    //at least 1 special character
-                ".{8,}" +               //at least 8 characters
-                "$");
+                "(?=.*[@#$%^&+=!])" +    //at least 1 special character
+                ".{7,}" +               //at least 7 characters
+                "$")
         return passwordREGEX.matcher(password).matches()
     }
 }

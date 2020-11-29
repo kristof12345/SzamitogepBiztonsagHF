@@ -1,13 +1,12 @@
-﻿using CaffStoreServer.WebApi.Entities;
+﻿using AutoMapper;
+using CaffStoreServer.WebApi.Extensions;
 using CaffStoreServer.WebApi.Interfaces;
-using CaffStoreServer.WebApi.Models;
 using CaffStoreServer.WebApi.Models.Requests;
 using CaffStoreServer.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -17,45 +16,61 @@ namespace CaffStoreServer.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService,
-                               ITokenService tokenService)
+        public UsersController(IUserService userService, IMapper _mapper)
         {
             _userService = userService;
-            _tokenService = tokenService;
+            this._mapper = _mapper;
         }
 
         [AllowAnonymous]
         [HttpPut]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            try
-            {
-                var result = await _userService.LoginAsync(request);
-                return Ok(result);
-            } catch (Exception e)
-            {
-                return Unauthorized();
-            }
+            var result = await _userService.LoginAsync(request);
+            return Ok(result);
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request) 
-            => await _userService.CreateUserAsync(request);
+        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
+        {
+            try
+            {
+                var result = await _userService.CreateUserAsync(request);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "User create error")
+                    return BadRequest("Password does not match requirements.");
+                else
+                    return Conflict(e.Message);
+            }
+        }
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
-            => Ok(await _userService.GetAsync());
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsersAsync()
+        {
+            if (!User.IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            var userEntities = await _userService.GetAsync();
+            var users = _mapper.Map<List<UserDTO>>(userEntities);
+
+            return Ok(users);
+        }
 
         [Authorize]
         [HttpPut("update")]
         public async Task<ActionResult> UpdateAsync([FromBody] UpdateRequest request)
         {
-            if (!User.HasClaim(c => c.Type == "userid" && c.Value == request.UserId.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
+            if (User.UserId() != request.UserId
+                && !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -68,14 +83,13 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id)
         {
-            if (!User.HasClaim(c => c.Type == "userid" && c.Value == id.ToString())
-                && !User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator"))
+            if (User.UserId() != id
+                && !User.IsAdmin())
             {
                 return Unauthorized();
             }
             await _userService.DeleteAsync(id);
             return NoContent();
         }
-
     }
 }
