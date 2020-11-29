@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /CAFFparser/*.d
 
 **/.DS_Store
+/Server/CaffStoreServer.WebApi/LogFiles/*
