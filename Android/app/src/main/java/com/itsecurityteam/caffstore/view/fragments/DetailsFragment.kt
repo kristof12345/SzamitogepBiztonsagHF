@@ -215,15 +215,10 @@ class DetailsFragment : Fragment() {
 
     private fun setView(it: Caff?) {
         it?.let {
-            if (it.image == null) {
-                ivDetailsImage.visibility = View.GONE
-                ivDetailsImage.maxHeight = 0
-            } else {
-                ivDetailsImage.setImageBitmap(it.image)
-                ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
-                ivDetailsImage.visibility = View.VISIBLE
-                bitmapAvailable = true
-            }
+            ivDetailsImage.setImageBitmap(it.thumbnail)
+            ivDetailsImage.maxHeight = (resources.displayMetrics.heightPixels * 0.75).toInt()
+            ivDetailsImage.visibility = View.VISIBLE
+            bitmapAvailable = true
 
             tvDetailsCreator.text = it.creator
 
