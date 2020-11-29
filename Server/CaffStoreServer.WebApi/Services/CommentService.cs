@@ -53,6 +53,7 @@ namespace CaffStoreServer.WebApi.Services
             var caff = await _context.Caffs
                 .Include(c => c.Comments)
                 .FirstOrDefaultAsync(c => c.Id == id);
+            if (caff == null) return null;
             var userIds = caff.Comments.Select(c => c.UserId);
             var userNameById = await _context.Users
                 .Where(u => userIds.Contains(u.Id))

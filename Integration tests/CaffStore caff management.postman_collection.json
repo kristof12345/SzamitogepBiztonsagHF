@@ -179,7 +179,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:5001/caffs",
+					"raw": "https://localhost:5001/caffs?free=true",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -187,6 +187,12 @@
 					"port": "5001",
 					"path": [
 						"caffs"
+					],
+					"query": [
+						{
+							"key": "free",
+							"value": "true"
+						}
 					]
 				}
 			},
