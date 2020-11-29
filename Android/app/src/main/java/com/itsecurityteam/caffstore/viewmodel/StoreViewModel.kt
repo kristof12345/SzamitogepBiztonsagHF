@@ -18,15 +18,20 @@ import com.itsecurityteam.caffstore.model.filter.OrderBy
 import com.itsecurityteam.caffstore.model.filter.OrderDirection
 import com.itsecurityteam.caffstore.model.responses.CaffResponse
 import com.itsecurityteam.caffstore.model.responses.UserType
+import com.itsecurityteam.caffstore.services.CertificateProvider
 import com.itsecurityteam.caffstore.services.SessionManager
 import com.itsecurityteam.caffstore.services.StoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.*
+import java.io.IOException
+import java.lang.Exception
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val storeService: StoreService = StoreService()
@@ -41,7 +46,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         const val REMOVE_CAFF_REQUEST = 1102
     }
 
-    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm:ss";
+    private val DATE_TIME_FORMAT = "yyyy. MM. dd. H:mm:ss"
 
     private val caffs = MutableLiveData<List<Caff>>()
     val caffsProp: LiveData<List<Caff>>
@@ -91,9 +96,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             when {
                 response.isSuccessful -> {
                     val list = response.body()
-                    var caffsList = ArrayList<Caff>()
+                    val caffsList = ArrayList<Caff>()
                     for (s in sort(list, orderBy, orderDir)) {
-                        var date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
+                        val date = LocalDateTime.parse(s.creationDate, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         caffsList.add(
                             Caff(
                                 s.id, s.name, date, s.creator, s.duration,
@@ -122,17 +127,16 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         if (direction == OrderDirection.Descending)
             result = result.reversed()
 
-        return result;
+        return result
     }
 
     private suspend fun loadImage(urlText: String?): Bitmap {
         return withContext(Dispatchers.IO) {
-            var text = urlText
-            //if (text == null)
-            text = "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-
-            val url = URL(text)
-            return@withContext BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            try {
+                return@withContext BitmapFactory.decodeStream(storeService.loadImage(urlText))
+            } catch (e: Exception) {
+                return@withContext BitmapFactory.decodeStream(storeService.loadPlaceholderImage())
+            }
         }
     }
 
@@ -150,9 +154,9 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             when {
                 response.isSuccessful -> {
                     val list = response.body()
-                    var commentList = ArrayList<Comment>()
+                    val commentList = ArrayList<Comment>()
                     for (s in list) {
-                        var date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
+                        val date = LocalDateTime.parse(s.addTime, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
                         commentList.add(
                             Comment(
                                 s.id, s.userName, date, s.text
@@ -162,7 +166,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                     comments.postValue(commentList)
                 }
             }
-            caff.image = loadImage(caff?.url)
+            caff.image = caff.thumbnail
         }
     }
 
@@ -214,14 +218,14 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.path
+            val fileUri = uri.path
             if (fileUri == null) {
                 result.postValue(ViewResult(UPLOAD_REQUEST, false))
             } else {
                 if (fileUri.takeLast(5) != ".caff") {
                     result.postValue(ViewResult(UPLOAD_REQUEST, false))
                 } else {
-                    var response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
+                    val response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
 
                     when {
                         response.isSuccessful -> {
@@ -236,7 +240,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun downloadCaff(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            var fileUri = uri.path
+            val fileUri = uri.path
             if (fileUri == null)
                 result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
             else {
@@ -249,7 +253,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun removeCurrentCaff() {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            var response = storeService.deleteCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!).execute()
+            val response = storeService.deleteCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!).execute()
             when {
                 response.isSuccessful -> {
                     search()
@@ -265,7 +269,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun removeComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(500)
-            var response = storeService.deleteComment(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, comment.id).execute()
+            val response = storeService.deleteComment(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, comment.id).execute()
             when {
                 response.isSuccessful -> {
                     search()
