@@ -67,4 +67,6 @@
     <string name="delete_error">A CAFF törlése sikertelen.</string>
     <string name="delete_comment_error">Komment törlése sikertelen.</string>
     <string name="confirm_mismatch">Megerősítésnek meg kell egyeznie a jelszóval</string>
+    <string name="caff_upload_error">CAFF feltöltése sikertelen. Érvénytelen fájl.</string>
+    <string name="caff_download_error">Caff file letöltése sikertelen</string>
 </resources>

@@ -25,12 +25,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.*
-import java.io.IOException
-import java.lang.Exception
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.Exception
 
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
@@ -218,35 +215,46 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun uploadCaff(name: String, price: Double, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            val fileUri = uri.path
-            if (fileUri == null) {
-                result.postValue(ViewResult(UPLOAD_REQUEST, false))
-            } else {
-                if (fileUri.takeLast(5) != ".caff") {
+            try {
+                val fileUri = uri.path
+                if (fileUri == null) {
                     result.postValue(ViewResult(UPLOAD_REQUEST, false))
                 } else {
-                    val response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
+                    if (fileUri.takeLast(5) != ".caff") {
+                        result.postValue(ViewResult(UPLOAD_REQUEST, false))
+                    } else {
+                        val response = storeService.uploadCaff(sessionManager.fetchAuthToken()!!, name, price, uri).execute()
 
-                    when {
-                        response.isSuccessful -> {
-                            search()
-                            result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                        when {
+                            response.isSuccessful -> {
+                                search()
+                                result.postValue(ViewResult(UPLOAD_REQUEST, true))
+                            }
+                            else -> {
+                                result.postValue(ViewResult(UPLOAD_REQUEST, false, R.string.caff_upload_error))
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                result.postValue(ViewResult(UPLOAD_REQUEST, false, R.string.caff_upload_error))
             }
         }
     }
 
     fun downloadCaff(uri: Uri) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val fileUri = uri.path
-            if (fileUri == null)
-                result.postValue(ViewResult(DOWNLOAD_REQUEST, false))
-            else {
-                storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
-                result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val fileUri = uri.path
+                if (fileUri == null)
+                    result.postValue(ViewResult(DOWNLOAD_REQUEST, false, R.string.caff_download_error))
+                else {
+                    storeService.downloadCaff(sessionManager.fetchAuthToken()!!, selectedCaff.value?.id!!, fileUri)
+                    result.postValue(ViewResult(DOWNLOAD_REQUEST, true))
+                }
             }
+        } catch (e: Exception) {
+            result.postValue(ViewResult(DOWNLOAD_REQUEST, false, R.string.caff_download_error))
         }
     }
 

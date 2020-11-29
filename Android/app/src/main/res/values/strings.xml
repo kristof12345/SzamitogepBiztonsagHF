@@ -71,4 +71,6 @@
     <string name="delete_error">Unable to delete CAFF</string>
     <string name="delete_comment_error">Unable to delete comment</string>
     <string name="confirm_mismatch">Confirm must match with the password</string>
+    <string name="caff_upload_error">Unable to upload caff file. Invalid format.</string>
+    <string name="caff_download_error">Unable to download CAFF file</string>
 </resources>
