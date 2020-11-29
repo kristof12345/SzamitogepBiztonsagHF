@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CaffStoreServer.WebApi.Controllers
@@ -32,8 +33,13 @@ namespace CaffStoreServer.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CAFFResponse>>> Search([FromQuery] string creator, [FromQuery] string title, [FromQuery] bool free, [FromQuery] bool bought)
         {
-            var list = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
-            var result = _mapper.Map<List<CAFFResponse>>(list);
+            var (caffList, purchasedList) = await _caffService.SearchAsync(User.UserId(), creator, title, free, bought);
+            var result = _mapper.Map<List<CAFFResponse>>(caffList);
+            foreach (var caff in result)
+            {
+                if (purchasedList.Contains(caff.Id))
+                    caff.Bought = true;
+            }
             // Add baseurl
             var baseUrl = $"{Request.Scheme}://{Request.Host}/";
             foreach (var item in result)

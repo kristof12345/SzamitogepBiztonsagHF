@@ -7,7 +7,7 @@ namespace CaffStoreServer.WebApi.Interfaces
 {
     public interface ICaffService
     {
-        Task<IEnumerable<Caff>> SearchAsync(long userId, string creator, string title, bool free, bool bought);
+        Task<(IEnumerable<Caff>, IEnumerable<long>)> SearchAsync(long userId, string creator, string title, bool free, bool bought);
         Task BuyAsync(long userId, long caffId);
         Task<Caff> Upload(long userId, UploadCAFFRequest request);
         Task<byte[]> Download(long userId, long id);
