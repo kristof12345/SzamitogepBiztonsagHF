@@ -210,7 +210,7 @@
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"    \t\t\tvar jsonData = pm.response.json();\r",
 							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
-							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 1\");\r",
+							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 3\");\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -231,7 +231,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:5001/caffs?title=1",
+					"raw": "https://localhost:5001/caffs?title=This is caff 3",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -243,7 +243,7 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "1"
+							"value": "This is caff 3"
 						}
 					]
 				}
@@ -263,7 +263,7 @@
 							"    \t\t\tvar jsonData = pm.response.json();\r",
 							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
 							"    \t\t\tpm.expect(jsonData[0].name).eql(\"This is caff 2\");\r",
-							"                pm.expect(jsonData[0].name).eql(\"This is caff 3\");\r",
+							"                pm.expect(jsonData[1].name).eql(\"This is caff 3\");\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -354,9 +354,7 @@
 							"pm.test(\"Test get comments for caff\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"    \t\t\tvar jsonData = pm.response.json();\r",
-							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
-							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"me\");\r",
-							"                pm.expect(jsonData[0].text).eql(\"Hello world!\");\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(0);\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -454,13 +452,13 @@
 					"script": {
 						"id": "6e88e5fd-afeb-4034-9e22-2af7037403be",
 						"exec": [
-							"pm.test(\"Test add comments for caff\", function(){\r",
+							"pm.test(\"Test added comment for caff\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"    \t\t\tvar jsonData = pm.response.json();\r",
-							"    \t\t\tpm.expect(jsonData.length).eql(2);\r",
-							"    \t\t\tpm.expect(jsonData[1].userName).eql(\"User1\");\r",
-							"                pm.expect(jsonData[1].text).eql(\"This caff is great!\");\r",
-							"                pm.environment.set(\"commentid\", jsonData[1].id);\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
+							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"TestUser\");\r",
+							"                pm.expect(jsonData[0].text).eql(\"This caff is great!\");\r",
+							"                pm.environment.set(\"commentid\", jsonData[0].id);\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
@@ -728,9 +726,7 @@
 							"pm.test(\"Test deleted comment\", function(){\r",
 							"    \t\t\tpm.response.to.have.status(200);\r",
 							"    \t\t\tvar jsonData = pm.response.json();\r",
-							"    \t\t\tpm.expect(jsonData.length).eql(1);\r",
-							"    \t\t\tpm.expect(jsonData[0].userName).eql(\"me\");\r",
-							"                pm.expect(jsonData[0].text).eql(\"Hello world!\");\r",
+							"    \t\t\tpm.expect(jsonData.length).eql(0);\r",
 							"\t\t});"
 						],
 						"type": "text/javascript"
