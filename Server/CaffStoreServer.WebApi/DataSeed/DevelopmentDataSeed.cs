@@ -13,7 +13,7 @@ namespace CaffStoreServer.WebApi.DataSeed
 {
     public class DevelopmentDataSeed
     {
-        public static async void Initialize(IServiceProvider serviceProvider)
+        public static async Task Initialize(IServiceProvider serviceProvider)
         {
             await SeedUsers(serviceProvider);
             await SeedCaffs(serviceProvider);
