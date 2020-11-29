@@ -113,7 +113,7 @@ namespace CaffStoreServer.WebApi.Services
             return filedata;
         }
 
-        public async Task<IEnumerable<Caff>> SearchAsync(long userId, string creator, string title, bool free, bool bought)
+        public async Task<(IEnumerable<Caff>, IEnumerable<long>)> SearchAsync(long userId, string creator, string title, bool free, bool bought)
         {
             var caffs = _context.Caffs
                 .Include(c => c.Comments)
@@ -133,7 +133,9 @@ namespace CaffStoreServer.WebApi.Services
             if (bought == true)
                 caffs = caffs.Where(c => purchasedCaffIds.Contains(c.Id));
 
-            return await caffs.ToListAsync();
+            var list = await caffs.ToListAsync();
+
+            return (list, purchasedCaffIds);
         }
 
         public async Task<Caff> Upload(long userId, UploadCAFFRequest request)
